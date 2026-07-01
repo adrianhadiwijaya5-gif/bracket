@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIFA World Cup 2026 Ultimate Bracket</title>
+    <title>FIFA World Cup 2026 - All Nations Bracket</title>
     <style>
         :root {
             --bg-color: #060709;
@@ -56,14 +56,14 @@
             padding: 10px 16px;
             border-radius: 8px;
             outline: none;
-            width: 180px;
+            width: 220px;
             font-weight: bold;
             text-transform: uppercase;
         }
 
         .control-panel input:focus { border-color: var(--accent-cyan); }
 
-        /* Area Tong Sampah Interaktif */
+        /* Trash Zone */
         .trash-zone {
             display: flex;
             align-items: center;
@@ -97,7 +97,7 @@
         }
         .btn-reset:hover { background: var(--accent-red); }
 
-        /* Arena Bracket */
+        /* Bracket Area */
         .bracket-arena {
             display: flex;
             justify-content: center;
@@ -133,7 +133,6 @@
             gap: 5px;
         }
 
-        /* Daun Asimetris */
         .team-slot {
             width: var(--slot-width);
             height: var(--slot-height);
@@ -147,7 +146,6 @@
             cursor: pointer;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
         }
 
         .team-slot.active-target {
@@ -189,7 +187,7 @@
             border: 1px solid #2b364f;
         }
 
-        /* Database Pool */
+        /* Database Pool Grid */
         .pool-section {
             background-color: var(--panel-bg);
             border: 1px solid rgba(43, 54, 79, 0.7);
@@ -200,7 +198,17 @@
             margin-top: 40px;
         }
 
-        .pool-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .pool-grid { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+            justify-content: center;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #090b12;
+            border-radius: 8px;
+        }
 
         .pool-item {
             display: flex;
@@ -210,27 +218,29 @@
             padding: 6px;
             border-radius: 10px 2px 10px 2px;
             border: 1px solid #252e45;
+            width: 65px;
         }
 
         .pool-flag { width: 48px; height: 34px; object-fit: cover; border-radius: 8px 2px 8px 2px; cursor: grab; }
-        .pool-code { font-size: 0.65rem; color: #8fa0c2; margin-top: 5px; font-weight: bold; }
+        .pool-code { font-size: 0.65rem; color: #8fa0c2; margin-top: 5px; font-weight: bold; text-align: center; }
     </style>
 </head>
 <body>
 
     <div class="control-panel">
-        <input type="text" id="countryInput" placeholder="KODE TIM">
+        <input type="text" id="countryInput" placeholder="CARI / KETIK KODE TIM...">
         
         <div class="trash-zone" id="trashBin">
             🗑️ DRAG SINI UNTUK HAPUS
         </div>
 
-        <button class="btn-reset" onclick="resetBracket()">RESET SEMUA</button>
+        <button class="btn-reset" onclick="resetBracket()">RESET BAGAN</button>
     </div>
 
     <div class="bracket-arena" id="arena">
         <svg id="connector-svg"></svg>
 
+        <!-- SISI KIRI -->
         <div class="side left-side">
             <div class="column">
                 <div class="match-node"><div class="team-slot drop-zone" id="L-1-1">?</div><div class="team-slot drop-zone" id="L-1-2">?</div></div>
@@ -257,6 +267,7 @@
             </div>
         </div>
 
+        <!-- PODIUM TENGAH -->
         <div class="center-stage">
             <div class="champion-podium">
                 <div style="font-size:0.75rem; font-weight:bold; letter-spacing:2px; margin-bottom:10px;">WORLD CHAMPION</div>
@@ -271,6 +282,7 @@
             </div>
         </div>
 
+        <!-- SISI KANAN -->
         <div class="side right-side">
             <div class="column">
                 <div class="match-node"><div class="team-slot drop-zone" id="R-4-1">?</div><div class="team-slot drop-zone" id="R-4-2">?</div></div>
@@ -289,7 +301,7 @@
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-1">?</div><div class="team-slot drop-zone" id="R-1-2">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-3">?</div><div class="team-slot drop-zone" id="R-1-4">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-5">?</div><div class="team-slot drop-zone" id="R-1-6">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="R-1-7">?</div><div class="team-slot drop-zone" id="L-1-8">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="R-1-7">?</div><div class="team-slot drop-zone" id="R-1-8">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-9">?</div><div class="team-slot drop-zone" id="R-1-10">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-11">?</div><div class="team-slot drop-zone" id="R-1-12">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-13">?</div><div class="team-slot drop-zone" id="R-1-14">?</div></div>
@@ -298,13 +310,14 @@
         </div>
     </div>
 
+    <!-- GLOBAL POOL DATABASE -->
     <div class="pool-section">
-        <div style="font-size:0.8rem; font-weight:bold; color:var(--accent-cyan); margin-bottom:15px; letter-spacing:1px;">🌐 DATABASE UTAMA (48 TIM PESERTA)</div>
+        <div style="font-size:0.8rem; font-weight:bold; color:var(--accent-cyan); margin-bottom:15px; letter-spacing:1px;">🌐 GLOBAL DATABASE (SELURUH NEGARA DI DUNIA)</div>
         <div class="pool-grid" id="global-pool-grid"></div>
     </div>
 
     <script>
-        // 48 Negara Peserta Lengkap
+        // DATABASE LENGKAP NEGARA DUNIA (195+ KODE NEGARA ISO)
         const countriesList = [
             {c:"us", n:"USA"}, {c:"mx", n:"MEX"}, {c:"ca", n:"CAN"}, {c:"id", n:"IDN"}, {c:"br", n:"BRA"}, {c:"ar", n:"ARG"},
             {c:"fr", n:"FRA"}, {c:"de", n:"GER"}, {c:"gb-eng", n:"ENG"}, {c:"es", n:"ESP"}, {c:"pt", n:"POR"}, {c:"jp", n:"JPN"},
@@ -313,26 +326,74 @@
             {c:"gh", n:"GHA"}, {c:"ch", n:"SUI"}, {c:"dk", n:"DEN"}, {c:"se", n:"SWE"}, {c:"no", n:"NOR"}, {c:"pl", n:"POL"},
             {c:"ua", n:"UKR"}, {c:"tr", n:"TUR"}, {c:"eg", n:"EGY"}, {c:"dz", n:"ALG"}, {c:"ng", n:"NGA"}, {c:"za", n:"RSA"},
             {c:"ir", n:"IRN"}, {c:"cl", n:"CHI"}, {c:"pe", n:"PER"}, {c:"ec", n:"ECU"}, {c:"py", n:"PAR"}, {c:"ve", n:"VEN"},
-            {c:"nz", n:"NZL"}, {c:"cr", n:"CRC"}, {c:"jm", n:"JAM"}, {c:"tn", n:"TUN"}, {c:"qa", n:"QAT"}, {c:"at", n:"AUT"}
+            {c:"nz", n:"NZL"}, {c:"cr", n:"CRC"}, {c:"jm", n:"JAM"}, {c:"tn", n:"TUN"}, {c:"qa", n:"QAT"}, {c:"at", n:"AUT"},
+            {c:"af", n:"AFG"}, {c:"al", n:"ALB"}, {c:"ad", n:"AND"}, {c:"ao", n:"ANG"}, {c:"ag", n:"ATG"}, {c:"am", n:"ARM"},
+            {c:"az", n:"AZE"}, {c:"bs", n:"BAH"}, {c:"bh", n:"BHR"}, {c:"bd", n:"BAN"}, {c:"bb", n:"BAR"}, {c:"by", n:"BLR"},
+            {c:"bz", n:"BEL"}, {c:"bj", n:"BEN"}, {c:"bt", n:"BHU"}, {c:"bo", n:"BOL"}, {c:"ba", n:"BIH"}, {c:"bw", n:"BOT"},
+            {c:"bn", n:"BRU"}, {c:"bg", n:"BUL"}, {c:"bf", n:"BUR"}, {c:"bi", n:"BDI"}, {c:"kh", n:"CAM"}, {c:"cv", n:"CPV"},
+            {c:"cf", n:"CAF"}, {c:"td", n:"CHA"}, {c:"cn", n:"CHN"}, {c:"km", n:"COM"}, {c:"cg", n:"CGO"}, {c:"cd", n:"COD"},
+            {c:"ci", n:"CIV"}, {c:"cu", n:"CUB"}, {c:"cy", n:"CYP"}, {c:"cz", n:"CZE"}, {c:"dj", n:"DJI"}, {c:"dm", n:"DMA"},
+            {c:"do", n:"DOM"}, {c:"gq", n:"GEQ"}, {c:"er", n:"ERI"}, {c:"ee", n:"EST"}, {c:"sz", n:"SWZ"}, {c:"et", n:"ETH"},
+            {c:"fj", n:"FIJ"}, {c:"fi", n:"FIN"}, {c:"ga", n:"GAB"}, {c:"gm", n:"GAM"}, {c:"ge", n:"GEO"}, {c:"gr", n:"GRE"},
+            {c:"gd", n:"GRN"}, {c:"gt", n:"GUA"}, {c:"gn", n:"GUI"}, {c:"gw", n:"GBS"}, {c:"gy", n:"GUY"}, {c:"ht", n:"HAI"},
+            {c:"hn", n:"HON"}, {c:"hu", n:"HUN"}, {c:"is", n:"ISL"}, {c:"in", n:"IND"}, {c:"iq", n:"IRQ"}, {c:"ie", n:"IRL"},
+            {c:"il", n:"ISR"}, {c:"jm", n:"JAM"}, {c:"jo", n:"JOR"}, {c:"kz", n:"KAZ"}, {c:"ke", n:"KEN"}, {c:"ki", n:"KIR"},
+            {c:"kp", n:"PRK"}, {c:"kw", n:"KUW"}, {c:"kg", n:"KGZ"}, {c:"la", n:"LAO"}, {c:"lv", n:"LAT"}, {c:"lb", n:"LEB"},
+            {c:"ls", n:"LES"}, {c:"lr", n:"LBR"}, {c:"ly", n:"LBY"}, {c:"li", n:"LIE"}, {c:"lt", n:"LTU"}, {c:"lu", n:"LUX"},
+            {c:"mg", n:"MAD"}, {c:"mw", n:"MWI"}, {c:"my", n:"MAS"}, {c:"mv", n:"MDV"}, {c:"ml", n:"MLI"}, {c:"mt", n:"MLT"},
+            {c:"mh", n:"MHL"}, {c:"mr", n:"MTN"}, {c:"mu", n:"MRI"}, {c:"md", n:"MDA"}, {c:"mc", n:"MON"}, {c:"mn", n:"MNG"},
+            {c:"me", n:"MNE"}, {c:"mz", n:"MOZ"}, {c:"mm", n:"MYA"}, {c:"na", n:"NAM"}, {c:"nr", n:"NRU"}, {c:"np", n:"NEP"},
+            {c:"ni", n:"NCA"}, {c:"ne", n:"NIG"}, {c:"mk", n:"MKD"}, {c:"om", n:"OMA"}, {c:"pk", n:"PAK"}, {c:"pw", n:"PLW"},
+            {c:"pa", n:"PAN"}, {c:"pg", n:"PNG"}, {c:"ph", n:"PHI"}, {c:"qa", n:"QAT"}, {c:"ro", n:"ROU"}, {c:"ru", n:"RUS"},
+            {c:"rw", n:"RWA"}, {c:"kn", n:"SKN"}, {c:"lc", n:"LCA"}, {c:"vc", n:"VIN"}, {c:"ws", n:"SAM"}, {c:"sm", n:"SMR"},
+            {c:"st", n:"STP"}, {c:"sn", n:"SEN"}, {c:"rs", n:"SRB"}, {c:"sc", n:"SEY"}, {c:"sl", n:"SLE"}, {c:"sg", n:"SGP"},
+            {c:"sk", n:"SVK"}, {c:"si", n:"SVN"}, {c:"sb", n:"SOL"}, {c:"so", n:"SOM"}, {c:"ss", n:"SSD"}, {c:"lk", n:"SRI"},
+            {c:"sd", n:"SUD"}, {c:"sr", n:"SUR"}, {c:"sy", n:"SYR"}, {c:"tw", n:"TPE"}, {c:"tj", n:"TJK"}, {c:"tz", n:"TAN"},
+            {c:"th", n:"THA"}, {c:"tl", n:"TLS"}, {c:"tg", n:"TOG"}, {c:"to", n:"TGA"}, {c:"tt", n:"TRI"}, {c:"tv", n:"TUV"},
+            {c:"ug", n:"UGA"}, {c:"ae", n:"UAE"}, {c:"gb-wls", n:"WAL"}, {c:"gb-sct", n:"SCO"}, {c:"uz", n:"UZB"}, {c:"vu", n:"VAN"},
+            {c:"ye", n:"YEM"}, {c:"zm", n:"ZAM"}, {c:"zw", n:"ZIM"}
         ];
 
         let draggedFlagSrc = null;
-        let draggedSourceSlotId = null; // Melacak asal slot yang di-drag
+        let draggedSourceSlotId = null;
         let selectedSlot = null;
 
         // Render flags database
         const poolGrid = document.getElementById('global-pool-grid');
-        countriesList.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'pool-item';
-            div.innerHTML = `
-                <img src="https://flagcdn.com/w80/${item.c}.png" class="pool-flag" draggable="true" data-type="pool">
-                <div class="pool-code">${item.n}</div>
-            `;
-            poolGrid.appendChild(div);
+        function renderPool(list) {
+            poolGrid.innerHTML = '';
+            list.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'pool-item';
+                div.innerHTML = `
+                    <img src="https://flagcdn.com/w80/${item.c}.png" class="pool-flag" draggable="true">
+                    <div class="pool-code">${item.n}</div>
+                `;
+                poolGrid.appendChild(div);
+            });
+        }
+        renderPool(countriesList);
+
+        // Search Bar Filter System (Realtime & Enter Input)
+        document.getElementById('countryInput').addEventListener('input', (e) => {
+            const val = e.target.value.trim().toUpperCase();
+            const filtered = countriesList.filter(c => c.n.includes(val));
+            renderPool(filtered);
         });
 
-        // Slot click selector
+        document.getElementById('countryInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && selectedSlot) {
+                const targetCode = e.target.value.trim().toUpperCase();
+                const found = countriesList.find(c => c.n === targetCode);
+                if (found) {
+                    setSlotImage(selectedSlot, `https://flagcdn.com/w80/${found.c}.png`);
+                    e.target.value = '';
+                    renderPool(countriesList);
+                }
+            }
+        });
+
+        // Slot Selector
         document.querySelectorAll('.drop-zone').forEach(slot => {
             slot.addEventListener('click', () => {
                 document.querySelectorAll('.drop-zone').forEach(s => s.classList.remove('active-target'));
@@ -342,37 +403,23 @@
             });
         });
 
-        // Search bar enter input
-        document.getElementById('countryInput').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && selectedSlot) {
-                const targetCode = e.target.value.trim().toUpperCase();
-                const found = countriesList.find(c => c.n === targetCode);
-                if (found) {
-                    setSlotImage(selectedSlot, `https://flagcdn.com/w80/${found.c}.png`);
-                    e.target.value = '';
-                }
-            }
-        });
-
-        // Global Drag Start handler
+        // Drag Systems
         document.addEventListener('dragstart', (e) => {
             if (e.target.classList.contains('pool-flag')) {
                 draggedFlagSrc = e.target.getAttribute('src');
-                draggedSourceSlotId = null; // Berasal dari pool bawah
+                draggedSourceSlotId = null;
             } else if (e.target.classList.contains('flag-img')) {
                 draggedFlagSrc = e.target.getAttribute('src');
-                draggedSourceSlotId = e.target.closest('.drop-zone').id; // Berasal dari bagan
+                draggedSourceSlotId = e.target.closest('.drop-zone').id;
             }
         });
 
-        // Drop Zone Event di dalam Bagan
         document.querySelectorAll('.drop-zone').forEach(zone => {
             zone.addEventListener('dragover', (e) => e.preventDefault());
             zone.addEventListener('drop', (e) => {
                 e.preventDefault();
                 if (draggedFlagSrc) {
                     setSlotImage(zone, draggedFlagSrc);
-                    // Jika di-drag antar slot di dalam bagan, kosongkan slot lamanya
                     if (draggedSourceSlotId && draggedSourceSlotId !== zone.id) {
                         clearSlot(document.getElementById(draggedSourceSlotId));
                     }
@@ -380,15 +427,10 @@
             });
         });
 
-        // --- SISTEM DETEKSI DRAG TO DELETE (TONG SAMPAH) ---
+        // Trash Bin system
         const trashBin = document.getElementById('trashBin');
-        trashBin.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            trashBin.classList.add('drag-over-trash');
-        });
-        trashBin.addEventListener('dragleave', () => {
-            trashBin.classList.remove('drag-over-trash');
-        });
+        trashBin.addEventListener('dragover', (e) => { e.preventDefault(); trashBin.classList.add('drag-over-trash'); });
+        trashBin.addEventListener('dragleave', () => trashBin.classList.remove('drag-over-trash'));
         trashBin.addEventListener('drop', (e) => {
             e.preventDefault();
             trashBin.classList.remove('drag-over-trash');
@@ -409,18 +451,18 @@
             }
         }
 
-        // Save & Load State Storage
+        // State Store
         function saveBracketState() {
             const state = {};
             document.querySelectorAll('.drop-zone').forEach(slot => {
                 const img = slot.querySelector('img');
                 state[slot.id] = img ? img.getAttribute('src') : null;
             });
-            localStorage.setItem('fifa2026_bracket_save', JSON.stringify(state));
+            localStorage.setItem('fifa2026_allnations_save', JSON.stringify(state));
         }
 
         function loadBracketState() {
-            const savedData = localStorage.getItem('fifa2026_bracket_save');
+            const savedData = localStorage.getItem('fifa2026_allnations_save');
             if (savedData) {
                 const state = JSON.parse(savedData);
                 Object.keys(state).forEach(id => {
@@ -433,15 +475,13 @@
         }
 
         function resetBracket() {
-            if (confirm("Reset ulang semua isi bagan turnamen?")) {
-                localStorage.removeItem('fifa2026_bracket_save');
-                document.querySelectorAll('.drop-zone').forEach(slot => {
-                    clearSlot(slot);
-                });
+            if (confirm("Kosongkan semua isi bagan?")) {
+                localStorage.removeItem('fifa2026_allnations_save');
+                document.querySelectorAll('.drop-zone').forEach(slot => clearSlot(slot));
             }
         }
 
-        // Jalur Garis Dinamis SVG
+        // SVG Connectors
         function drawLines() {
             const svg = document.getElementById('connector-svg');
             if (!svg) return;
@@ -482,7 +522,7 @@
             createTreePath(rightR32, rightR16); createTreePath(rightR16, rightQF); createTreePath(rightQF, rightSF);
         }
 
-        window.addEventListener('load', () => { loadBracketState(); setTimeout(drawLines, 200); });
+        window.addEventListener('load', () => { loadBracketState(); setTimeout(drawLines, 250); });
         window.addEventListener('resize', drawLines);
     </script>
 </body>
