@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Official FIFA World Cup 2026 Leaf-Style Bracket (With Auto-Save)</title>
+    <style>
+        :root {
+            --bg-color: #060709;
+            --panel-bg: #0f121d;
+            --card-bg: rgba(25, 29, 44, 0.45);
+            --slot-empty: #1c2130;
+            --line-color: #2b364f;
+            --line-glow: rgba(0, 240, 255, 0.2);
+            --accent-cyan: #00f0ff;
+            --accent-gold: #ffd700;
+            --accent-red: #ff3b30;
+            --text-color: #ffffff;
+            
+            --slot-width: 58px;
+            --slot-height: 42px;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 50% 40%, #111827 0%, var(--bg-color) 70%);
+            color: var(--text-color);
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            user-select: none;
+            overflow-x: auto;
+        }
+
+        /* Top Bar Control Panel */
+        .control-panel {
+            background: rgba(15, 18, 29, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 12px 25px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        .control-panel input {
+            background: #050609;
+            border: 2px solid #2b364f;
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            outline: none;
+            width: 220px;
+            transition: all 0.2s;
+        }
+
+        .control-panel input:focus {
+            border-color: var
