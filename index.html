@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIFA World Cup 2026 Bracket</title>
+    <title>FIFA World Cup 2026 Ultimate Bracket</title>
     <style>
         :root {
             --bg-color: #060709;
@@ -23,7 +23,7 @@
             background-color: var(--bg-color);
             background-image: radial-gradient(circle at 50% 40%, #111827 0%, var(--bg-color) 70%);
             color: var(--text-color);
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -31,8 +31,10 @@
             align-items: center;
             min-height: 100vh;
             overflow-x: auto;
+            user-select: none;
         }
 
+        /* Top Control Panel */
         .control-panel {
             background: rgba(15, 18, 29, 0.85);
             backdrop-filter: blur(12px);
@@ -44,7 +46,7 @@
             margin-bottom: 30px;
             border: 1px solid rgba(0, 240, 255, 0.15);
             width: 90%;
-            max-width: 1200px;
+            max-width: 1300px;
         }
 
         .control-panel input {
@@ -54,22 +56,48 @@
             padding: 10px 16px;
             border-radius: 8px;
             outline: none;
-            width: 200px;
+            width: 180px;
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
         .control-panel input:focus { border-color: var(--accent-cyan); }
 
+        /* Area Tong Sampah Interaktif */
+        .trash-zone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(255, 59, 48, 0.1);
+            border: 2px dashed var(--accent-red);
+            color: var(--accent-red);
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .trash-zone.drag-over-trash {
+            background: rgba(255, 59, 48, 0.3);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 59, 48, 0.4);
+        }
+
         .btn-reset {
-            background: var(--accent-red);
-            border: none;
+            background: #2b364f;
+            border: 1px solid rgba(255,255,255,0.1);
             color: white;
             padding: 10px 20px;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
             margin-left: auto;
+            transition: background 0.2s;
         }
+        .btn-reset:hover { background: var(--accent-red); }
 
+        /* Arena Bracket */
         .bracket-arena {
             display: flex;
             justify-content: center;
@@ -105,6 +133,7 @@
             gap: 5px;
         }
 
+        /* Daun Asimetris */
         .team-slot {
             width: var(--slot-width);
             height: var(--slot-height);
@@ -114,10 +143,11 @@
             align-items: center;
             justify-content: center;
             font-weight: 900;
-            color: rgba(255, 255, 255, 0.4);
+            color: rgba(255, 255, 255, 0.3);
             cursor: pointer;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
         }
 
         .team-slot.active-target {
@@ -130,6 +160,7 @@
             height: 100%;
             object-fit: cover;
             border-radius: 14px 2px 14px 2px;
+            cursor: grab;
         }
 
         .center-stage { display: flex; flex-direction: column; align-items: center; gap: 60px; z-index: 2; }
@@ -148,7 +179,6 @@
             border-radius: 22px 2px 22px 2px;
             border-color: var(--accent-gold);
         }
-
         .champion-podium .flag-img { border-radius: 20px 2px 20px 2px; }
 
         .bronze-box {
@@ -159,6 +189,7 @@
             border: 1px solid #2b364f;
         }
 
+        /* Database Pool */
         .pool-section {
             background-color: var(--panel-bg);
             border: 1px solid rgba(43, 54, 79, 0.7);
@@ -188,9 +219,13 @@
 <body>
 
     <div class="control-panel">
-        <input type="text" id="countryInput" placeholder="KODE NEGARA (MISAL: IDN)">
-        <span>💾 <b>SISTEM AKTIF:</b> Klik kotak daun di bagan, lalu ketik kode tim di kiri atau geser bendera dari bawah!</span>
-        <button class="btn-reset" onclick="resetBracket()">RESET</button>
+        <input type="text" id="countryInput" placeholder="KODE TIM">
+        
+        <div class="trash-zone" id="trashBin">
+            🗑️ DRAG SINI UNTUK HAPUS
+        </div>
+
+        <button class="btn-reset" onclick="resetBracket()">RESET SEMUA</button>
     </div>
 
     <div class="bracket-arena" id="arena">
@@ -254,7 +289,7 @@
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-1">?</div><div class="team-slot drop-zone" id="R-1-2">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-3">?</div><div class="team-slot drop-zone" id="R-1-4">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-5">?</div><div class="team-slot drop-zone" id="R-1-6">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="R-1-7">?</div><div class="team-slot drop-zone" id="R-1-8">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="R-1-7">?</div><div class="team-slot drop-zone" id="L-1-8">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-9">?</div><div class="team-slot drop-zone" id="R-1-10">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-11">?</div><div class="team-slot drop-zone" id="R-1-12">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-13">?</div><div class="team-slot drop-zone" id="R-1-14">?</div></div>
@@ -264,14 +299,16 @@
     </div>
 
     <div class="pool-section">
+        <div style="font-size:0.8rem; font-weight:bold; color:var(--accent-cyan); margin-bottom:15px; letter-spacing:1px;">🌐 DATABASE UTAMA (48 TIM PESERTA)</div>
         <div class="pool-grid" id="global-pool-grid"></div>
     </div>
 
     <script>
+        // 48 Negara Peserta Lengkap
         const countriesList = [
-            {c:"id", n:"IDN"}, {c:"br", n:"BRA"}, {c:"ar", n:"ARG"}, {c:"fr", n:"FRA"}, {c:"de", n:"GER"}, {c:"gb-eng", n:"ENG"}, 
-            {c:"es", n:"ESP"}, {c:"pt", n:"POR"}, {c:"jp", n:"JPN"}, {c:"kr", n:"KOR"}, {c:"nl", n:"NED"}, {c:"it", n:"ITA"},
-            {c:"mx", n:"MEX"}, {c:"us", n:"USA"}, {c:"ca", n:"CAN"}, {c:"ma", n:"MAR"}, {c:"hr", n:"CRO"}, {c:"be", n:"BEL"},
+            {c:"us", n:"USA"}, {c:"mx", n:"MEX"}, {c:"ca", n:"CAN"}, {c:"id", n:"IDN"}, {c:"br", n:"BRA"}, {c:"ar", n:"ARG"},
+            {c:"fr", n:"FRA"}, {c:"de", n:"GER"}, {c:"gb-eng", n:"ENG"}, {c:"es", n:"ESP"}, {c:"pt", n:"POR"}, {c:"jp", n:"JPN"},
+            {c:"kr", n:"KOR"}, {c:"nl", n:"NED"}, {c:"it", n:"ITA"}, {c:"ma", n:"MAR"}, {c:"hr", n:"CRO"}, {c:"be", n:"BEL"},
             {c:"uy", n:"URU"}, {c:"co", n:"COL"}, {c:"sa", n:"KSA"}, {c:"au", n:"AUS"}, {c:"sn", n:"SEN"}, {c:"cm", n:"CMR"},
             {c:"gh", n:"GHA"}, {c:"ch", n:"SUI"}, {c:"dk", n:"DEN"}, {c:"se", n:"SWE"}, {c:"no", n:"NOR"}, {c:"pl", n:"POL"},
             {c:"ua", n:"UKR"}, {c:"tr", n:"TUR"}, {c:"eg", n:"EGY"}, {c:"dz", n:"ALG"}, {c:"ng", n:"NGA"}, {c:"za", n:"RSA"},
@@ -279,7 +316,8 @@
             {c:"nz", n:"NZL"}, {c:"cr", n:"CRC"}, {c:"jm", n:"JAM"}, {c:"tn", n:"TUN"}, {c:"qa", n:"QAT"}, {c:"at", n:"AUT"}
         ];
 
-        let currentDragUrl = null;
+        let draggedFlagSrc = null;
+        let draggedSourceSlotId = null; // Melacak asal slot yang di-drag
         let selectedSlot = null;
 
         // Render flags database
@@ -288,7 +326,7 @@
             const div = document.createElement('div');
             div.className = 'pool-item';
             div.innerHTML = `
-                <img src="https://flagcdn.com/w80/${item.c}.png" class="pool-flag" draggable="true">
+                <img src="https://flagcdn.com/w80/${item.c}.png" class="pool-flag" draggable="true" data-type="pool">
                 <div class="pool-code">${item.n}</div>
             `;
             poolGrid.appendChild(div);
@@ -304,7 +342,7 @@
             });
         });
 
-        // Search bar input
+        // Search bar enter input
         document.getElementById('countryInput').addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && selectedSlot) {
                 const targetCode = e.target.value.trim().toUpperCase();
@@ -316,27 +354,62 @@
             }
         });
 
-        // Drag and Drop
+        // Global Drag Start handler
         document.addEventListener('dragstart', (e) => {
-            if (e.target.classList.contains('pool-flag') || e.target.classList.contains('flag-img')) {
-                currentDragUrl = e.target.getAttribute('src');
+            if (e.target.classList.contains('pool-flag')) {
+                draggedFlagSrc = e.target.getAttribute('src');
+                draggedSourceSlotId = null; // Berasal dari pool bawah
+            } else if (e.target.classList.contains('flag-img')) {
+                draggedFlagSrc = e.target.getAttribute('src');
+                draggedSourceSlotId = e.target.closest('.drop-zone').id; // Berasal dari bagan
             }
         });
 
+        // Drop Zone Event di dalam Bagan
         document.querySelectorAll('.drop-zone').forEach(zone => {
             zone.addEventListener('dragover', (e) => e.preventDefault());
             zone.addEventListener('drop', (e) => {
                 e.preventDefault();
-                if (currentDragUrl) { setSlotImage(zone, currentDragUrl); }
+                if (draggedFlagSrc) {
+                    setSlotImage(zone, draggedFlagSrc);
+                    // Jika di-drag antar slot di dalam bagan, kosongkan slot lamanya
+                    if (draggedSourceSlotId && draggedSourceSlotId !== zone.id) {
+                        clearSlot(document.getElementById(draggedSourceSlotId));
+                    }
+                }
             });
         });
 
+        // --- SISTEM DETEKSI DRAG TO DELETE (TONG SAMPAH) ---
+        const trashBin = document.getElementById('trashBin');
+        trashBin.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            trashBin.classList.add('drag-over-trash');
+        });
+        trashBin.addEventListener('dragleave', () => {
+            trashBin.classList.remove('drag-over-trash');
+        });
+        trashBin.addEventListener('drop', (e) => {
+            e.preventDefault();
+            trashBin.classList.remove('drag-over-trash');
+            if (draggedSourceSlotId) {
+                clearSlot(document.getElementById(draggedSourceSlotId));
+                saveBracketState();
+            }
+        });
+
         function setSlotImage(slotElement, imgUrl) {
-            slotElement.innerHTML = `<img src="${imgUrl}" class="flag-img">`;
+            slotElement.innerHTML = `<img src="${imgUrl}" class="flag-img" draggable="true">`;
             saveBracketState();
         }
 
-        // Save & Load State
+        function clearSlot(slotElement) {
+            if (slotElement) {
+                slotElement.innerHTML = slotElement.id === 'CHAMP' ? '🏆' : '?';
+            }
+        }
+
+        // Save & Load State Storage
         function saveBracketState() {
             const state = {};
             document.querySelectorAll('.drop-zone').forEach(slot => {
@@ -353,22 +426,22 @@
                 Object.keys(state).forEach(id => {
                     const slot = document.getElementById(id);
                     if (slot && state[id]) {
-                        slot.innerHTML = `<img src="${state[id]}" class="flag-img">`;
+                        slot.innerHTML = `<img src="${state[id]}" class="flag-img" draggable="true">`;
                     }
                 });
             }
         }
 
         function resetBracket() {
-            if (confirm("Reset ulang semua bagan?")) {
+            if (confirm("Reset ulang semua isi bagan turnamen?")) {
                 localStorage.removeItem('fifa2026_bracket_save');
                 document.querySelectorAll('.drop-zone').forEach(slot => {
-                    slot.innerHTML = slot.id === 'CHAMP' ? '🏆' : '?';
+                    clearSlot(slot);
                 });
             }
         }
 
-        // Jalur Garis Dinamis yang Lebih Aman (Anti-Crash)
+        // Jalur Garis Dinamis SVG
         function drawLines() {
             const svg = document.getElementById('connector-svg');
             if (!svg) return;
@@ -395,7 +468,6 @@
                 }
             };
 
-            // Ambil ID secara manual untuk memastikan semuanya aman ter-render
             const leftR32 = []; for(let i=1; i<=16; i++) leftR32.push(`L-1-${i}`);
             const leftR16 = []; for(let i=1; i<=8; i++) leftR16.push(`L-2-${i}`);
             const leftQF = []; for(let i=1; i<=4; i++) leftQF.push(`L-3-${i}`);
