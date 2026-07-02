@@ -3,29 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Football Engine - Black Edition (193 Flags & Clubs)</title>
+    <title>FIFA World Cup 2026 - Ultimate Bracket</title>
     <style>
         :root {
-            --bg-color: #050505;
-            --panel-bg: #121212;
-            --card-bg: #181818;
-            --line-color: #2c2c2c;
-            --accent-gold: #ffffff; /* Putih/Silver bersih untuk tema hitam kontras */
-            --accent-glow: #00ffff;
+            --bg-color: #060709;
+            --panel-bg: #0f121d;
+            --card-bg: rgba(25, 29, 44, 0.45);
+            --line-color: #2b364f;
+            --line-glow: rgba(0, 240, 255, 0.2);
+            --accent-cyan: #00f0ff;
+            --accent-gold: #ffd700;
             --accent-red: #ff3b30;
-            --text-color: #f5f5f5;
-            --slot-width: 68px;
-            --slot-height: 46px;
+            --text-color: #ffffff;
+            --slot-width: 58px;
+            --slot-height: 42px;
         }
 
         body {
             background-color: var(--bg-color);
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
-            background-size: 30px 30px;
+            background-image: radial-gradient(circle at 50% 40%, #111827 0%, var(--bg-color) 70%);
             color: var(--text-color);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -36,155 +34,78 @@
             user-select: none;
         }
 
-        .tabs-container {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            width: 95%;
-            max-width: 1500px;
-            margin-bottom: 0;
-            overflow-x: auto;
-        }
-
-        .tab-button {
-            background: #0f0f0f;
-            border: 1px solid var(--line-color);
-            color: #777;
-            padding: 10px 18px;
-            border-radius: 8px 8px 0 0;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: none;
-            white-space: nowrap;
-            transition: all 0.2s;
-        }
-
-        .tab-button.active {
-            background: var(--panel-bg);
-            color: #fff;
-            border-color: #444 #444 transparent #444;
-            box-shadow: 0 -2px 10px rgba(255,255,255,0.05);
-        }
-
-        .btn-create-tab {
-            background: transparent;
-            border: 1px dashed #444;
-            color: #aaa;
-            padding: 8px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.75rem;
-            white-space: nowrap;
-        }
-        .btn-create-tab:hover { border-color: #fff; color: #fff; }
-
-        .tab-actions-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-left: 4px;
-        }
-
-        .action-tab-icon {
-            font-size: 0.75rem;
-            cursor: pointer;
-            padding: 2px 4px;
-            border-radius: 4px;
-        }
-        .action-tab-icon.clear-bin { color: #888; }
-        .action-tab-icon.clear-bin:hover { color: #fff; }
-        .action-tab-icon.delete-x { color: var(--accent-red); }
-
+        /* Top Control Panel */
         .control-panel {
-            background: var(--panel-bg);
-            padding: 15px 25px;
-            border-radius: 0 12px 12px 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 25px;
-            border: 1px solid var(--line-color);
-            width: 95%;
-            max-width: 1500px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        }
-
-        .panel-row {
+            background: rgba(15, 18, 29, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 12px 25px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
             gap: 15px;
-        }
-
-        .search-box-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            width: 90%;
+            max-width: 1300px;
         }
 
         .control-panel input {
-            background: #000;
-            border: 1px solid var(--line-color);
+            background: #050609;
+            border: 2px solid #2b364f;
             color: #fff;
             padding: 10px 16px;
-            border-radius: 6px;
+            border-radius: 8px;
             outline: none;
-            width: 220px;
+            width: 240px;
             font-weight: bold;
+            text-transform: uppercase;
         }
-        .control-panel input:focus { border-color: #666; }
 
-        .filter-tabs {
+        .control-panel input:focus { border-color: var(--accent-cyan); }
+
+        /* Trash Zone */
+        .trash-zone {
             display: flex;
-            gap: 4px;
-            background: #000;
-            padding: 4px;
-            border-radius: 6px;
-            border: 1px solid var(--line-color);
-        }
-
-        .filter-btn {
-            background: transparent;
-            border: none;
-            color: #666;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.75rem;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(255, 59, 48, 0.1);
+            border: 2px dashed var(--accent-red);
+            color: var(--accent-red);
+            padding: 8px 18px;
+            border-radius: 10px;
             font-weight: bold;
-        }
-
-        .filter-btn.active {
-            background: #222;
-            color: #fff;
-        }
-
-        .btn-action {
-            background: #fff;
-            border: none;
-            color: #000;
-            padding: 11px 24px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
+            font-size: 0.9rem;
             transition: all 0.2s;
         }
-        .btn-action:hover { background: #e0e0e0; }
+        .trash-zone.drag-over-trash {
+            background: rgba(255, 59, 48, 0.3);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 59, 48, 0.4);
+        }
 
+        .btn-reset {
+            background: #2b364f;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: auto;
+            transition: background 0.2s;
+        }
+        .btn-reset:hover { background: var(--accent-red); }
+
+        /* Bracket Area */
         .bracket-arena {
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
-            padding: 40px 10px;
+            padding: 20px;
             width: 100%;
-            max-width: 1700px;
+            max-width: 1650px;
         }
 
         #connector-svg {
@@ -198,16 +119,16 @@
         }
 
         .side { display: flex; align-items: center; z-index: 2; }
-        .column { display: flex; flex-direction: column; justify-content: space-around; height: 950px; }
-        .left-side .column { margin-right: 65px; }
-        .right-side .column { margin-left: 65px; }
+        .column { display: flex; flex-direction: column; justify-content: space-around; height: 930px; gap: 6px; }
+        .left-side .column { margin-right: 55px; }
+        .right-side .column { margin-left: 55px; }
 
         .match-node {
             display: flex;
             flex-direction: column;
             background-color: var(--card-bg);
-            border: 1px solid var(--line-color);
-            border-radius: 8px;
+            border: 1px solid rgba(43, 54, 79, 0.4);
+            border-radius: 12px;
             padding: 5px;
             gap: 5px;
         }
@@ -215,139 +136,128 @@
         .team-slot {
             width: var(--slot-width);
             height: var(--slot-height);
-            background: #0a0a0a;
-            border-radius: 4px; 
+            background: linear-gradient(135deg, #232a3d 0%, #151924 100%);
+            border-radius: 16px 2px 16px 2px; 
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            color: #333;
-            font-size: 1rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.3);
             cursor: pointer;
             overflow: hidden;
-            border: 1px solid var(--line-color);
-            transition: all 0.15s;
-            box-sizing: border-box;
-            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
         }
 
         .team-slot.active-target {
-            border-color: #fff;
-            box-shadow: 0 0 10px rgba(255,255,255,0.3);
-        }
-
-        .flag-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
         }
 
         .flag-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-radius: 14px 2px 14px 2px;
+            cursor: grab;
+            transition: opacity 0.2s ease, filter 0.2s ease;
         }
 
-        /* Representasi Bendera Garis/Syal khusus Klub */
-        .club-flag-mock {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
+        /* --- FITUR REDUP (TIM KALAH) --- */
+        .team-slot.eliminated .flag-img {
+            opacity: 0.25;
+            filter: grayscale(60%) contrast(80%);
         }
-
-        .club-text-overlay {
-            position: absolute;
-            font-size: 0.65rem;
-            font-weight: 900;
-            color: #fff;
-            text-shadow: 1px 1px 3px #000, -1px -1px 3px #000;
-            text-align: center;
-            width: 100%;
-            pointer-events: none;
-        }
-
         .team-slot.eliminated {
-            opacity: 0.15;
-            filter: grayscale(100%);
-            border-color: #222;
+            border-color: rgba(255, 255, 255, 0.05);
+            background: #0b0e16;
         }
 
-        .center-stage { display: flex; flex-direction: column; align-items: center; gap: 40px; z-index: 2; }
-        
+        .center-stage { display: flex; flex-direction: column; align-items: center; gap: 60px; z-index: 2; }
+
         .champion-podium {
-            background: #111;
-            border: 1px solid #444;
-            border-radius: 12px;
-            padding: 20px 30px;
+            background: linear-gradient(135deg, #2b220d 0%, #111522 100%);
+            border: 2px solid var(--accent-gold);
+            border-radius: 20px;
+            padding: 20px 35px;
             text-align: center;
-            box-shadow: 0 0 30px rgba(255,255,255,0.05);
-        }
-        .champion-podium .team-slot { 
-            width: 85px; 
-            height: 55px; 
-            border-color: #fff;
-            font-size: 1.3rem;
-            background: #000;
         }
 
+        .champion-podium .team-slot {
+            width: 76px;
+            height: 54px;
+            border-radius: 22px 2px 22px 2px;
+            border-color: var(--accent-gold);
+        }
+        .champion-podium .flag-img { border-radius: 20px 2px 20px 2px; }
+
+        .bronze-box {
+            text-align: center;
+            background: rgba(15, 18, 29, 0.7);
+            padding: 15px;
+            border-radius: 14px;
+            border: 1px solid #2b364f;
+        }
+
+        /* Database Pool Grid */
         .pool-section {
             background-color: var(--panel-bg);
-            border: 1px solid var(--line-color);
-            border-radius: 12px;
+            border: 1px solid rgba(43, 54, 79, 0.7);
+            border-radius: 16px;
             padding: 20px;
             width: 95%;
-            max-width: 1500px;
-            margin-top: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            max-width: 1450px;
+            margin-top: 40px;
         }
 
         .pool-grid { 
-            display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
-            max-height: 280px; overflow-y: auto; padding: 10px; background: #000; border-radius: 6px;
-            border: 1px solid var(--line-color);
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+            justify-content: center;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #090b12;
+            border-radius: 8px;
         }
+
         .pool-item {
-            display: flex; position: relative; align-items: center; justify-content: center;
-            border-radius: 4px; width: 68px; height: 46px; overflow: hidden;
-            cursor: pointer; transition: transform 0.1s; box-sizing: border-box;
-            border: 1px solid #222;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #161b29;
+            padding: 6px;
+            border-radius: 10px 2px 10px 2px;
+            border: 1px solid #252e45;
+            width: 65px;
         }
-        .pool-item:hover { transform: scale(1.08); border-color: #fff; z-index: 10; }
+
+        .pool-flag { width: 48px; height: 34px; object-fit: cover; border-radius: 8px 2px 8px 2px; cursor: grab; }
+        .pool-code { font-size: 0.65rem; color: #8fa0c2; margin-top: 5px; font-weight: bold; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div class="tabs-container" id="tabs-header-box">
-        <button class="btn-create-tab" onclick="createNewTab()">+ OPSI PREDIKSI BARU</button>
-    </div>
-
     <div class="control-panel">
-        <div class="panel-row">
-            <div class="search-box-wrapper">
-                <input type="text" id="countryInput" placeholder="CARI NEGARA / KLUB...">
-                <div class="filter-tabs">
-                    <button class="filter-btn active" onclick="setPoolFilter('ALL')">ALL</button>
-                    <button class="filter-btn" onclick="setPoolFilter('NATION')">193 BENDERA NEGARA</button>
-                    <button class="filter-btn" onclick="setPoolFilter('UEFA')">UEFA</button>
-                    <button class="filter-btn" onclick="setPoolFilter('AFC')">AFC</button>
-                    <button class="filter-btn" onclick="setPoolFilter('CAF')">CAF</button>
-                </div>
-            </div>
-            <button class="btn-action" onclick="generateNextRound()">⚡ SIMULASI LANJUT</button>
+        <input type="text" id="countryInput" placeholder="CARI / ENTER KODE TIM...">
+        
+        <div class="trash-zone" id="trashBin">
+            🗑️ DRAG SINI UNTUK HAPUS
         </div>
+
+        <div style="font-size: 0.8rem; color: #8fa0c2; max-width: 250px; line-height: 1.3;">
+            💡 <b>Tips:</b> Klik kiri untuk pilih slot. <b>Klik kanan (atau tahan lama)</b> pada bendera di bagan untuk meredupkan tim kalah!
+        </div>
+
+        <button class="btn-reset" onclick="resetBracket()">RESET BAGAN</button>
     </div>
 
     <div class="bracket-arena" id="arena">
         <svg id="connector-svg"></svg>
 
-        <!-- SISI KIRI -->
         <div class="side left-side">
-            <div class="column" data-round="1">
+            <div class="column">
                 <div class="match-node"><div class="team-slot drop-zone" id="L-1-1">?</div><div class="team-slot drop-zone" id="L-1-2">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="L-1-3">?</div><div class="team-slot drop-zone" id="L-1-4">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="L-1-5">?</div><div class="team-slot drop-zone" id="L-1-6">?</div></div>
@@ -357,45 +267,50 @@
                 <div class="match-node"><div class="team-slot drop-zone" id="L-1-13">?</div><div class="team-slot drop-zone" id="L-1-14">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="L-1-15">?</div><div class="team-slot drop-zone" id="L-1-16">?</div></div>
             </div>
-            <div class="column" data-round="2">
+            <div class="column">
                 <div class="match-node"><div class="team-slot drop-zone" id="L-2-1">?</div><div class="team-slot drop-zone" id="L-2-2">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="L-2-3">?</div><div class="team-slot drop-zone" id="L-2-4">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="L-2-5">?</div><div class="team-slot drop-zone" id="L-2-6">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="L-2-7">?</div><div class="team-slot drop-zone" id="L-2-8">?</div></div>
             </div>
-            <div class="column" data-round="3">
+            <div class="column">
                 <div class="match-node"><div class="team-slot drop-zone" id="L-3-1">?</div><div class="team-slot drop-zone" id="L-3-2">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="L-3-3">?</div><div class="team-slot drop-zone" id="L-3-4">?</div></div>
             </div>
-            <div class="column" data-round="4">
+            <div class="column">
                 <div class="match-node"><div class="team-slot drop-zone" id="L-4-1">?</div><div class="team-slot drop-zone" id="L-4-2">?</div></div>
             </div>
         </div>
 
-        <!-- CENTER -->
         <div class="center-stage">
             <div class="champion-podium">
-                <div style="font-size:0.65rem; font-weight:bold; letter-spacing:2px; margin-bottom:10px; color:#aaa;">JUARA</div>
+                <div style="font-size:0.75rem; font-weight:bold; letter-spacing:2px; margin-bottom:10px;">WORLD CHAMPION</div>
                 <div class="team-slot drop-zone" id="CHAMP">🏆</div>
+            </div>
+            <div class="bronze-box">
+                <div style="font-size:0.75rem; font-weight:bold; margin-bottom:8px;">BRONZE FINAL</div>
+                <div class="match-node" style="flex-direction: row;">
+                    <div class="team-slot drop-zone" id="B-1">?</div>
+                    <div class="team-slot drop-zone" id="B-2">?</div>
+                </div>
             </div>
         </div>
 
-        <!-- SISI KANAN -->
         <div class="side right-side">
-            <div class="column" data-round="4">
+            <div class="column">
                 <div class="match-node"><div class="team-slot drop-zone" id="R-4-1">?</div><div class="team-slot drop-zone" id="R-4-2">?</div></div>
             </div>
-            <div class="column" data-round="3">
+            <div class="column">
                 <div class="match-node"><div class="team-slot drop-zone" id="R-3-1">?</div><div class="team-slot drop-zone" id="R-3-2">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-3-3">?</div><div class="team-slot drop-zone" id="R-3-4">?</div></div>
             </div>
-            <div class="column" data-round="2">
+            <div class="column">
                 <div class="match-node"><div class="team-slot drop-zone" id="R-2-1">?</div><div class="team-slot drop-zone" id="R-2-2">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-2-3">?</div><div class="team-slot drop-zone" id="R-2-4">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-2-5">?</div><div class="team-slot drop-zone" id="R-2-6">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-2-7">?</div><div class="team-slot drop-zone" id="R-2-8">?</div></div>
             </div>
-            <div class="column" data-round="1">
+            <div class="column">
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-1">?</div><div class="team-slot drop-zone" id="R-1-2">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-3">?</div><div class="team-slot drop-zone" id="R-1-4">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-5">?</div><div class="team-slot drop-zone" id="R-1-6">?</div></div>
@@ -409,342 +324,232 @@
     </div>
 
     <div class="pool-section">
+        <div style="font-size:0.8rem; font-weight:bold; color:var(--accent-cyan); margin-bottom:15px; letter-spacing:1px;">🌐 GLOBAL DATABASE (SELURUH NEGARA DI DUNIA)</div>
         <div class="pool-grid" id="global-pool-grid"></div>
     </div>
 
     <script>
-        // MASTER DATABASE: 193 Negara Anggota PBB dengan Kode ISO Alpha-2 Resmi untuk CDN Bendera + Klub
-        const masterDatabase = [
-            // --- 193 VALID NATIONS (ISO 2-Letter Code for Flag API) ---
-            {id:"AFG", n:"AFGHANISTAN", t:"NATION", iso:"af"},{id:"ALB", n:"ALBANIA", t:"NATION", iso:"al"},{id:"ALG", n:"ALGERIA", t:"NATION", iso:"dz"},{id:"AND", n:"ANDORRA", t:"NATION", iso:"ad"},{id:"ANG", n:"ANGOLA", t:"NATION", iso:"ao"},{id:"ANT", n:"ANTIGUA & BARBUDA", t:"NATION", iso:"ag"},
-            {id:"ARG", n:"ARGENTINA", t:"NATION", iso:"ar"},{id:"ARM", n:"ARMENIA", t:"NATION", iso:"am"},{id:"AUS", n:"AUSTRALIA", t:"NATION", iso:"au"},{id:"AUT", n:"AUSTRIA", t:"NATION", iso:"at"},{id:"AZE", n:"AZERBAIJAN", t:"NATION", iso:"az"},{id:"BAH", n:"BAHAMAS", t:"NATION", iso:"bs"},
-            {id:"BHR", n:"BAHRAIN", t:"NATION", iso:"bh"},{id:"BAN", n:"BANGLADESH", t:"NATION", iso:"bd"},{id:"BAR", n:"BARBADOS", t:"NATION", iso:"bb"},{id:"BLR", n:"BELARUS", t:"NATION", iso:"by"},{id:"BEL", n:"BELGIUM", t:"NATION", iso:"be"},{id:"BLZ", n:"BELIZE", t:"NATION", iso:"bz"},
-            {id:"BEN", n:"BENIN", t:"NATION", iso:"bj"},{id:"BHU", n:"BHUTAN", t:"NATION", iso:"bt"},{id:"BOL", n:"BOLIVIA", t:"NATION", iso:"bo"},{id:"BIH", n:"BOSNIA & HERZEGOVINA", t:"NATION", iso:"ba"},{id:"BOT", n:"BOTSWANA", t:"NATION", iso:"bw"},{id:"BRA", n:"BRAZIL", t:"NATION", iso:"br"},
-            {id:"BRU", n:"BRUNEI", t:"NATION", iso:"bn"},{id:"BUL", n:"BULGARIA", t:"NATION", iso:"bg"},{id:"BUR", n:"BURKINA FASO", t:"NATION", iso:"bf"},{id:"BDI", n:"BURUNDI", t:"NATION", iso:"bi"},{id:"CAM", n:"CAMBODIA", t:"NATION", iso:"kh"},{id:"CMR", n:"CAMEROON", t:"NATION", iso:"cm"},
-            {id:"CAN", n:"CANADA", t:"NATION", iso:"ca"},{id:"CPV", n:"CAPE VERDE", t:"NATION", iso:"cv"},{id:"CAF", n:"CENTRAL AFRICAN REP", t:"NATION", iso:"cf"},{id:"CHA", n:"CHAD", t:"NATION", iso:"td"},{id:"CHI", n:"CHILE", t:"NATION", iso:"cl"},{id:"CHN", n:"CHINA", t:"NATION", iso:"cn"},
-            {id:"COL", n:"COLOMBIA", t:"NATION", iso:"co"},{id:"COM", n:"COMOROS", t:"NATION", iso:"km"},{id:"COG", n:"CONGO", t:"NATION", iso:"cg"},{id:"CRC", n:"COSTA RICA", t:"NATION", iso:"cr"},{id:"CRO", n:"CROATIA", t:"NATION", iso:"hr"},{id:"CUB", n:"CUBA", t:"NATION", iso:"cu"},
-            {id:"CYP", n:"CYPRUS", t:"NATION", iso:"cy"},{id:"CZE", n:"CZECHIA", t:"NATION", iso:"cz"},{id:"DEN", n:"DENMARK", t:"NATION", iso:"dk"},{id:"DJI", n:"DJIBOUTI", t:"NATION", iso:"dj"},{id:"DMA", n:"DOMINICA", t:"NATION", iso:"dm"},{id:"DOM", n:"DOMINICAN REP", t:"NATION", iso:"do"},
-            {id:"TLS", n:"EAST TIMOR", t:"NATION", iso:"tl"},{id:"ECU", n:"ECUADOR", t:"NATION", iso:"ec"},{id:"EGY", n:"EGYPT", t:"NATION", iso:"eg"},{id:"SLV", n:"EL SALVADOR", t:"NATION", iso:"sv"},{id:"EQG", n:"EQUATORIAL GUINEA", t:"NATION", iso:"gq"},{id:"ERI", n:"ERITREA", t:"NATION", iso:"er"},
-            {id:"EST", n:"ESTONIA", t:"NATION", iso:"ee"},{id:"ESW", n:"ESWATINI", t:"NATION", iso:"sz"},{id:"ETH", n:"ETHIOPIA", t:"NATION", iso:"et"},{id:"FIJ", n:"FIJI", t:"NATION", iso:"fj"},{id:"FIN", n:"FINLAND", t:"NATION", iso:"fi"},{id:"FRA", n:"FRANCE", t:"NATION", iso:"fr"},
-            {id:"GAB", n:"GABON", t:"NATION", iso:"ga"},{id:"GAM", n:"GAMBIA", t:"NATION", iso:"gm"},{id:"GEO", n:"GEORGIA", t:"NATION", iso:"ge"},{id:"GER", n:"GERMANY", t:"NATION", iso:"de"},{id:"GHA", n:"GHANA", t:"NATION", iso:"gh"},{id:"GRE", n:"GREECE", t:"NATION", iso:"gr"},
-            {id:"GRN", n:"GRENADA", t:"NATION", iso:"gd"},{id:"GUA", n:"GUATEMALA", t:"NATION", iso:"gt"},{id:"GUI", n:"GUINEA", t:"NATION", iso:"gn"},{id:"GNB", n:"GUINEA-BISSAU", t:"NATION", iso:"gw"},{id:"GUY", n:"GUYANA", t:"NATION", iso:"gy"},{id:"HAI", n:"HAITI", t:"NATION", iso:"ht"},
-            {id:"HON", n:"HONDURAS", t:"NATION", iso:"hn"},{id:"HUN", n:"HUNGARY", t:"NATION", iso:"hu"},{id:"ISL", n:"ICELAND", t:"NATION", iso:"is"},{id:"IND", n:"INDIA", t:"NATION", iso:"in"},{id:"IDN", n:"INDONESIA", t:"NATION", iso:"id"},{id:"IRN", n:"IRAN", t:"NATION", iso:"ir"},
-            {id:"IRQ", n:"IRAQ", t:"NATION", iso:"iq"},{id:"IRL", n:"IRELAND", t:"NATION", iso:"ie"},{id:"ISR", n:"ISRAEL", t:"NATION", iso:"il"},{id:"ITA", n:"ITALY", t:"NATION", iso:"it"},{id:"JAM", n:"JAMAICA", t:"NATION", iso:"jm"},{id:"JPN", n:"JAPAN", t:"NATION", iso:"jp"},
-            {id:"JOR", n:"JORDAN", t:"NATION", iso:"jo"},{id:"KAZ", n:"KAZAKHSTAN", t:"NATION", iso:"kz"},{id:"KEN", n:"KENYA", t:"NATION", iso:"ke"},{id:"KIR", n:"KIRIBATI", t:"NATION", iso:"ki"},{id:"PRK", n:"NORTH KOREA", t:"NATION", iso:"kp"},{id:"KOR", n:"SOUTH KOREA", t:"NATION", iso:"kr"},
-            {id:"KUW", n:"KUWAIT", t:"NATION", iso:"kw"},{id:"KGZ", n:"KYRGYZSTAN", t:"NATION", iso:"kg"},{id:"LAO", n:"LAOS", t:"NATION", iso:"la"},{id:"LVA", n:"LATVIA", t:"NATION", iso:"lv"},{id:"LBN", n:"LEBANON", t:"NATION", iso:"lb"},{id:"LES", n:"LESOTHO", t:"NATION", iso:"ls"},
-            {id:"LBR", n:"LIBERIA", t:"NATION", iso:"lr"},{id:"LBY", n:"LIBYA", t:"NATION", iso:"ly"},{id:"LIE", n:"LIECHTENSTEIN", t:"NATION", iso:"li"},{id:"LTU", n:"LITHUANIA", t:"NATION", iso:"lt"},{id:"LUX", n:"LUXEMBOURG", t:"NATION", iso:"lu"},{id:"MAD", n:"MADAGASCAR", t:"NATION", iso:"mg"},
-            {id:"MWI", n:"MALAWI", t:"NATION", iso:"mw"},{id:"MAS", n:"MALAYSIA", t:"NATION", iso:"my"},{id:"MDV", n:"MALDIVES", t:"NATION", iso:"mv"},{id:"MLI", n:"MALI", t:"NATION", iso:"ml"},{id:"MLT", n:"MALTA", t:"NATION", iso:"mt"},{id:"MHL", n:"MARSHALL ISLANDS", t:"NATION", iso:"mh"},
-            {id:"MTN", n:"MAURITANIA", t:"NATION", iso:"mr"},{id:"MRI", n:"MAURITIUS", t:"NATION", iso:"mu"},{id:"MEX", n:"MEXICO", t:"NATION", iso:"mx"},{id:"FSM", n:"MICRONESIA", t:"NATION", iso:"fm"},{id:"MDA", n:"MOLDOVA", t:"NATION", iso:"md"},{id:"MON", n:"MONACO", t:"NATION", iso:"mc"},
-            {id:"MGL", n:"MONGOLIA", t:"NATION", iso:"mn"},{id:"MNE", n:"MONTENEGRO", t:"NATION", iso:"me"},{id:"MAR", n:"MOROCCO", t:"NATION", iso:"ma"},{id:"MOZ", n:"MOZAMBIQUE", t:"NATION", iso:"mz"},{id:"MYA", n:"MYANMAR", t:"NATION", iso:"mm"},{id:"NAM", n:"NAMIBIA", t:"NATION", iso:"na"},
-            {id:"NRU", n:"NAURU", t:"NATION", iso:"nr"},{id:"NEP", n:"NEPAL", t:"NATION", iso:"np"},{id:"NED", n:"NETHERLANDS", t:"NATION", iso:"nl"},{id:"NZL", n:"NEW ZEALAND", t:"NATION", iso:"nz"},{id:"NCA", n:"NICARAGUA", t:"NATION", iso:"ni"},{id:"NER", n:"NIGER", t:"NATION", iso:"ne"},
-            {id:"NGA", n:"NIGERIA", t:"NATION", iso:"ng"},{id:"MKD", n:"NORTH MACEDONIA", t:"NATION", iso:"mk"},{id:"NOR", n:"NORWAY", t:"NATION", iso:"no"},{id:"OMA", n:"OMAN", t:"NATION", iso:"om"},{id:"PAK", n:"PAKISTAN", t:"NATION", iso:"pk"},{id:"PLW", n:"PALAU", t:"NATION", iso:"pw"},
-            {id:"PAN", n:"PANAMA", t:"NATION", iso:"pa"},{id:"PNG", n:"PAPUA NEW GUINEA", t:"NATION", iso:"pg"},{id:"PAR", n:"PARAGUAY", t:"NATION", iso:"py"},{id:"PER", n:"PERU", t:"NATION", iso:"pe"},{id:"PHI", n:"PHILIPPINES", t:"NATION", iso:"ph"},{id:"POL", n:"POLAND", t:"NATION", iso:"pl"},
-            {id:"POR", n:"PORTUGAL", t:"NATION", iso:"pt"},{id:"QAT", n:"QATAR", t:"NATION", iso:"qa"},{id:"ROU", n:"ROMANIA", t:"NATION", iso:"ro"},{id:"RUS", n:"RUSSIA", t:"NATION", iso:"ru"},{id:"RWA", n:"RWANDA", t:"NATION", iso:"rw"},{id:"KNA", n:"SAINT KITTS & NEVIS", t:"NATION", iso:"kn"},
-            {id:"LCA", n:"SAINT LUCIA", t:"NATION", iso:"lc"},{id:"VIN", n:"SAINT VINCENT", t:"NATION", iso:"vc"},{id:"SAM", n:"SAMOA", t:"NATION", iso:"ws"},{id:"SMR", n:"SAN MARINO", t:"NATION", iso:"sm"},{id:"STP", n:"SAO TOME & PRINCIPE", t:"NATION", iso:"st"},{id:"KSA", n:"SAUDI ARABIA", t:"NATION", iso:"sa"},
-            {id:"SEN", n:"SENEGAL", t:"NATION", iso:"sn"},{id:"SRB", n:"SERBIA", t:"NATION", iso:"rs"},{id:"SEY", n:"SEYCHELLES", t:"NATION", iso:"sc"},{id:"SLE", n:"SIERRA LEONE", t:"NATION", iso:"sl"},{id:"SGP", n:"SINGAPORE", t:"NATION", iso:"sg"},{id:"SVK", n:"SLOVAKIA", t:"NATION", iso:"sk"},
-            {id:"SLO", n:"SLOVENIA", t:"NATION", iso:"si"},{id:"SOL", n:"SOLOMON ISLANDS", t:"NATION", iso:"sb"},{id:"SOM", n:"SOMALIA", t:"NATION", iso:"so"},{id:"RSA", n:"SOUTH AFRICA", t:"NATION", iso:"za"},{id:"SSD", n:"SOUTH SUDAN", t:"NATION", iso:"ss"},{id:"ESP", n:"SPAIN", t:"NATION", iso:"es"},
-            {id:"SRI", n:"SRI LANKA", t:"NATION", iso:"lk"},{id:"SUD", n:"SUDAN", t:"NATION", iso:"sd"},{id:"SUR", n:"SURINAME", t:"NATION", iso:"sr"},{id:"SWE", n:"SWEDEN", t:"NATION", iso:"se"},{id:"SUI", n:"SWITZERLAND", t:"NATION", iso:"ch"},{id:"SYR", n:"SYRIA", t:"NATION", iso:"sy"},
-            {id:"TJK", n:"TAJIKISTAN", t:"NATION", iso:"tj"},{id:"TAN", n:"TANZANIA", t:"NATION", iso:"tz"},{id:"THA", n:"THAILAND", t:"NATION", iso:"th"},{id:"TOG", n:"TOGO", t:"NATION", iso:"tg"},{id:"TGA", n:"TONGA", t:"NATION", iso:"to"},{id:"TRI", n:"TRINIDAD & TOBAGO", t:"NATION", iso:"tt"},
-            {id:"TUN", n:"TUNISIA", t:"NATION", iso:"tn"},{id:"TUR", n:"TURKEY", t:"NATION", iso:"tr"},{id:"TKM", n:"TURKMENISTAN", t:"NATION", iso:"tm"},{id:"TUV", n:"TUVALU", t:"NATION", iso:"tv"},{id:"UGA", n:"UGANDA", t:"NATION", iso:"ug"},{id:"UKR", n:"UKRAINE", t:"NATION", iso:"ua"},
-            {id:"UAE", n:"UAE", t:"NATION", iso:"ae"},{id:"GBR", n:"UNITED KINGDOM", t:"NATION", iso:"gb"},{id:"USA", n:"USA", t:"NATION", iso:"us"},{id:"URU", n:"URUGUAY", t:"NATION", iso:"uy"},{id:"UZB", n:"UZBEKISTAN", t:"NATION", iso:"uz"},{id:"VAN", n:"VANUATU", t:"NATION", iso:"vu"},
-            {id:"VEN", n:"VENEZUELA", t:"NATION", iso:"ve"},{id:"VIE", n:"VIETNAM", t:"NATION", iso:"vn"},{id:"YEM", n:"YEMEN", t:"NATION", iso:"ye"},{id:"ZAM", n:"ZAMBIA", t:"NATION", iso:"zm"},{id:"ZIM", n:"ZIMBABWE", t:"NATION", iso:"zw"},
-
-            // --- UEFA CLUB FLAGS (Menggunakan Representasi Pola Warna Bendera Klub) ---
-            {id:"RMA", n:"REAL MADRID", t:"UEFA", colors:["#fff","#fff","#fff"], init:"RMA"},
-            {id:"MCI", n:"MANCHESTER CITY", t:"UEFA", colors:["#6cabdd","#fff","#6cabdd"], init:"MCI"},
-            {id:"FCB", n:"FC BAYERN MUNICH", t:"UEFA", colors:["#dc052d","#0052b4","#dc052d"], init:"FCB"},
-            {id:"PSG", n:"PARIS SAINT-GERMAIN", t:"UEFA", colors:["#002453","#e30613","#002453"], init:"PSG"},
-            {id:"BAR", n:"BARCELONA", t:"UEFA", colors:["#004d98","#a50044","#004d98"], init:"BAR"},
-            {id:"LIV", n:"LIVERPOOL", t:"UEFA", colors:["#c8102e","#00b06a","#c8102e"], init:"LIV"},
-            {id:"ARS", n:"ARSENAL", t:"UEFA", colors:["#ef0107","#fff","#ef0107"], init:"ARS"},
-            {id:"INT", n:"INTER MILAN", t:"UEFA", colors:["#001c55","#000000","#001c55"], init:"INT"},
-            {id:"MIL", n:"AC MILAN", t:"UEFA", colors:["#e32119","#000000","#e32119"], init:"MIL"},
-            {id:"JUV", n:"JUVENTUS", t:"UEFA", colors:["#000","#fff","#000"], init:"JUV"},
-            {id:"MUN", n:"MANCHESTER UNITED", t:"UEFA", colors:["#da291c","#ffe500","#da291c"], init:"MUN"},
-            {id:"CHE", n:"CHELSEA", t:"UEFA", colors:["#034694","#fff","#034694"], init:"CHE"},
-
-            // --- AFC CLUB FLAGS ---
-            {id:"HIL", n:"AL HILAL SFC", t:"AFC", colors:["#0053a0","#fff","#0053a0"], init:"HIL"},
-            {id:"NAS", n:"AL NASSR FC", t:"AFC", colors:["#fff200","#0053a0","#fff200"], init:"NAS"},
-            {id:"ITT", n:"AL ITTIHAD", t:"AFC", colors:["#000","#ffcc00","#000"], init:"ITT"},
-            {id:"PRB", n:"PERSIB BANDUNG", t:"AFC", colors:["#005ba9","#fff","#005ba9"], init:"PRB"},
-            {id:"pjm", n:"PERSEBAYA SURABAYA", t:"AFC", colors:["#007a3d","#fff","#007a3d"], init:"PJM"},
-            {id:"psm", n:"PERS_JA_JA_KARTA", t:"AFC", colors:["#e00000","#ffcc00","#e00000"], init:"PSM"},
-            {id:"JDT", n:"JOHOR DARUL TA'ZIM", t:"AFC", colors:["#002060","#ff3b30","#002060"], init:"JDT"},
-            {id:"YFM", n:"YOKOHAMA F. MARINOS", t:"AFC", colors:["#002f6c","#e60012","#fff"], init:"YFM"},
-
-            // --- CAF CLUB FLAGS ---
-            {id:"AHL", n:"AL AHLY SC", t:"CAF", colors:["#cc0000","#000","#cc0000"], init:"AHL"},
-            {id:"ZAM", n:"ZAMALEK SC", t:"CAF", colors:["#fff","#cc0000","#fff"], init:"ZAM"},
-            {id:"MSD", n:"MAMELODI SUNDOWNS", t:"CAF", colors:["#ffcc00","#008040","#ffcc00"], init:"MSD"},
-            {id:"WAC", n:"WYDAD AC", t:"CAF", colors:["#e2001a","#fff","#e2001a"], init:"WAC"},
-            {id:"RCA", n:"RAJA CASABLANCA", t:"CAF", colors:["#008040","#fff","#008040"], init:"RCA"},
-            {id:"TPM", n:"TP MAZEMBE", t:"CAF", colors:["#000","#fff","#000"], init:"TPM"}
+        const countriesList = [
+            {c:"us", n:"USA"}, {c:"mx", n:"MEX"}, {c:"ca", n:"CAN"}, {c:"id", n:"IDN"}, {c:"br", n:"BRA"}, {c:"ar", n:"ARG"},
+            {c:"fr", n:"FRA"}, {c:"de", n:"GER"}, {c:"gb-eng", n:"ENG"}, {c:"es", n:"ESP"}, {c:"pt", n:"POR"}, {c:"jp", n:"JPN"},
+            {c:"kr", n:"KOR"}, {c:"nl", n:"NED"}, {c:"it", n:"ITA"}, {c:"ma", n:"MAR"}, {c:"hr", n:"CRO"}, {c:"be", n:"BEL"},
+            {c:"uy", n:"URU"}, {c:"co", n:"COL"}, {c:"sa", n:"KSA"}, {c:"au", n:"AUS"}, {c:"sn", n:"SEN"}, {c:"cm", n:"CMR"},
+            {c:"gh", n:"GHA"}, {c:"ch", n:"SUI"}, {c:"dk", n:"DEN"}, {c:"se", n:"SWE"}, {c:"no", n:"NOR"}, {c:"pl", n:"POL"},
+            {c:"ua", n:"UKR"}, {c:"tr", n:"TUR"}, {c:"eg", n:"EGY"}, {c:"dz", n:"ALG"}, {c:"ng", n:"NGA"}, {c:"za", n:"RSA"},
+            {c:"ir", n:"IRN"}, {c:"cl", n:"CHI"}, {c:"pe", n:"PER"}, {c:"ec", n:"ECU"}, {c:"py", n:"PAR"}, {c:"ve", n:"VEN"},
+            {c:"nz", n:"NZL"}, {c:"cr", n:"CRC"}, {c:"jm", n:"JAM"}, {c:"tn", n:"TUN"}, {c:"qa", n:"QAT"}, {c:"at", n:"AUT"},
+            {c:"af", n:"AFG"}, {c:"al", n:"ALB"}, {c:"ad", n:"AND"}, {c:"ao", n:"ANG"}, {c:"ag", n:"ATG"}, {c:"am", n:"ARM"},
+            {c:"az", n:"AZE"}, {c:"bs", n:"BAH"}, {c:"bh", n:"BHR"}, {c:"bd", n:"BAN"}, {c:"bb", n:"BAR"}, {c:"by", n:"BLR"},
+            {c:"bz", n:"BEL"}, {c:"bj", n:"BEN"}, {c:"bt", n:"BHU"}, {c:"bo", n:"BOL"}, {c:"ba", n:"BIH"}, {c:"bw", n:"BOT"},
+            {c:"bn", n:"BRU"}, {c:"bg", n:"BUL"}, {c:"bf", n:"BUR"}, {c:"bi", n:"BDI"}, {c:"kh", n:"CAM"}, {c:"cv", n:"CPV"},
+            {c:"cf", n:"CAF"}, {c:"td", n:"CHA"}, {c:"cn", n:"CHN"}, {c:"km", n:"COM"}, {c:"cg", n:"CGO"}, {c:"cd", n:"COD"},
+            {c:"ci", n:"CIV"}, {c:"cu", n:"CUB"}, {c:"cy", n:"CYP"}, {c:"cz", n:"CZE"}, {c:"dj", n:"DJI"}, {c:"dm", n:"DMA"},
+            {c:"do", n:"DOM"}, {c:"gq", n:"GEQ"}, {c:"er", n:"ERI"}, {c:"ee", n:"EST"}, {c:"sz", n:"SWZ"}, {c:"et", n:"ETH"},
+            {c:"fj", n:"FIJ"}, {c:"fi", n:"FIN"}, {c:"ga", n:"GAB"}, {c:"gm", n:"GAM"}, {c:"ge", n:"GEO"}, {c:"gr", n:"GRE"},
+            {c:"gd", n:"GRN"}, {c:"gt", n:"GUA"}, {c:"gn", n:"GUI"}, {c:"gw", n:"GBS"}, {c:"gy", n:"GUY"}, {c:"ht", n:"HAI"},
+            {c:"hn", n:"HON"}, {c:"hu", n:"HUN"}, {c:"is", n:"ISL"}, {c:"in", n:"IND"}, {c:"iq", n:"IRQ"}, {c:"ie", n:"IRL"},
+            {c:"il", n:"ISR"}, {c:"jm", n:"JAM"}, {c:"jo", n:"JOR"}, {c:"kz", n:"KAZ"}, {c:"ke", n:"KEN"}, {c:"ki", n:"KIR"},
+            {c:"kp", n:"PRK"}, {c:"kw", n:"KUW"}, {c:"kg", n:"KGZ"}, {c:"la", n:"LAO"}, {c:"lv", n:"LAT"}, {c:"lb", n:"LEB"},
+            {c:"ls", n:"LES"}, {c:"lr", n:"LBR"}, {c:"ly", n:"LBY"}, {c:"li", n:"LIE"}, {c:"lt", n:"LTU"}, {c:"lu", n:"LUX"},
+            {c:"mg", n:"MAD"}, {c:"mw", n:"MWI"}, {c:"my", n:"MAS"}, {c:"mv", n:"MDV"}, {c:"ml", n:"MLI"}, {c:"mt", n:"MLT"},
+            {c:"mh", n:"MHL"}, {c:"mr", n:"MTN"}, {c:"mu", n:"MRI"}, {c:"md", n:"MDA"}, {c:"mc", n:"MON"}, {c:"mn", n:"MNG"},
+            {c:"me", n:"MNE"}, {c:"mz", n:"MOZ"}, {c:"mm", n:"MYA"}, {c:"na", n:"NAM"}, {c:"nr", n:"NRU"}, {c:"np", n:"NEP"},
+            {c:"ni", n:"NCA"}, {c:"ne", n:"NIG"}, {c:"mk", n:"MKD"}, {c:"om", n:"OMA"}, {c:"pk", n:"PAK"}, {c:"pw", n:"PLW"},
+            {c:"pa", n:"PAN"}, {c:"pg", n:"PNG"}, {c:"ph", n:"PHI"}, {c:"qa", n:"QAT"}, {c:"ro", n:"ROU"}, {c:"ru", n:"RUS"},
+            {c:"rw", n:"RWA"}, {c:"kn", n:"SKN"}, {c:"lc", n:"LCA"}, {c:"vc", n:"VIN"}, {c:"ws", n:"SAM"}, {c:"sm", n:"SMR"},
+            {c:"st", n:"STP"}, {c:"sn", n:"SEN"}, {c:"rs", n:"SRB"}, {c:"sc", n:"SEY"}, {c:"sl", n:"SLE"}, {c:"sg", n:"SGP"},
+            {c:"sk", n:"SVK"}, {c:"si", n:"SVN"}, {c:"sb", n:"SOL"}, {c:"so", n:"SOM"}, {c:"ss", n:"SSD"}, {c:"lk", n:"SRI"},
+            {c:"sd", n:"SUD"}, {c:"sr", n:"SUR"}, {c:"sy", n:"SYR"}, {c:"tw", n:"TPE"}, {c:"tj", n:"TJK"}, {c:"tz", n:"TAN"},
+            {c:"th", n:"THA"}, {c:"tl", n:"TLS"}, {c:"tg", n:"TOG"}, {c:"to", n:"TGA"}, {c:"tt", n:"TRI"}, {c:"tv", n:"TUV"},
+            {c:"ug", n:"UGA"}, {c:"ae", n:"UAE"}, {c:"gb-wls", n:"WAL"}, {c:"gb-sct", n:"SCO"}, {c:"uz", n:"UZB"}, {c:"vu", n:"VAN"},
+            {c:"ye", n:"YEM"}, {c:"zm", n:"ZAM"}, {c:"zw", n:"ZIM"}
         ];
 
+        let draggedFlagSrc = null;
+        let draggedSourceSlotId = null;
         let selectedSlot = null;
-        let activePoolFilter = 'ALL';
-        let predictionTabs = { "Prediksi Utama": {} }; 
-        let activeTabName = "Prediksi Utama";
 
-        // Render visual bendera negara via API / CSS Banner dinamis untuk klub
-        function createBadgeHTML(teamObj) {
-            if (teamObj.t === 'NATION') {
-                return `
-                    <div class="flag-container">
-                        <img class="flag-img" src="https://flagcdn.com/64x48/${teamObj.iso}.png" alt="${teamObj.n}">
-                        <div class="club-text-overlay">${teamObj.id}</div>
-                    </div>
-                `;
-            } else {
-                // Skema bendera/syal klub sepak bola horizontal split
-                const c = teamObj.colors;
-                return `
-                    <div class="flag-container">
-                        <div class="club-flag-mock">
-                            <div style="flex:1; background:${c[0]};"></div>
-                            <div style="flex:1; background:${c[1]};"></div>
-                            <div style="flex:1; background:${c[2]};"></div>
-                        </div>
-                        <div class="club-text-overlay">${teamObj.init}</div>
-                    </div>
-                `;
-            }
-        }
-
-        function renderTabsHeader() {
-            const container = document.getElementById('tabs-header-box');
-            const createBtn = container.querySelector('.btn-create-tab');
-            container.innerHTML = '';
-            
-            Object.keys(predictionTabs).forEach(tabName => {
-                const btn = document.createElement('button');
-                btn.className = `tab-button ${tabName === activeTabName ? 'active' : ''}`;
-                btn.innerHTML = `
-                    <span onclick="switchTab('${tabName}')">⚫ ${tabName}</span>
-                    <div class="tab-actions-wrapper">
-                        <span class="action-tab-icon clear-bin" title="Reset Opsi" onclick="clearSpecificTab('${tabName}')">⟲</span>
-                        ${Object.keys(predictionTabs).length > 1 ? `<span class="action-tab-icon delete-x" title="Hapus Tab" onclick="deleteTab('${tabName}')">✕</span>` : ''}
-                    </div>
-                `;
-                container.appendChild(btn);
-            });
-            container.appendChild(createBtn);
-        }
-
-        function createNewTab() {
-            const name = prompt("Buat nama opsi simulasi baru:", `Prediksi ${Object.keys(predictionTabs).length + 1}`);
-            if (name && name.trim() !== "") {
-                if (predictionTabs[name]) { alert("Nama opsi tab ini sudah ada!"); return; }
-                predictionTabs[name] = {};
-                activeTabName = name;
-                saveAllTabsState();
-                renderTabsHeader();
-                clearVisualBracket();
-                setTimeout(drawLines, 50);
-            }
-        }
-
-        function switchTab(tabName) {
-            activeTabName = tabName;
-            renderTabsHeader();
-            loadActiveTabToVisual();
-            setTimeout(drawLines, 50);
-        }
-
-        function clearSpecificTab(tabName) {
-            if (confirm(`Kosongkan isi seluruh prediksi pada tab "${tabName}"?`)) {
-                predictionTabs[tabName] = {};
-                if (tabName === activeTabName) clearVisualBracket();
-                saveAllTabsState();
-            }
-        }
-
-        function deleteTab(tabName) {
-            if (confirm(`Hapus tab "${tabName}" secara permanen?`)) {
-                delete predictionTabs[tabName];
-                if (activeTabName === tabName) activeTabName = Object.keys(predictionTabs)[0];
-                saveAllTabsState();
-                renderTabsHeader();
-                loadActiveTabToVisual();
-                setTimeout(drawLines, 50);
-            }
-        }
-
-        function setPoolFilter(filterType) {
-            activePoolFilter = filterType;
-            filterAndRenderPool();
-        }
-
-        function filterAndRenderPool() {
-            const searchVal = document.getElementById('countryInput').value.trim().toUpperCase();
-            let filtered = masterDatabase;
-
-            if (activePoolFilter !== 'ALL') filtered = filtered.filter(item => item.t === activePoolFilter);
-            if (searchVal !== '') filtered = filtered.filter(item => item.n.includes(searchVal) || item.id.includes(searchVal));
-
-            const grid = document.getElementById('global-pool-grid');
-            grid.innerHTML = '';
-            
-            filtered.forEach(item => {
+        const poolGrid = document.getElementById('global-pool-grid');
+        function renderPool(list) {
+            poolGrid.innerHTML = '';
+            list.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'pool-item';
-                div.innerHTML = createBadgeHTML(item);
-                div.addEventListener('click', () => {
-                    if (selectedSlot) setSlotTeam(selectedSlot, item);
-                    else alert("Klik salah satu slot kosong '?' di bagan atas dulu bro!");
-                });
-                grid.appendChild(div);
+                div.innerHTML = `
+                    <img src="https://flagcdn.com/w80/${item.c}.png" class="pool-flag" draggable="true">
+                    <div class="pool-code">${item.n}</div>
+                `;
+                poolGrid.appendChild(div);
             });
         }
+        renderPool(countriesList);
 
-        document.getElementById('countryInput').addEventListener('input', filterAndRenderPool);
+        // Search Bar Logic
+        document.getElementById('countryInput').addEventListener('input', (e) => {
+            const val = e.target.value.trim().toUpperCase();
+            const filtered = countriesList.filter(c => c.n.includes(val));
+            renderPool(filtered);
+        });
 
+        document.getElementById('countryInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && selectedSlot) {
+                const targetCode = e.target.value.trim().toUpperCase();
+                const found = countriesList.find(c => c.n === targetCode);
+                if (found) {
+                    setSlotImage(selectedSlot, `https://flagcdn.com/w80/${found.c}.png`);
+                    e.target.value = '';
+                    renderPool(countriesList);
+                }
+            }
+        });
+
+        // Slot Klik Kiri Selector & Sistem Klik Kanan Efek Redup
         document.querySelectorAll('.drop-zone').forEach(slot => {
             slot.addEventListener('click', () => {
                 document.querySelectorAll('.drop-zone').forEach(s => s.classList.remove('active-target'));
-                selectedSlot = slot; slot.classList.add('active-target');
+                selectedSlot = slot;
+                slot.classList.add('active-target');
                 document.getElementById('countryInput').focus();
             });
 
+            // KLIK KANAN UNTUK TOGGLE REDUP (ELIMINASI)
             slot.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                if (slot.getAttribute('data-team-id')) {
+                e.preventDefault(); // Mencegah browser memunculkan menu bawaan
+                if (slot.querySelector('img')) {
                     slot.classList.toggle('eliminated');
-                    saveActiveTabState();
+                    saveBracketState();
                 }
             });
         });
 
-        function generateNextRound() {
-            const sides = ['L', 'R'];
-            sides.forEach(side => {
-                for (let round = 1; round <= 4; round++) {
-                    const currentNodes = document.querySelectorAll(`.${side === 'L' ? 'left-side' : 'right-side'} .column[data-round="${round}"] .match-node`);
-                    currentNodes.forEach((node, index) => {
-                        const slots = node.querySelectorAll('.team-slot');
-                        if (slots.length === 2) {
-                            const slot1 = slots[0], slot2 = slots[1];
-                            const id1 = slot1.getAttribute('data-team-id'), id2 = slot2.getAttribute('data-team-id');
+        // Drag Systems
+        document.addEventListener('dragstart', (e) => {
+            if (e.target.classList.contains('pool-flag')) {
+                draggedFlagSrc = e.target.getAttribute('src');
+                draggedSourceSlotId = null;
+            } else if (e.target.classList.contains('flag-img')) {
+                draggedFlagSrc = e.target.getAttribute('src');
+                draggedSourceSlotId = e.target.closest('.drop-zone').id;
+            }
+        });
 
-                            let winnerId = null;
-                            if (id1 && !slot1.classList.contains('eliminated') && slot2.classList.contains('eliminated')) winnerId = id1;
-                            else if (id2 && !slot2.classList.contains('eliminated') && slot1.classList.contains('eliminated')) winnerId = id2;
-
-                            if (winnerId) {
-                                const teamObj = masterDatabase.find(t => t.id === winnerId);
-                                if (teamObj) {
-                                    if (round < 4) {
-                                        const nextRoundIndex = Math.floor(index / 2) + 1;
-                                        const nextSlotPosition = (index % 2) + 1;
-                                        const targetNode = document.querySelectorAll(`.${side === 'L' ? 'left-side' : 'right-side'} .column[data-round="${round + 1}"] .match-node`)[nextRoundIndex - 1];
-                                        if (targetNode) setSlotTeam(targetNode.querySelectorAll('.team-slot')[nextSlotPosition - 1], teamObj);
-                                    } else if (round === 4) {
-                                        setSlotTeam(document.getElementById('CHAMP'), teamObj);
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-            saveActiveTabState();
-        }
-
-        function setSlotTeam(slotElement, teamObj) {
-            if (!slotElement) return;
-            slotElement.innerHTML = createBadgeHTML(teamObj);
-            slotElement.setAttribute('data-team-id', teamObj.id);
-            slotElement.classList.remove('eliminated');
-            saveActiveTabState();
-        }
-
-        function saveActiveTabState() {
-            const state = {};
-            document.querySelectorAll('.drop-zone').forEach(slot => {
-                const teamId = slot.getAttribute('data-team-id');
-                state[slot.id] = { id: teamId || null, isEliminated: slot.classList.contains('eliminated') };
-            });
-            predictionTabs[activeTabName] = state;
-            saveAllTabsState();
-        }
-
-        function saveAllTabsState() {
-            localStorage.setItem('football_black_engine_data', JSON.stringify({ tabs: predictionTabs, active: activeTabName }));
-        }
-
-        function loadActiveTabToVisual() {
-            clearVisualBracket();
-            const state = predictionTabs[activeTabName] || {};
-            Object.keys(state).forEach(id => {
-                const slot = document.getElementById(id);
-                if (slot && state[id].id) {
-                    const teamObj = masterDatabase.find(t => t.id === state[id].id);
-                    if (teamObj) {
-                        slot.innerHTML = createBadgeHTML(teamObj);
-                        slot.setAttribute('data-team-id', teamObj.id);
-                        if (state[id].isEliminated) slot.classList.add('eliminated');
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragover', (e) => e.preventDefault());
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                if (draggedFlagSrc) {
+                    setSlotImage(zone, draggedFlagSrc);
+                    if (draggedSourceSlotId && draggedSourceSlotId !== zone.id) {
+                        clearSlot(document.getElementById(draggedSourceSlotId));
                     }
                 }
             });
+        });
+
+        // Trash Bin System
+        const trashBin = document.getElementById('trashBin');
+        trashBin.addEventListener('dragover', (e) => { e.preventDefault(); trashBin.classList.add('drag-over-trash'); });
+        trashBin.addEventListener('dragleave', () => trashBin.classList.remove('drag-over-trash'));
+        trashBin.addEventListener('drop', (e) => {
+            e.preventDefault();
+            trashBin.classList.remove('drag-over-trash');
+            if (draggedSourceSlotId) {
+                clearSlot(document.getElementById(draggedSourceSlotId));
+                saveBracketState();
+            }
+        });
+
+        function setSlotImage(slotElement, imgUrl) {
+            slotElement.innerHTML = `<img src="${imgUrl}" class="flag-img" draggable="true">`;
+            slotElement.classList.remove('eliminated'); // Reset status eliminasi jika diganti tim baru
+            saveBracketState();
         }
 
-        function clearVisualBracket() {
+        function clearSlot(slotElement) {
+            if (slotElement) {
+                slotElement.innerHTML = slotElement.id === 'CHAMP' ? '🏆' : '?';
+                slotElement.classList.remove('eliminated');
+            }
+        }
+
+        // State Save & Load LocalStorage (Menyimpan posisi benderanya + status redupnya)
+        function saveBracketState() {
+            const state = {};
             document.querySelectorAll('.drop-zone').forEach(slot => {
-                slot.innerHTML = slot.id === 'CHAMP' ? '🏆' : '?';
-                slot.removeAttribute('data-team-id');
-                slot.classList.remove('eliminated');
+                const img = slot.querySelector('img');
+                state[slot.id] = {
+                    src: img ? img.getAttribute('src') : null,
+                    isEliminated: slot.classList.contains('eliminated')
+                };
             });
+            localStorage.setItem('fifa2026_redup_save', JSON.stringify(state));
         }
 
+        function loadBracketState() {
+            const savedData = localStorage.getItem('fifa2026_redup_save');
+            if (savedData) {
+                const state = JSON.parse(savedData);
+                Object.keys(state).forEach(id => {
+                    const slot = document.getElementById(id);
+                    if (slot && state[id].src) {
+                        slot.innerHTML = `<img src="${state[id].src}" class="flag-img" draggable="true">`;
+                        if (state[id].isEliminated) {
+                            slot.classList.add('eliminated');
+                        }
+                    }
+                });
+            }
+        }
+
+        function resetBracket() {
+            if (confirm("Kosongkan semua isi bagan beserta status eliminasi?")) {
+                localStorage.removeItem('fifa2026_redup_save');
+                document.querySelectorAll('.drop-zone').forEach(slot => clearSlot(slot));
+            }
+        }
+
+        // SVG Path Connector
         function drawLines() {
-            const svg = document.getElementById('connector-svg'); 
-            if (!svg) return; 
+            const svg = document.getElementById('connector-svg');
+            if (!svg) return;
             svg.innerHTML = '';
             const arenaRect = document.getElementById('arena').getBoundingClientRect();
 
-            const createTreePath = (side, fromRound, toRound) => {
-                const fromNodes = document.querySelectorAll(`.${side === 'L' ? 'left-side' : 'right-side'} .column[data-round="${fromRound}"] .match-node`);
-                const toNodes = document.querySelectorAll(`.${side === 'L' ? 'left-side' : 'right-side'} .column[data-round="${toRound}"] .match-node`);
-                
-                fromNodes.forEach((node, idx) => {
-                    const targetNode = toNodes[Math.floor(idx / 2)];
-                    if (node && targetNode) {
-                        const rA = node.getBoundingClientRect(), rB = targetNode.getBoundingClientRect();
-                        let x1 = (side === 'L') ? (rA.right - arenaRect.left) : (rA.left - arenaRect.left);
-                        let y1 = (rA.top + rA.height / 2) - arenaRect.top;
-                        let x2 = (side === 'L') ? (rB.left - arenaRect.left) : (rB.right - arenaRect.left);
-                        let y2 = (rB.top + rB.height / 2) - arenaRect.top;
-                        const midX = x1 + (x2 - x1) / 2;
+            const createTreePath = (fromArr, toArr) => {
+                for(let i=0; i < fromArr.length; i++) {
+                    const elA = document.getElementById(fromArr[i]);
+                    const elB = document.getElementById(toArr[Math.floor(i/2)]);
+                    if(elA && elB) {
+                        const rA = elA.getBoundingClientRect(), rB = elB.getBoundingClientRect();
+                        const x1 = (rA.left + rA.width/2) - arenaRect.left, y1 = (rA.top + rA.height/2) - arenaRect.top;
+                        const x2 = (rB.left + rB.width/2) - arenaRect.left, y2 = (rB.top + rB.height/2) - arenaRect.top;
                         
                         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        const midX = x1 + (x2 - x1) / 2;
                         path.setAttribute('d', `M ${x1} ${y1} H ${midX} V ${y2} H ${x2}`);
-                        path.setAttribute('stroke', 'var(--line-color)'); 
-                        path.setAttribute('stroke-width', '2'); 
+                        path.setAttribute('stroke', 'var(--line-color)');
+                        path.setAttribute('stroke-width', '2.5');
                         path.setAttribute('fill', 'none');
                         svg.appendChild(path);
                     }
-                });
+                }
             };
 
-            for(let r=1; r<=3; r++) { 
-                createTreePath('L', r, r+1); 
-                createTreePath('R', r, r+1); 
-            }
+            const leftR32 = []; for(let i=1; i<=16; i++) leftR32.push(`L-1-${i}`);
+            const leftR16 = []; for(let i=1; i<=8; i++) leftR16.push(`L-2-${i}`);
+            const leftQF = []; for(let i=1; i<=4; i++) leftQF.push(`L-3-${i}`);
+            const leftSF = ['L-4-1', 'L-4-2'];
+
+            const rightR32 = []; for(let i=1; i<=16; i++) rightR32.push(`R-1-${i}`);
+            const rightR16 = []; for(let i=1; i<=8; i++) rightR16.push(`R-2-${i}`);
+            const rightQF = []; for(let i=1; i<=4; i++) rightQF.push(`R-3-${i}`);
+            const rightSF = ['R-4-1', 'R-4-2'];
+
+            createTreePath(leftR32, leftR16); createTreePath(leftR16, leftQF); createTreePath(leftQF, leftSF);
+            createTreePath(rightR32, rightR16); createTreePath(rightR16, rightQF); createTreePath(rightQF, rightSF);
         }
 
-        window.addEventListener('load', () => {
-            const saved = localStorage.getItem('football_black_engine_data');
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                predictionTabs = parsed.tabs || { "Prediksi Utama": {} };
-                activeTabName = parsed.active || "Prediksi Utama";
-            }
-            renderTabsHeader();
-            filterAndRenderPool();
-            loadActiveTabToVisual();
-            setTimeout(drawLines, 300);
-        });
+        window.addEventListener('load', () => { loadBracketState(); setTimeout(drawLines, 250); });
         window.addEventListener('resize', drawLines);
     </script>
 </body>
