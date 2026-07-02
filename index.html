@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIFA World Cup 2026 - All Nations Bracket</title>
+    <title>FIFA World Cup 2026 - Ultimate Bracket</title>
     <style>
         :root {
             --bg-color: #060709;
@@ -56,7 +56,7 @@
             padding: 10px 16px;
             border-radius: 8px;
             outline: none;
-            width: 220px;
+            width: 240px;
             font-weight: bold;
             text-transform: uppercase;
         }
@@ -146,6 +146,7 @@
             cursor: pointer;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
         }
 
         .team-slot.active-target {
@@ -159,6 +160,17 @@
             object-fit: cover;
             border-radius: 14px 2px 14px 2px;
             cursor: grab;
+            transition: opacity 0.2s ease, filter 0.2s ease;
+        }
+
+        /* --- FITUR REDUP (TIM KALAH) --- */
+        .team-slot.eliminated .flag-img {
+            opacity: 0.25;
+            filter: grayscale(60%) contrast(80%);
+        }
+        .team-slot.eliminated {
+            border-color: rgba(255, 255, 255, 0.05);
+            background: #0b0e16;
         }
 
         .center-stage { display: flex; flex-direction: column; align-items: center; gap: 60px; z-index: 2; }
@@ -203,7 +215,7 @@
             flex-wrap: wrap; 
             gap: 10px; 
             justify-content: center;
-            max-height: 400px;
+            max-height: 300px;
             overflow-y: auto;
             padding: 10px;
             background: #090b12;
@@ -228,10 +240,14 @@
 <body>
 
     <div class="control-panel">
-        <input type="text" id="countryInput" placeholder="CARI / KETIK KODE TIM...">
+        <input type="text" id="countryInput" placeholder="CARI / ENTER KODE TIM...">
         
         <div class="trash-zone" id="trashBin">
             🗑️ DRAG SINI UNTUK HAPUS
+        </div>
+
+        <div style="font-size: 0.8rem; color: #8fa0c2; max-width: 250px; line-height: 1.3;">
+            💡 <b>Tips:</b> Klik kiri untuk pilih slot. <b>Klik kanan (atau tahan lama)</b> pada bendera di bagan untuk meredupkan tim kalah!
         </div>
 
         <button class="btn-reset" onclick="resetBracket()">RESET BAGAN</button>
@@ -240,7 +256,6 @@
     <div class="bracket-arena" id="arena">
         <svg id="connector-svg"></svg>
 
-        <!-- SISI KIRI -->
         <div class="side left-side">
             <div class="column">
                 <div class="match-node"><div class="team-slot drop-zone" id="L-1-1">?</div><div class="team-slot drop-zone" id="L-1-2">?</div></div>
@@ -267,7 +282,6 @@
             </div>
         </div>
 
-        <!-- PODIUM TENGAH -->
         <div class="center-stage">
             <div class="champion-podium">
                 <div style="font-size:0.75rem; font-weight:bold; letter-spacing:2px; margin-bottom:10px;">WORLD CHAMPION</div>
@@ -282,7 +296,6 @@
             </div>
         </div>
 
-        <!-- SISI KANAN -->
         <div class="side right-side">
             <div class="column">
                 <div class="match-node"><div class="team-slot drop-zone" id="R-4-1">?</div><div class="team-slot drop-zone" id="R-4-2">?</div></div>
@@ -310,14 +323,12 @@
         </div>
     </div>
 
-    <!-- GLOBAL POOL DATABASE -->
     <div class="pool-section">
         <div style="font-size:0.8rem; font-weight:bold; color:var(--accent-cyan); margin-bottom:15px; letter-spacing:1px;">🌐 GLOBAL DATABASE (SELURUH NEGARA DI DUNIA)</div>
         <div class="pool-grid" id="global-pool-grid"></div>
     </div>
 
     <script>
-        // DATABASE LENGKAP NEGARA DUNIA (195+ KODE NEGARA ISO)
         const countriesList = [
             {c:"us", n:"USA"}, {c:"mx", n:"MEX"}, {c:"ca", n:"CAN"}, {c:"id", n:"IDN"}, {c:"br", n:"BRA"}, {c:"ar", n:"ARG"},
             {c:"fr", n:"FRA"}, {c:"de", n:"GER"}, {c:"gb-eng", n:"ENG"}, {c:"es", n:"ESP"}, {c:"pt", n:"POR"}, {c:"jp", n:"JPN"},
@@ -358,7 +369,6 @@
         let draggedSourceSlotId = null;
         let selectedSlot = null;
 
-        // Render flags database
         const poolGrid = document.getElementById('global-pool-grid');
         function renderPool(list) {
             poolGrid.innerHTML = '';
@@ -374,7 +384,7 @@
         }
         renderPool(countriesList);
 
-        // Search Bar Filter System (Realtime & Enter Input)
+        // Search Bar Logic
         document.getElementById('countryInput').addEventListener('input', (e) => {
             const val = e.target.value.trim().toUpperCase();
             const filtered = countriesList.filter(c => c.n.includes(val));
@@ -393,13 +403,22 @@
             }
         });
 
-        // Slot Selector
+        // Slot Klik Kiri Selector & Sistem Klik Kanan Efek Redup
         document.querySelectorAll('.drop-zone').forEach(slot => {
             slot.addEventListener('click', () => {
                 document.querySelectorAll('.drop-zone').forEach(s => s.classList.remove('active-target'));
                 selectedSlot = slot;
                 slot.classList.add('active-target');
                 document.getElementById('countryInput').focus();
+            });
+
+            // KLIK KANAN UNTUK TOGGLE REDUP (ELIMINASI)
+            slot.addEventListener('contextmenu', (e) => {
+                e.preventDefault(); // Mencegah browser memunculkan menu bawaan
+                if (slot.querySelector('img')) {
+                    slot.classList.toggle('eliminated');
+                    saveBracketState();
+                }
             });
         });
 
@@ -427,7 +446,7 @@
             });
         });
 
-        // Trash Bin system
+        // Trash Bin System
         const trashBin = document.getElementById('trashBin');
         trashBin.addEventListener('dragover', (e) => { e.preventDefault(); trashBin.classList.add('drag-over-trash'); });
         trashBin.addEventListener('dragleave', () => trashBin.classList.remove('drag-over-trash'));
@@ -442,46 +461,54 @@
 
         function setSlotImage(slotElement, imgUrl) {
             slotElement.innerHTML = `<img src="${imgUrl}" class="flag-img" draggable="true">`;
+            slotElement.classList.remove('eliminated'); // Reset status eliminasi jika diganti tim baru
             saveBracketState();
         }
 
         function clearSlot(slotElement) {
             if (slotElement) {
                 slotElement.innerHTML = slotElement.id === 'CHAMP' ? '🏆' : '?';
+                slotElement.classList.remove('eliminated');
             }
         }
 
-        // State Store
+        // State Save & Load LocalStorage (Menyimpan posisi benderanya + status redupnya)
         function saveBracketState() {
             const state = {};
             document.querySelectorAll('.drop-zone').forEach(slot => {
                 const img = slot.querySelector('img');
-                state[slot.id] = img ? img.getAttribute('src') : null;
+                state[slot.id] = {
+                    src: img ? img.getAttribute('src') : null,
+                    isEliminated: slot.classList.contains('eliminated')
+                };
             });
-            localStorage.setItem('fifa2026_allnations_save', JSON.stringify(state));
+            localStorage.setItem('fifa2026_redup_save', JSON.stringify(state));
         }
 
         function loadBracketState() {
-            const savedData = localStorage.getItem('fifa2026_allnations_save');
+            const savedData = localStorage.getItem('fifa2026_redup_save');
             if (savedData) {
                 const state = JSON.parse(savedData);
                 Object.keys(state).forEach(id => {
                     const slot = document.getElementById(id);
-                    if (slot && state[id]) {
-                        slot.innerHTML = `<img src="${state[id]}" class="flag-img" draggable="true">`;
+                    if (slot && state[id].src) {
+                        slot.innerHTML = `<img src="${state[id].src}" class="flag-img" draggable="true">`;
+                        if (state[id].isEliminated) {
+                            slot.classList.add('eliminated');
+                        }
                     }
                 });
             }
         }
 
         function resetBracket() {
-            if (confirm("Kosongkan semua isi bagan?")) {
-                localStorage.removeItem('fifa2026_allnations_save');
+            if (confirm("Kosongkan semua isi bagan beserta status eliminasi?")) {
+                localStorage.removeItem('fifa2026_redup_save');
                 document.querySelectorAll('.drop-zone').forEach(slot => clearSlot(slot));
             }
         }
 
-        // SVG Connectors
+        // SVG Path Connector
         function drawLines() {
             const svg = document.getElementById('connector-svg');
             if (!svg) return;
