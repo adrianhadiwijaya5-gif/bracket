@@ -3,30 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Football Tournament Engine - 193 Nations & Continental Clubs</title>
+    <title>Ultimate Football Engine - Black Edition (193 Flags & Clubs)</title>
     <style>
         :root {
-            --bg-color: #1a010c;
-            --panel-bg: #32021a;
-            --card-bg: rgba(86, 4, 44, 0.25);
-            --line-color: #56042c;
-            --accent-gold: #d4af37;
-            --accent-white: #ffffff;
+            --bg-color: #050505;
+            --panel-bg: #121212;
+            --card-bg: #181818;
+            --line-color: #2c2c2c;
+            --accent-gold: #ffffff; /* Putih/Silver bersih untuk tema hitam kontras */
+            --accent-glow: #00ffff;
             --accent-red: #ff3b30;
-            --text-color: #fcf8f2;
-            --slot-width: 62px;
-            --slot-height: 44px;
+            --text-color: #f5f5f5;
+            --slot-width: 68px;
+            --slot-height: 46px;
         }
 
         body {
             background-color: var(--bg-color);
             background-image: 
-                radial-gradient(circle at 50% 25%, #420322 0%, var(--bg-color) 80%),
-                linear-gradient(rgba(212, 175, 55, 0.015) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(212, 175, 55, 0.015) 1px, transparent 1px);
-            background-size: 100% 100%, 35px 35px, 35px 35px;
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+            background-size: 30px 30px;
             color: var(--text-color);
-            font-family: 'Georgia', 'Segoe UI', -apple-system, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -45,46 +44,44 @@
             max-width: 1500px;
             margin-bottom: 0;
             overflow-x: auto;
-            padding-bottom: 2px;
         }
 
         .tab-button {
-            background: #250113;
+            background: #0f0f0f;
             border: 1px solid var(--line-color);
-            color: #b5899e;
+            color: #777;
             padding: 10px 18px;
-            border-radius: 12px 12px 0 0;
+            border-radius: 8px 8px 0 0;
             cursor: pointer;
             font-weight: bold;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: all 0.2s ease;
             border-bottom: none;
             white-space: nowrap;
+            transition: all 0.2s;
         }
 
         .tab-button.active {
             background: var(--panel-bg);
-            color: var(--accent-gold);
-            border-color: var(--accent-gold) var(--accent-gold) transparent var(--accent-gold);
-            box-shadow: 0 -4px 12px rgba(212, 175, 55, 0.15);
+            color: #fff;
+            border-color: #444 #444 transparent #444;
+            box-shadow: 0 -2px 10px rgba(255,255,255,0.05);
         }
 
         .btn-create-tab {
-            background: rgba(212, 175, 55, 0.08);
-            border: 1px dashed var(--accent-gold);
-            color: var(--accent-gold);
+            background: transparent;
+            border: 1px dashed #444;
+            color: #aaa;
             padding: 8px 14px;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
-            font-weight: 800;
-            font-size: 0.8rem;
+            font-weight: bold;
+            font-size: 0.75rem;
             white-space: nowrap;
-            transition: all 0.2s;
         }
-        .btn-create-tab:hover { background: rgba(212, 175, 55, 0.2); }
+        .btn-create-tab:hover { border-color: #fff; color: #fff; }
 
         .tab-actions-wrapper {
             display: flex;
@@ -99,23 +96,22 @@
             padding: 2px 4px;
             border-radius: 4px;
         }
-        .action-tab-icon.clear-bin { color: #caa27c; }
-        .action-tab-icon.clear-bin:hover { background: rgba(202, 162, 124, 0.2); }
+        .action-tab-icon.clear-bin { color: #888; }
+        .action-tab-icon.clear-bin:hover { color: #fff; }
         .action-tab-icon.delete-x { color: var(--accent-red); }
-        .action-tab-icon.delete-x:hover { background: rgba(255, 59, 48, 0.2); }
 
         .control-panel {
             background: var(--panel-bg);
             padding: 15px 25px;
-            border-radius: 0 16px 16px 16px;
+            border-radius: 0 12px 12px 12px;
             display: flex;
             flex-direction: column;
             gap: 12px;
             margin-bottom: 25px;
-            border: 1px solid rgba(212, 175, 55, 0.2);
+            border: 1px solid var(--line-color);
             width: 95%;
             max-width: 1500px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
 
         .panel-row {
@@ -133,54 +129,53 @@
         }
 
         .control-panel input {
-            background: #12000a;
-            border: 2px solid var(--line-color);
+            background: #000;
+            border: 1px solid var(--line-color);
             color: #fff;
             padding: 10px 16px;
-            border-radius: 8px;
+            border-radius: 6px;
             outline: none;
             width: 220px;
             font-weight: bold;
-            text-transform: uppercase;
         }
-        .control-panel input:focus { border-color: var(--accent-gold); }
+        .control-panel input:focus { border-color: #666; }
 
         .filter-tabs {
             display: flex;
-            gap: 5px;
-            background: #12000a;
+            gap: 4px;
+            background: #000;
             padding: 4px;
-            border-radius: 8px;
+            border-radius: 6px;
             border: 1px solid var(--line-color);
         }
 
         .filter-btn {
             background: transparent;
             border: none;
-            color: #b5899e;
+            color: #666;
             padding: 6px 12px;
-            border-radius: 6px;
+            border-radius: 4px;
             cursor: pointer;
             font-size: 0.75rem;
             font-weight: bold;
         }
 
         .filter-btn.active {
-            background: var(--line-color);
-            color: var(--accent-gold);
+            background: #222;
+            color: #fff;
         }
 
         .btn-action {
-            background: linear-gradient(135deg, var(--accent-gold) 0%, #aa841c 100%);
+            background: #fff;
             border: none;
-            color: #1a010c;
+            color: #000;
             padding: 11px 24px;
-            border-radius: 8px;
-            font-weight: 900;
+            border-radius: 6px;
+            font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
         }
-        .btn-action:hover { transform: scale(1.02); }
+        .btn-action:hover { background: #e0e0e0; }
 
         .bracket-arena {
             display: flex;
@@ -212,126 +207,138 @@
             flex-direction: column;
             background-color: var(--card-bg);
             border: 1px solid var(--line-color);
-            border-radius: 10px;
-            padding: 6px;
-            gap: 6px;
+            border-radius: 8px;
+            padding: 5px;
+            gap: 5px;
         }
 
         .team-slot {
             width: var(--slot-width);
             height: var(--slot-height);
-            background: linear-gradient(135deg, #420322 0%, #12000a 100%);
-            border-radius: 6px; 
+            background: #0a0a0a;
+            border-radius: 4px; 
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 900;
-            color: rgba(252, 248, 242, 0.15);
-            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            font-size: 1rem;
             cursor: pointer;
             overflow: hidden;
             border: 1px solid var(--line-color);
-            transition: all 0.15s ease;
+            transition: all 0.15s;
             box-sizing: border-box;
+            position: relative;
         }
 
         .team-slot.active-target {
-            border-color: var(--accent-gold);
-            box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+            border-color: #fff;
+            box-shadow: 0 0 10px rgba(255,255,255,0.3);
         }
 
-        .badge-render {
+        .flag-container {
             width: 100%;
             height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 900;
-            color: #fff;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-            text-align: center;
-            line-height: 1.1;
+            position: relative;
         }
 
-        .badge-sub {
-            font-size: 0.5rem;
-            opacity: 0.8;
-            font-weight: bold;
+        .flag-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Representasi Bendera Garis/Syal khusus Klub */
+        .club-flag-mock {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .club-text-overlay {
+            position: absolute;
+            font-size: 0.65rem;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 1px 1px 3px #000, -1px -1px 3px #000;
+            text-align: center;
+            width: 100%;
+            pointer-events: none;
         }
 
         .team-slot.eliminated {
-            opacity: 0.25;
+            opacity: 0.15;
             filter: grayscale(100%);
-            background: #0d0006;
-            border-color: rgba(86, 4, 44, 0.1);
+            border-color: #222;
         }
 
         .center-stage { display: flex; flex-direction: column; align-items: center; gap: 40px; z-index: 2; }
         
         .champion-podium {
-            background: linear-gradient(135deg, #4d3a14 0%, #250113 100%);
-            border: 2px solid var(--accent-gold);
-            border-radius: 16px;
+            background: #111;
+            border: 1px solid #444;
+            border-radius: 12px;
             padding: 20px 30px;
             text-align: center;
-            box-shadow: 0 0 35px rgba(212, 175, 55, 0.25);
+            box-shadow: 0 0 30px rgba(255,255,255,0.05);
         }
         .champion-podium .team-slot { 
-            width: 80px; 
-            height: 56px; 
-            border-color: var(--accent-gold); 
-            font-size: 1.5rem;
-            background: #3a031d;
+            width: 85px; 
+            height: 55px; 
+            border-color: #fff;
+            font-size: 1.3rem;
+            background: #000;
         }
 
         .pool-section {
             background-color: var(--panel-bg);
             border: 1px solid var(--line-color);
-            border-radius: 16px;
+            border-radius: 12px;
             padding: 20px;
             width: 95%;
             max-width: 1500px;
             margin-top: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
 
         .pool-grid { 
-            display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
-            max-height: 280px; overflow-y: auto; padding: 10px; background: #12000a; border-radius: 8px;
+            display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+            max-height: 280px; overflow-y: auto; padding: 10px; background: #000; border-radius: 6px;
+            border: 1px solid var(--line-color);
         }
         .pool-item {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 6px; border-radius: 6px; width: 62px; height: 50px;
+            display: flex; position: relative; align-items: center; justify-content: center;
+            border-radius: 4px; width: 68px; height: 46px; overflow: hidden;
             cursor: pointer; transition: transform 0.1s; box-sizing: border-box;
+            border: 1px solid #222;
         }
-        .pool-item:hover { transform: scale(1.05); outline: 2px solid var(--accent-gold); }
-        .pool-item .badge-render { pointer-events: none; }
+        .pool-item:hover { transform: scale(1.08); border-color: #fff; z-index: 10; }
     </style>
 </head>
 <body>
 
     <div class="tabs-container" id="tabs-header-box">
-        <button class="btn-create-tab" onclick="createNewTab()">+ CREATE OPTION TAB</button>
+        <button class="btn-create-tab" onclick="createNewTab()">+ OPSI PREDIKSI BARU</button>
     </div>
 
     <div class="control-panel">
         <div class="panel-row">
             <div class="search-box-wrapper">
-                <input type="text" id="countryInput" placeholder="CARI TIM/NEGARA...">
+                <input type="text" id="countryInput" placeholder="CARI NEGARA / KLUB...">
                 <div class="filter-tabs">
                     <button class="filter-btn active" onclick="setPoolFilter('ALL')">ALL</button>
-                    <button class="filter-btn" onclick="setPoolFilter('NATION')">193 NATIONS</button>
-                    <button class="filter-btn" onclick="setPoolFilter('UEFA')">UEFA CLUBS</button>
-                    <button class="filter-btn" onclick="setPoolFilter('AFC')">AFC CLUBS</button>
-                    <button class="filter-btn" onclick="setPoolFilter('CAF')">CAF CLUBS</button>
+                    <button class="filter-btn" onclick="setPoolFilter('NATION')">193 BENDERA NEGARA</button>
+                    <button class="filter-btn" onclick="setPoolFilter('UEFA')">UEFA</button>
+                    <button class="filter-btn" onclick="setPoolFilter('AFC')">AFC</button>
+                    <button class="filter-btn" onclick="setPoolFilter('CAF')">CAF</button>
                 </div>
             </div>
-            <button class="btn-action" onclick="generateNextRound()">⚡ RUN PREDICTION</button>
-        </div>
-        <div style="font-size: 0.8rem; color: #caa27c;">
-            ⚽ <b>Database Terintegrasi Penuh:</b> Pilih target '?' di bagan atas, lalu klik item pada database pool di bawah untuk memasukkan tim pilihanmu! Klik kanan slot untuk eliminasi.
+            <button class="btn-action" onclick="generateNextRound()">⚡ SIMULASI LANJUT</button>
         </div>
     </div>
 
@@ -365,10 +372,10 @@
             </div>
         </div>
 
-        <!-- CENTER STAGE -->
+        <!-- CENTER -->
         <div class="center-stage">
             <div class="champion-podium">
-                <div style="font-size:0.7rem; font-weight:900; letter-spacing:3px; margin-bottom:12px; color:var(--accent-gold);">CHAMPION</div>
+                <div style="font-size:0.65rem; font-weight:bold; letter-spacing:2px; margin-bottom:10px; color:#aaa;">JUARA</div>
                 <div class="team-slot drop-zone" id="CHAMP">🏆</div>
             </div>
         </div>
@@ -402,64 +409,77 @@
     </div>
 
     <div class="pool-section">
-        <div id="pool-title" style="font-size:0.8rem; font-weight:bold; color:var(--accent-gold); margin-bottom:15px; letter-spacing:1px;">🌐 GLOBAL TEAM DATABASE</div>
         <div class="pool-grid" id="global-pool-grid"></div>
     </div>
 
     <script>
-        // MASTER DATABASE: NO TRUNCATION - ALL 193 COUNTRIES + ELITE CONTINENTAL CLUBS
+        // MASTER DATABASE: 193 Negara Anggota PBB dengan Kode ISO Alpha-2 Resmi untuk CDN Bendera + Klub
         const masterDatabase = [
-            // --- 193 INDEPENDENT NATIONS ---
-            {id:"AFG", n:"AFGHANISTAN", t:"NATION", bg:"#006622", init:"AFG"},{id:"ALB", n:"ALBANIA", t:"NATION", bg:"#cc0000", init:"ALB"},{id:"ALG", n:"ALGERIA", t:"NATION", bg:"#007733", init:"ALG"},{id:"AND", n:"ANDORRA", t:"NATION", bg:"#1a3a8f", init:"AND"},{id:"ANG", n:"ANGOLA", t:"NATION", bg:"#222222", init:"ANG"},{id:"ANT", n:"ANTIGUA & BARBUDA", t:"NATION", bg:"#000000", init:"ANT"},
-            {id:"ARG", n:"ARGENTINA", t:"NATION", bg:"#75aadb", init:"ARG"},{id:"ARM", n:"ARMENIA", t:"NATION", bg:"#e6a100", init:"ARM"},{id:"AUS", n:"AUSTRALIA", t:"NATION", bg:"#000044", init:"AUS"},{id:"AUT", n:"AUSTRIA", t:"NATION", bg:"#f00000", init:"AUT"},{id:"AZE", n:"AZERBAIJAN", t:"NATION", bg:"#0099.cc", init:"AZE"},{id:"BAH", n:"BAHAMAS", t:"NATION", bg:"#00a6a0", init:"BAH"},
-            {id:"BHR", n:"BAHRAIN", t:"NATION", bg:"#e00000", init:"BHR"},{id:"BAN", n:"BANGLADESH", t:"NATION", bg:"#006633", init:"BAN"},{id:"BAR", n:"BARBADOS", t:"NATION", bg:"#002060", init:"BAR"},{id:"BLR", n:"BELARUS", t:"NATION", bg:"#ff0000", init:"BLR"},{id:"BEL", n:"BELGIUM", t:"NATION", bg:"#e6b000", init:"BEL"},{id:"BLZ", n:"BELIZE", t:"NATION", bg:"#102080", init:"BLZ"},
-            {id:"BEN", n:"BENIN", t:"NATION", bg:"#008000", init:"BEN"},{id:"BHU", n:"BHUTAN", t:"NATION", bg:"#ff8000", init:"BHU"},{id:"BOL", n:"BOLIVIA", t:"NATION", bg:"#008000", init:"BOL"},{id:"BIH", n:"BOSNIA & HERZEGOVINA", t:"NATION", bg:"#002060", init:"BIH"},{id:"BOT", n:"BOTSWANA", t:"NATION", bg:"#66aacc", init:"BOT"},{id:"BRA", n:"BRAZIL", t:"NATION", bg:"#eed000", init:"BRA"},
-            {id:"BRU", n:"BRUNEI", t:"NATION", bg:"#eed000", init:"BRU"},{id:"BUL", n:"BULGARIA", t:"NATION", bg:"#008040", init:"BUL"},{id:"BUR", n:"BURKINA FASO", t:"NATION", bg:"#ff0000", init:"BUR"},{id:"BDI", n:"BURUNDI", t:"NATION", bg:"#ff3333", init:"BDI"},{id:"CAM", n:"CAMBODIA", t:"NATION", bg:"#3333cc", init:"CAM"},{id:"CMR", n:"CAMEROON", t:"NATION", bg:"#006633", init:"CMR"},
-            {id:"CAN", n:"CANADA", t:"NATION", bg:"#ff0000", init:"CAN"},{id:"CPV", n:"CAPE VERDE", t:"NATION", bg:"#002060", init:"CPV"},{id:"CAF", n:"CENTRAL AFRICAN REP", t:"NATION", bg:"#008000", init:"CAF"},{id:"CHA", n:"CHAD", t:"NATION", bg:"#002060", init:"CHA"},{id:"CHI", n:"CHILE", t:"NATION", bg:"#ff0000", init:"CHI"},{id:"CHN", n:"CHINA", t:"NATION", bg:"#de2110", init:"CHN"},
-            {id:"COL", n:"COLOMBIA", t:"NATION", bg:"#eed000", init:"COL"},{id:"COM", n:"COMOROS", t:"NATION", bg:"#00a0e0", init:"COM"},{id:"COG", n:"CONGO", t:"NATION", bg:"#eed000", init:"COG"},{id:"CRC", n:"COSTA RICA", t:"NATION", bg:"#ff0000", init:"CRC"},{id:"CRO", n:"CROATIA", t:"NATION", bg:"#ff0000", init:"CRO"},{id:"CUB", n:"CUBA", t:"NATION", bg:"#cc0000", init:"CUB"},
-            {id:"CYP", n:"CYPRUS", t:"NATION", bg:"#e67e22", init:"CYP"},{id:"CZE", n:"CZECHIA", t:"NATION", bg:"#113366", init:"CZE"},{id:"DEN", n:"DENMARK", t:"NATION", bg:"#cc0000", init:"DEN"},{id:"DJI", n:"DJIBOUTI", t:"NATION", bg:"#66ccff", init:"DJI"},{id:"DMA", n:"DOMINICA", t:"NATION", bg:"#006633", init:"DMA"},{id:"DOM", n:"DOMINICAN REP", t:"NATION", bg:"#002060", init:"DOM"},
-            {id:"TLS", n:"EAST TIMOR", t:"NATION", bg:"#ffcc00", init:"TLS"},{id:"ECU", n:"ECUADOR", t:"NATION", bg:"#eed000", init:"ECU"},{id:"EGY", n:"EGYPT", t:"NATION", bg:"#cc0000", init:"EGY"},{id:"SLV", n:"EL SALVADOR", t:"NATION", bg:"#002060", init:"SLV"},{id:"EQG", n:"EQUATORIAL GUINEA", t:"NATION", bg:"#00a040", init:"EQG"},{id:"ERI", n:"ERITREA", t:"NATION", bg:"#ff0000", init:"ERI"},
-            {id:"EST", n:"ESTONIA", t:"NATION", bg:"#2277cc", init:"EST"},{id:"ESW", n:"ESWATINI", t:"NATION", bg:"#3366cc", init:"ESW"},{id:"ETH", n:"ETHIOPIA", t:"NATION", bg:"#008000", init:"ETH"},{id:"FIJ", n:"FIJI", t:"NATION", bg:"#66ccff", init:"FIJ"},{id:"FIN", n:"FINLAND", t:"NATION", bg:"#003399", init:"FIN"},{id:"FRA", n:"FRANCE", t:"NATION", bg:"#002395", init:"FRA"},
-            {id:"GAB", n:"GABON", t:"NATION", bg:"#33cc66", init:"GAB"},{id:"GAM", n:"GAMBIA", t:"NATION", bg:"#ff0000", init:"GAM"},{id:"GEO", n:"GEORGIA", t:"NATION", bg:"#ff0000", init:"GEO"},{id:"GER", n:"GERMANY", t:"NATION", bg:"#222222", init:"GER"},{id:"GHA", n:"GHANA", t:"NATION", bg:"#ffcc00", init:"GHA"},{id:"GRE", n:"GREECE", t:"NATION", bg:"#0055a5", init:"GRE"},
-            {id:"GRN", n:"GRENADA", t:"NATION", bg:"#00a040", init:"GRN"},{id:"GUA", n:"GUATEMALA", t:"NATION", bg:"#4fa3df", init:"GUA"},{id:"GUI", n:"GUINEA", t:"NATION", bg:"#cc0000", init:"GUI"},{id:"GNB", n:"GUINEA-BISSAU", t:"NATION", bg:"#ffcc00", init:"GNB"},{id:"GUY", n:"GUYANA", t:"NATION", bg:"#009940", init:"GUY"},{id:"HAI", n:"HAITI", t:"NATION", bg:"#002060", init:"HAI"},
-            {id:"HON", n:"HONDURAS", t:"NATION", bg:"#00a0e0", init:"HON"},{id:"HUN", n:"HUNGARY", t:"NATION", bg:"#cc0000", init:"HUN"},{id:"ISL", n:"ICELAND", t:"NATION", bg:"#003897", init:"ISL"},{id:"IND", n:"INDIA", t:"NATION", bg:"#ff9933", init:"IND"},{id:"IDN", n:"INDONESIA", t:"NATION", bg:"#e00000", init:"IDN"},{id:"IRN", n:"IRAN", t:"NATION", bg:"#228b22", init:"IRN"},
-            {id:"IRQ", n:"IRAQ", t:"NATION", bg:"#cc0000", init:"IRQ"},{id:"IRL", n:"IRELAND", t:"NATION", bg:"#169b62", init:"IRL"},{id:"ISR", n:"ISRAEL", t:"NATION", bg:"#0038a8", init:"ISR"},{id:"ITA", n:"ITALY", t:"NATION", bg:"#008c45", init:"ITA"},{id:"JAM", n:"JAMAICA", t:"NATION", bg:"#ffcc00", init:"JAM"},{id:"JPN", n:"JAPAN", t:"NATION", bg:"#000066", init:"JPN"},
-            {id:"JOR", n:"JORDAN", t:"NATION", bg:"#007a3d", init:"JOR"},{id:"KAZ", n:"KAZAKHSTAN", t:"NATION", bg:"#00afca", init:"KAZ"},{id:"KEN", n:"KENYA", t:"NATION", bg:"#000000", init:"KEN"},{id:"KIR", n:"KIRIBATI", t:"NATION", bg:"#dd2222", init:"KIR"},{id:"PRK", n:"NORTH KOREA", t:"NATION", bg:"#0038a8", init:"PRK"},{id:"KOR", n:"SOUTH KOREA", t:"NATION", bg:"#ffffff", init:"KOR"},
-            {id:"KUW", n:"KUWAIT", t:"NATION", bg:"#007a3d", init:"KUW"},{id:"KGZ", n:"KYRGYZSTAN", t:"NATION", bg:"#e00000", init:"KGZ"},{id:"LAO", n:"LAOS", t:"NATION", bg:"#002868", init:"LAO"},{id:"LVA", n:"LATVIA", t:"NATION", bg:"#9e3039", init:"LVA"},{id:"LBN", n:"LEBANON", t:"NATION", bg:"#cc0000", init:"LBN"},{id:"LES", n:"LESOTHO", t:"NATION", bg:"#002094", init:"LES"},
-            {id:"LBR", n:"LIBERIA", t:"NATION", bg:"#bf0a30", init:"LBR"},{id:"LBY", n:"LIBYA", t:"NATION", bg:"#222222", init:"LBY"},{id:"LIE", n:"LIECHTENSTEIN", t:"NATION", bg:"#002395", init:"LIE"},{id:"LTU", n:"LITHUANIA", t:"NATION", bg:"#fdb913", init:"LTU"},{id:"LUX", n:"LUXEMBOURG", t:"NATION", bg:"#419ad6", init:"LUX"},{id:"MAD", n:"MADAGASCAR", t:"NATION", bg:"#fc3d32", init:"MAD"},
-            {id:"MWI", n:"MALAWI", t:"NATION", bg:"#222222", init:"MWI"},{id:"MAS", n:"MALAYSIA", t:"NATION", bg:"#010066", init:"MAS"},{id:"MDV", n:"MALDIVES", t:"NATION", bg:"#d2143a", init:"MDV"},{id:"MLI", n:"MALI", t:"NATION", bg:"#fcd116", init:"MLI"},{id:"MLT", n:"MALTA", t:"NATION", bg:"#ffffff", init:"MLT"},{id:"MHL", n:"MARSHALL ISLANDS", t:"NATION", bg:"#0038a8", init:"MHL"},
-            {id:"MTN", n:"MAURITANIA", t:"NATION", bg:"#006233", init:"MTN"},{id:"MRI", n:"MAURITIUS", t:"NATION", bg:"#ea2839", init:"MRI"},{id:"MEX", n:"MEXICO", t:"NATION", bg:"#006847", init:"MEX"},{id:"FSM", n:"MICRONESIA", t:"NATION", bg:"#6594c0", init:"FSM"},{id:"MDA", n:"MOLDOVA", t:"NATION", bg:"#cc0000", init:"MDA"},{id:"MON", n:"MONACO", t:"NATION", bg:"#ce1126", init:"MON"},
-            {id:"MGL", n:"MONGOLIA", t:"NATION", bg:"#e01a22", init:"MGL"},{id:"MNE", n:"MONTENEGRO", t:"NATION", bg:"#c4161c", init:"MNE"},{id:"MAR", n:"MOROCCO", t:"NATION", bg:"#c1272d", init:"MAR"},{id:"MOZ", n:"MOZAMBIQUE", t:"NATION", bg:"#005a50", init:"MOZ"},{id:"MYA", n:"MYANMAR", t:"NATION", bg:"#fec310", init:"MYA"},{id:"NAM", n:"NAMIBIA", t:"NATION", bg:"#003580", init:"NAM"},
-            {id:"NRU", n:"NAURU", t:"NATION", bg:"#002060", init:"NRU"},{id:"NEP", n:"NEPAL", t:"NATION", bg:"#dc143c", init:"NEP"},{id:"NED", n:"NETHERLANDS", t:"NATION", bg:"#ae1c28", init:"NED"},{id:"NZL", n:"NEW ZEALAND", t:"NATION", bg:"#00247d", init:"NZL"},{id:"NCA", n:"NICARAGUA", t:"NATION", bg:"#0067a6", init:"NCA"},{id:"NER", n:"NIGER", t:"NATION", bg:"#e05206", init:"NER"},
-            {id:"NGA", n:"NIGERIA", t:"NATION", bg:"#008751", init:"NGA"},{id:"MKD", n:"NORTH MACEDONIA", t:"NATION", bg:"#d20000", init:"MKD"},{id:"NOR", n:"NORWAY", t:"NATION", bg:"#ba0c2f", init:"NOR"},{id:"OMA", n:"OMAN", t:"NATION", bg:"#ff0000", init:"OMA"},{id:"PAK", n:"PAKISTAN", t:"NATION", bg:"#00401a", init:"PAK"},{id:"PLW", n:"PALAU", t:"NATION", bg:"#4aadd6", init:"PLW"},
-            {id:"PAN", n:"PANAMA", t:"NATION", bg:"#002060", init:"PAN"},{id:"PNG", n:"PAPUA NEW GUINEA", t:"NATION", bg:"#222222", init:"PNG"},{id:"PAR", n:"PARAGUAY", t:"NATION", bg:"#d52b1e", init:"PAR"},{id:"PER", n:"PERU", t:"NATION", bg:"#d91414", init:"PER"},{id:"PHI", n:"PHILIPPINES", t:"NATION", bg:"#0038a8", init:"PHI"},{id:"POL", n:"POLAND", t:"NATION", bg:"#dc143c", init:"POL"},
-            {id:"POR", n:"PORTUGAL", t:"NATION", bg:"#ff0000", init:"POR"},{id:"QAT", n:"QATAR", t:"NATION", bg:"#8a1538", init:"QAT"},{id:"ROU", n:"ROMANIA", t:"NATION", bg:"#002b7f", init:"ROU"},{id:"RUS", n:"RUSSIA", t:"NATION", bg:"#1c3578", init:"RUS"},{id:"RWA", n:"RWANDA", t:"NATION", bg:"#00a3e0", init:"RWA"},{id:"KNA", n:"SAINT KITTS & NEVIS", t:"NATION", bg:"#009e49", init:"KNA"},
-            {id:"LCA", n:"SAINT LUCIA", t:"NATION", bg:"#66ccff", init:"LCA"},{id:"VIN", n:"SAINT VINCENT", t:"NATION", bg:"#007a3d", init:"VIN"},{id:"SAM", n:"SAMOA", t:"NATION", bg:"#002b7f", init:"SAM"},{id:"SMR", n:"SAN MARINO", t:"NATION", bg:"#66ccff", init:"SMR"},{id:"STP", n:"SAO TOME & PRINCIPE", t:"NATION", bg:"#009e49", init:"STP"},{id:"KSA", n:"SAUDI ARABIA", t:"NATION", bg:"#006c35", init:"KSA"},
-            {id:"SEN", n:"SENEGAL", t:"NATION", bg:"#00853f", init:"SEN"},{id:"SRB", n:"SERBIA", t:"NATION", bg:"#c6363c", init:"SRB"},{id:"SEY", n:"SEYCHELLES", t:"NATION", bg:"#003f87", init:"SEY"},{id:"SLE", n:"SIERRA LEONE", t:"NATION", bg:"#00b5e2", init:"SLE"},{id:"SGP", n:"SINGAPORE", t:"NATION", bg:"#df0000", init:"SGP"},{id:"SVK", n:"SLOVAKIA", t:"NATION", bg:"#0b4ea2", init:"SVK"},
-            {id:"SLO", n:"SLOVENIA", t:"NATION", bg:"#002395", init:"SLO"},{id:"SOL", n:"SOLOMON ISLANDS", t:"NATION", bg:"#002060", init:"SOL"},{id:"SOM", n:"SOMALIA", t:"NATION", bg:"#4189dd", init:"SOM"},{id:"RSA", n:"SOUTH AFRICA", t:"NATION", bg:"#007a4d", init:"RSA"},{id:"SSD", n:"SOUTH SUDAN", t:"NATION", bg:"#000000", init:"SSD"},{id:"ESP", n:"SPAIN", t:"NATION", bg:"#c60b1e", init:"ESP"},
-            {id:"SRI", n:"SRI LANKA", t:"NATION", bg:"#8d1b3d", init:"SRI"},{id:"SUD", n:"SUDAN", t:"NATION", bg:"#007229", init:"SUD"},{id:"SUR", n:"SURINAME", t:"NATION", bg:"#b40a2d", init:"SUR"},{id:"SWE", n:"SWEDEN", t:"NATION", bg:"#006aa7", init:"SWE"},{id:"SUI", n:"SWITZERLAND", t:"NATION", bg:"#d52b1e", init:"SUI"},{id:"SYR", n:"SYRIA", t:"NATION", bg:"#e52b50", init:"SYR"},
-            {id:"TJK", n:"TAJIKISTAN", t:"NATION", bg:"#cc0000", init:"TJK"},{id:"TAN", n:"TANZANIA", t:"NATION", bg:"#1eb960", init:"TAN"},{id:"THA", n:"THAILAND", t:"NATION", bg:"#2d2a4a", init:"THA"},{id:"TOG", n:"TOGO", t:"NATION", bg:"#006a4e", init:"TOG"},{id:"TGA", n:"TONGA", t:"NATION", bg:"#da291c", init:"TGA"},{id:"TRI", n:"TRINIDAD & TOBAGO", t:"NATION", bg:"#da291c", init:"TRI"},
-            {id:"TUN", n:"TUNISIA", t:"NATION", bg:"#e41b13", init:"TUN"},{id:"TUR", n:"TURKEY", t:"NATION", bg:"#e30a17", init:"TUR"},{id:"TKM", n:"TURKMENISTAN", t:"NATION", bg:"#008751", init:"TKM"},{id:"TUV", n:"TUVALU", t:"NATION", bg:"#4682b4", init:"TUV"},{id:"UGA", n:"UGANDA", t:"NATION", bg:"#fcdc04", init:"UGA"},{id:"UKR", n:"UKRAINE", t:"NATION", bg:"#ffd500", init:"UKR"},
-            {id:"UAE", n:"UAE", t:"NATION", bg:"#00732f", init:"UAE"},{id:"GBR", n:"UNITED KINGDOM", t:"NATION", bg:"#00247d", init:"GBR"},{id:"USA", n:"USA", t:"NATION", bg:"#132257", init:"USA"},{id:"URU", n:"URUGUAY", t:"NATION", bg:"#43a1d5", init:"URU"},{id:"UZB", n:"UZBEKISTAN", t:"NATION", bg:"#00b5e2", init:"UZB"},{id:"VAN", n:"VANUATU", t:"NATION", bg:"#bc1220", init:"VAN"},
-            {id:"VEN", n:"VENEZUELA", t:"NATION", bg:"#7b142c", init:"VEN"},{id:"VIE", n:"VIETNAM", t:"NATION", bg:"#da251d", init:"VIE"},{id:"YEM", n:"YEMEN", t:"NATION", bg:"#ce1126", init:"YEM"},{id:"ZAM", n:"ZAMBIA", t:"NATION", bg:"#198a00", init:"ZAM"},{id:"ZIM", n:"ZIMBABWE", t:"NATION", bg:"#ffd500", init:"ZIM"},
+            // --- 193 VALID NATIONS (ISO 2-Letter Code for Flag API) ---
+            {id:"AFG", n:"AFGHANISTAN", t:"NATION", iso:"af"},{id:"ALB", n:"ALBANIA", t:"NATION", iso:"al"},{id:"ALG", n:"ALGERIA", t:"NATION", iso:"dz"},{id:"AND", n:"ANDORRA", t:"NATION", iso:"ad"},{id:"ANG", n:"ANGOLA", t:"NATION", iso:"ao"},{id:"ANT", n:"ANTIGUA & BARBUDA", t:"NATION", iso:"ag"},
+            {id:"ARG", n:"ARGENTINA", t:"NATION", iso:"ar"},{id:"ARM", n:"ARMENIA", t:"NATION", iso:"am"},{id:"AUS", n:"AUSTRALIA", t:"NATION", iso:"au"},{id:"AUT", n:"AUSTRIA", t:"NATION", iso:"at"},{id:"AZE", n:"AZERBAIJAN", t:"NATION", iso:"az"},{id:"BAH", n:"BAHAMAS", t:"NATION", iso:"bs"},
+            {id:"BHR", n:"BAHRAIN", t:"NATION", iso:"bh"},{id:"BAN", n:"BANGLADESH", t:"NATION", iso:"bd"},{id:"BAR", n:"BARBADOS", t:"NATION", iso:"bb"},{id:"BLR", n:"BELARUS", t:"NATION", iso:"by"},{id:"BEL", n:"BELGIUM", t:"NATION", iso:"be"},{id:"BLZ", n:"BELIZE", t:"NATION", iso:"bz"},
+            {id:"BEN", n:"BENIN", t:"NATION", iso:"bj"},{id:"BHU", n:"BHUTAN", t:"NATION", iso:"bt"},{id:"BOL", n:"BOLIVIA", t:"NATION", iso:"bo"},{id:"BIH", n:"BOSNIA & HERZEGOVINA", t:"NATION", iso:"ba"},{id:"BOT", n:"BOTSWANA", t:"NATION", iso:"bw"},{id:"BRA", n:"BRAZIL", t:"NATION", iso:"br"},
+            {id:"BRU", n:"BRUNEI", t:"NATION", iso:"bn"},{id:"BUL", n:"BULGARIA", t:"NATION", iso:"bg"},{id:"BUR", n:"BURKINA FASO", t:"NATION", iso:"bf"},{id:"BDI", n:"BURUNDI", t:"NATION", iso:"bi"},{id:"CAM", n:"CAMBODIA", t:"NATION", iso:"kh"},{id:"CMR", n:"CAMEROON", t:"NATION", iso:"cm"},
+            {id:"CAN", n:"CANADA", t:"NATION", iso:"ca"},{id:"CPV", n:"CAPE VERDE", t:"NATION", iso:"cv"},{id:"CAF", n:"CENTRAL AFRICAN REP", t:"NATION", iso:"cf"},{id:"CHA", n:"CHAD", t:"NATION", iso:"td"},{id:"CHI", n:"CHILE", t:"NATION", iso:"cl"},{id:"CHN", n:"CHINA", t:"NATION", iso:"cn"},
+            {id:"COL", n:"COLOMBIA", t:"NATION", iso:"co"},{id:"COM", n:"COMOROS", t:"NATION", iso:"km"},{id:"COG", n:"CONGO", t:"NATION", iso:"cg"},{id:"CRC", n:"COSTA RICA", t:"NATION", iso:"cr"},{id:"CRO", n:"CROATIA", t:"NATION", iso:"hr"},{id:"CUB", n:"CUBA", t:"NATION", iso:"cu"},
+            {id:"CYP", n:"CYPRUS", t:"NATION", iso:"cy"},{id:"CZE", n:"CZECHIA", t:"NATION", iso:"cz"},{id:"DEN", n:"DENMARK", t:"NATION", iso:"dk"},{id:"DJI", n:"DJIBOUTI", t:"NATION", iso:"dj"},{id:"DMA", n:"DOMINICA", t:"NATION", iso:"dm"},{id:"DOM", n:"DOMINICAN REP", t:"NATION", iso:"do"},
+            {id:"TLS", n:"EAST TIMOR", t:"NATION", iso:"tl"},{id:"ECU", n:"ECUADOR", t:"NATION", iso:"ec"},{id:"EGY", n:"EGYPT", t:"NATION", iso:"eg"},{id:"SLV", n:"EL SALVADOR", t:"NATION", iso:"sv"},{id:"EQG", n:"EQUATORIAL GUINEA", t:"NATION", iso:"gq"},{id:"ERI", n:"ERITREA", t:"NATION", iso:"er"},
+            {id:"EST", n:"ESTONIA", t:"NATION", iso:"ee"},{id:"ESW", n:"ESWATINI", t:"NATION", iso:"sz"},{id:"ETH", n:"ETHIOPIA", t:"NATION", iso:"et"},{id:"FIJ", n:"FIJI", t:"NATION", iso:"fj"},{id:"FIN", n:"FINLAND", t:"NATION", iso:"fi"},{id:"FRA", n:"FRANCE", t:"NATION", iso:"fr"},
+            {id:"GAB", n:"GABON", t:"NATION", iso:"ga"},{id:"GAM", n:"GAMBIA", t:"NATION", iso:"gm"},{id:"GEO", n:"GEORGIA", t:"NATION", iso:"ge"},{id:"GER", n:"GERMANY", t:"NATION", iso:"de"},{id:"GHA", n:"GHANA", t:"NATION", iso:"gh"},{id:"GRE", n:"GREECE", t:"NATION", iso:"gr"},
+            {id:"GRN", n:"GRENADA", t:"NATION", iso:"gd"},{id:"GUA", n:"GUATEMALA", t:"NATION", iso:"gt"},{id:"GUI", n:"GUINEA", t:"NATION", iso:"gn"},{id:"GNB", n:"GUINEA-BISSAU", t:"NATION", iso:"gw"},{id:"GUY", n:"GUYANA", t:"NATION", iso:"gy"},{id:"HAI", n:"HAITI", t:"NATION", iso:"ht"},
+            {id:"HON", n:"HONDURAS", t:"NATION", iso:"hn"},{id:"HUN", n:"HUNGARY", t:"NATION", iso:"hu"},{id:"ISL", n:"ICELAND", t:"NATION", iso:"is"},{id:"IND", n:"INDIA", t:"NATION", iso:"in"},{id:"IDN", n:"INDONESIA", t:"NATION", iso:"id"},{id:"IRN", n:"IRAN", t:"NATION", iso:"ir"},
+            {id:"IRQ", n:"IRAQ", t:"NATION", iso:"iq"},{id:"IRL", n:"IRELAND", t:"NATION", iso:"ie"},{id:"ISR", n:"ISRAEL", t:"NATION", iso:"il"},{id:"ITA", n:"ITALY", t:"NATION", iso:"it"},{id:"JAM", n:"JAMAICA", t:"NATION", iso:"jm"},{id:"JPN", n:"JAPAN", t:"NATION", iso:"jp"},
+            {id:"JOR", n:"JORDAN", t:"NATION", iso:"jo"},{id:"KAZ", n:"KAZAKHSTAN", t:"NATION", iso:"kz"},{id:"KEN", n:"KENYA", t:"NATION", iso:"ke"},{id:"KIR", n:"KIRIBATI", t:"NATION", iso:"ki"},{id:"PRK", n:"NORTH KOREA", t:"NATION", iso:"kp"},{id:"KOR", n:"SOUTH KOREA", t:"NATION", iso:"kr"},
+            {id:"KUW", n:"KUWAIT", t:"NATION", iso:"kw"},{id:"KGZ", n:"KYRGYZSTAN", t:"NATION", iso:"kg"},{id:"LAO", n:"LAOS", t:"NATION", iso:"la"},{id:"LVA", n:"LATVIA", t:"NATION", iso:"lv"},{id:"LBN", n:"LEBANON", t:"NATION", iso:"lb"},{id:"LES", n:"LESOTHO", t:"NATION", iso:"ls"},
+            {id:"LBR", n:"LIBERIA", t:"NATION", iso:"lr"},{id:"LBY", n:"LIBYA", t:"NATION", iso:"ly"},{id:"LIE", n:"LIECHTENSTEIN", t:"NATION", iso:"li"},{id:"LTU", n:"LITHUANIA", t:"NATION", iso:"lt"},{id:"LUX", n:"LUXEMBOURG", t:"NATION", iso:"lu"},{id:"MAD", n:"MADAGASCAR", t:"NATION", iso:"mg"},
+            {id:"MWI", n:"MALAWI", t:"NATION", iso:"mw"},{id:"MAS", n:"MALAYSIA", t:"NATION", iso:"my"},{id:"MDV", n:"MALDIVES", t:"NATION", iso:"mv"},{id:"MLI", n:"MALI", t:"NATION", iso:"ml"},{id:"MLT", n:"MALTA", t:"NATION", iso:"mt"},{id:"MHL", n:"MARSHALL ISLANDS", t:"NATION", iso:"mh"},
+            {id:"MTN", n:"MAURITANIA", t:"NATION", iso:"mr"},{id:"MRI", n:"MAURITIUS", t:"NATION", iso:"mu"},{id:"MEX", n:"MEXICO", t:"NATION", iso:"mx"},{id:"FSM", n:"MICRONESIA", t:"NATION", iso:"fm"},{id:"MDA", n:"MOLDOVA", t:"NATION", iso:"md"},{id:"MON", n:"MONACO", t:"NATION", iso:"mc"},
+            {id:"MGL", n:"MONGOLIA", t:"NATION", iso:"mn"},{id:"MNE", n:"MONTENEGRO", t:"NATION", iso:"me"},{id:"MAR", n:"MOROCCO", t:"NATION", iso:"ma"},{id:"MOZ", n:"MOZAMBIQUE", t:"NATION", iso:"mz"},{id:"MYA", n:"MYANMAR", t:"NATION", iso:"mm"},{id:"NAM", n:"NAMIBIA", t:"NATION", iso:"na"},
+            {id:"NRU", n:"NAURU", t:"NATION", iso:"nr"},{id:"NEP", n:"NEPAL", t:"NATION", iso:"np"},{id:"NED", n:"NETHERLANDS", t:"NATION", iso:"nl"},{id:"NZL", n:"NEW ZEALAND", t:"NATION", iso:"nz"},{id:"NCA", n:"NICARAGUA", t:"NATION", iso:"ni"},{id:"NER", n:"NIGER", t:"NATION", iso:"ne"},
+            {id:"NGA", n:"NIGERIA", t:"NATION", iso:"ng"},{id:"MKD", n:"NORTH MACEDONIA", t:"NATION", iso:"mk"},{id:"NOR", n:"NORWAY", t:"NATION", iso:"no"},{id:"OMA", n:"OMAN", t:"NATION", iso:"om"},{id:"PAK", n:"PAKISTAN", t:"NATION", iso:"pk"},{id:"PLW", n:"PALAU", t:"NATION", iso:"pw"},
+            {id:"PAN", n:"PANAMA", t:"NATION", iso:"pa"},{id:"PNG", n:"PAPUA NEW GUINEA", t:"NATION", iso:"pg"},{id:"PAR", n:"PARAGUAY", t:"NATION", iso:"py"},{id:"PER", n:"PERU", t:"NATION", iso:"pe"},{id:"PHI", n:"PHILIPPINES", t:"NATION", iso:"ph"},{id:"POL", n:"POLAND", t:"NATION", iso:"pl"},
+            {id:"POR", n:"PORTUGAL", t:"NATION", iso:"pt"},{id:"QAT", n:"QATAR", t:"NATION", iso:"qa"},{id:"ROU", n:"ROMANIA", t:"NATION", iso:"ro"},{id:"RUS", n:"RUSSIA", t:"NATION", iso:"ru"},{id:"RWA", n:"RWANDA", t:"NATION", iso:"rw"},{id:"KNA", n:"SAINT KITTS & NEVIS", t:"NATION", iso:"kn"},
+            {id:"LCA", n:"SAINT LUCIA", t:"NATION", iso:"lc"},{id:"VIN", n:"SAINT VINCENT", t:"NATION", iso:"vc"},{id:"SAM", n:"SAMOA", t:"NATION", iso:"ws"},{id:"SMR", n:"SAN MARINO", t:"NATION", iso:"sm"},{id:"STP", n:"SAO TOME & PRINCIPE", t:"NATION", iso:"st"},{id:"KSA", n:"SAUDI ARABIA", t:"NATION", iso:"sa"},
+            {id:"SEN", n:"SENEGAL", t:"NATION", iso:"sn"},{id:"SRB", n:"SERBIA", t:"NATION", iso:"rs"},{id:"SEY", n:"SEYCHELLES", t:"NATION", iso:"sc"},{id:"SLE", n:"SIERRA LEONE", t:"NATION", iso:"sl"},{id:"SGP", n:"SINGAPORE", t:"NATION", iso:"sg"},{id:"SVK", n:"SLOVAKIA", t:"NATION", iso:"sk"},
+            {id:"SLO", n:"SLOVENIA", t:"NATION", iso:"si"},{id:"SOL", n:"SOLOMON ISLANDS", t:"NATION", iso:"sb"},{id:"SOM", n:"SOMALIA", t:"NATION", iso:"so"},{id:"RSA", n:"SOUTH AFRICA", t:"NATION", iso:"za"},{id:"SSD", n:"SOUTH SUDAN", t:"NATION", iso:"ss"},{id:"ESP", n:"SPAIN", t:"NATION", iso:"es"},
+            {id:"SRI", n:"SRI LANKA", t:"NATION", iso:"lk"},{id:"SUD", n:"SUDAN", t:"NATION", iso:"sd"},{id:"SUR", n:"SURINAME", t:"NATION", iso:"sr"},{id:"SWE", n:"SWEDEN", t:"NATION", iso:"se"},{id:"SUI", n:"SWITZERLAND", t:"NATION", iso:"ch"},{id:"SYR", n:"SYRIA", t:"NATION", iso:"sy"},
+            {id:"TJK", n:"TAJIKISTAN", t:"NATION", iso:"tj"},{id:"TAN", n:"TANZANIA", t:"NATION", iso:"tz"},{id:"THA", n:"THAILAND", t:"NATION", iso:"th"},{id:"TOG", n:"TOGO", t:"NATION", iso:"tg"},{id:"TGA", n:"TONGA", t:"NATION", iso:"to"},{id:"TRI", n:"TRINIDAD & TOBAGO", t:"NATION", iso:"tt"},
+            {id:"TUN", n:"TUNISIA", t:"NATION", iso:"tn"},{id:"TUR", n:"TURKEY", t:"NATION", iso:"tr"},{id:"TKM", n:"TURKMENISTAN", t:"NATION", iso:"tm"},{id:"TUV", n:"TUVALU", t:"NATION", iso:"tv"},{id:"UGA", n:"UGANDA", t:"NATION", iso:"ug"},{id:"UKR", n:"UKRAINE", t:"NATION", iso:"ua"},
+            {id:"UAE", n:"UAE", t:"NATION", iso:"ae"},{id:"GBR", n:"UNITED KINGDOM", t:"NATION", iso:"gb"},{id:"USA", n:"USA", t:"NATION", iso:"us"},{id:"URU", n:"URUGUAY", t:"NATION", iso:"uy"},{id:"UZB", n:"UZBEKISTAN", t:"NATION", iso:"uz"},{id:"VAN", n:"VANUATU", t:"NATION", iso:"vu"},
+            {id:"VEN", n:"VENEZUELA", t:"NATION", iso:"ve"},{id:"VIE", n:"VIETNAM", t:"NATION", iso:"vn"},{id:"YEM", n:"YEMEN", t:"NATION", iso:"ye"},{id:"ZAM", n:"ZAMBIA", t:"NATION", iso:"zm"},{id:"ZIM", n:"ZIMBABWE", t:"NATION", iso:"zw"},
 
-            // --- UEFA FAMOUS CLUBS ---
-            {id:"RMA", n:"REAL MADRID", t:"UEFA", bg:"#ffffff", init:"RMA"},{id:"MCI", n:"MANCHESTER CITY", t:"UEFA", bg:"#6cabdd", init:"MCI"},{id:"FCB", n:"FC BAYERN MUNICH", t:"UEFA", bg:"#dc052d", init:"FCB"},{id:"PSG", n:"PARIS SAINT-GERMAIN", t:"UEFA", bg:"#0052b4", init:"PSG"},
-            {id:"BAR", n:"BARCELONA", t:"UEFA", bg:"#004d98", init:"BAR"},{id:"LIV", n:"LIVERPOOL", t:"UEFA", bg:"#c8102e", init:"LIV"},{id:"ARS", n:"ARSENAL", t:"UEFA", bg:"#ef0107", init:"ARS"},{id:"INT", n:"INTER MILAN", t:"UEFA", bg:"#0066b2", init:"INT"},
-            {id:"MIL", n:"AC MILAN", t:"UEFA", bg:"#e32119", init:"MIL"},{id:"JUV", n:"JUVENTUS", t:"UEFA", bg:"#222222", init:"JUV"},{id:"MUN", n:"MANCHESTER UNITED", t:"UEFA", bg:"#da291c", init:"MUN"},{id:"CHE", n:"CHELSEA", t:"UEFA", bg:"#034694", init:"CHE"},
-            {id:"ATM", n:"ATLETICO MADRID", t:"UEFA", bg:"#cb3524", init:"ATM"},{id:"DOR", n:"BORUSSIA DORTMUND", t:"UEFA", bg:"#fde100", init:"DOR"},{id:"BLV", n:"BAYER LEVERKUSEN", t:"UEFA", bg:"#e32219", init:"BLV"},{id:"TOT", n:"TOTTENHAM HOTSPUR", t:"UEFA", bg:"#132257", init:"TOT"},
+            // --- UEFA CLUB FLAGS (Menggunakan Representasi Pola Warna Bendera Klub) ---
+            {id:"RMA", n:"REAL MADRID", t:"UEFA", colors:["#fff","#fff","#fff"], init:"RMA"},
+            {id:"MCI", n:"MANCHESTER CITY", t:"UEFA", colors:["#6cabdd","#fff","#6cabdd"], init:"MCI"},
+            {id:"FCB", n:"FC BAYERN MUNICH", t:"UEFA", colors:["#dc052d","#0052b4","#dc052d"], init:"FCB"},
+            {id:"PSG", n:"PARIS SAINT-GERMAIN", t:"UEFA", colors:["#002453","#e30613","#002453"], init:"PSG"},
+            {id:"BAR", n:"BARCELONA", t:"UEFA", colors:["#004d98","#a50044","#004d98"], init:"BAR"},
+            {id:"LIV", n:"LIVERPOOL", t:"UEFA", colors:["#c8102e","#00b06a","#c8102e"], init:"LIV"},
+            {id:"ARS", n:"ARSENAL", t:"UEFA", colors:["#ef0107","#fff","#ef0107"], init:"ARS"},
+            {id:"INT", n:"INTER MILAN", t:"UEFA", colors:["#001c55","#000000","#001c55"], init:"INT"},
+            {id:"MIL", n:"AC MILAN", t:"UEFA", colors:["#e32119","#000000","#e32119"], init:"MIL"},
+            {id:"JUV", n:"JUVENTUS", t:"UEFA", colors:["#000","#fff","#000"], init:"JUV"},
+            {id:"MUN", n:"MANCHESTER UNITED", t:"UEFA", colors:["#da291c","#ffe500","#da291c"], init:"MUN"},
+            {id:"CHE", n:"CHELSEA", t:"UEFA", colors:["#034694","#fff","#034694"], init:"CHE"},
 
-            // --- AFC FAMOUS CLUBS ---
-            {id:"HIL", n:"AL HILAL SFC", t:"AFC", bg:"#0053a0", init:"HIL"},{id:"NAS", n:"AL NASSR FC", t:"AFC", bg:"#fff200", init:"NAS"},{id:"ITT", n:"AL ITTIHAD", t:"AFC", bg:"#ffcc00", init:"ITT"},{id:"AIN", n:"AL AIN FC", t:"AFC", bg:"#5f259f", init:"AIN"},
-            {id:"YFM", n:"YOKOHAMA F. MARINOS", t:"AFC", bg:"#002f6c", init:"YFM"},{id:"vko", n:"VISSEL KOBE", t:"AFC", bg:"#7a263a", init:"VKO"},{id:"RED", n:"URAWA RED DIAMONDS", t:"AFC", bg:"#e60012", init:"RED"},{id:"JDT", n:"JOHOR DARUL TA'ZIM", t:"AFC", bg:"#002060", init:"JDT"},
-            {id:"PRB", n:"PERSIB BANDUNG", t:"AFC", bg:"#005ba9", init:"PRB"},{id:"pjm", n:"PERSEBAYA SURABAYA", t:"AFC", bg:"#007a3d", init:"PJM"},{id:"psm", n:"PERS_JA_JA_KARTA", t:"AFC", bg:"#e00000", init:"PSM"},{id:"BUR", n:"BURIRAM UNITED", t:"AFC", bg:"#00263e", init:"BUR"},
-            {id:"ULS", n:"ULSAN HD FC", t:"AFC", bg:"#003399", init:"ULS"},{id:"POH", n:"POHANG STEELERS", t:"AFC", bg:"#222222", init:"POH"},{id:"SCA", n:"SHANGHAI PORT FC", t:"AFC", bg:"#e20613", init:"SCA"},{id:"SEN", n:"SHANDONG TAISHAN", t:"AFC", bg:"#ff6600", init:"SEN"},
+            // --- AFC CLUB FLAGS ---
+            {id:"HIL", n:"AL HILAL SFC", t:"AFC", colors:["#0053a0","#fff","#0053a0"], init:"HIL"},
+            {id:"NAS", n:"AL NASSR FC", t:"AFC", colors:["#fff200","#0053a0","#fff200"], init:"NAS"},
+            {id:"ITT", n:"AL ITTIHAD", t:"AFC", colors:["#000","#ffcc00","#000"], init:"ITT"},
+            {id:"PRB", n:"PERSIB BANDUNG", t:"AFC", colors:["#005ba9","#fff","#005ba9"], init:"PRB"},
+            {id:"pjm", n:"PERSEBAYA SURABAYA", t:"AFC", colors:["#007a3d","#fff","#007a3d"], init:"PJM"},
+            {id:"psm", n:"PERS_JA_JA_KARTA", t:"AFC", colors:["#e00000","#ffcc00","#e00000"], init:"PSM"},
+            {id:"JDT", n:"JOHOR DARUL TA'ZIM", t:"AFC", colors:["#002060","#ff3b30","#002060"], init:"JDT"},
+            {id:"YFM", n:"YOKOHAMA F. MARINOS", t:"AFC", colors:["#002f6c","#e60012","#fff"], init:"YFM"},
 
-            // --- CAF FAMOUS CLUBS ---
-            {id:"AHL", n:"AL AHLY SC", t:"CAF", bg:"#cc0000", init:"AHL"},{id:"ZAM", n:"ZAMALEK SC", t:"CAF", bg:"#ffffff", init:"ZAM"},{id:"MSD", n:"MAMELODI SUNDOWNS", t:"CAF", bg:"#ffcc00", init:"MSD"},{id:"WAC", n:"WYDAD AC", t:"CAF", bg:"#e2001a", init:"WAC"},
-            {id:"EST", n:"ES TÉNIS TUNIS", t:"CAF", bg:"#ffcc00", init:"EST"},{id:"RCA", n:"RAJA CASABLANCA", t:"CAF", bg:"#008040", init:"RCA"},{id:"TPM", n:"TP MAZEMBE", t:"CAF", bg:"#ffffff", init:"TPM"},{id:"ORL", n:"ORLANDO PIRATES", t:"CAF", bg:"#111111", init:"ORL"},
-            {id:"KCA", n:"KAIZER CHIEFS", t:"CAF", bg:"#f3a31b", init:"KCA"},{id:"CCa", n:"CLUB AFRICAIN", t:"CAF", bg:"#e2001a", init:"CCA"},{id:"ASE", n:"ASEC MIMOSAS", t:"CAF", bg:"#ffcc00", init:"ASE"},{id:"sim", n:"SIMBA SC", t:"CAF", bg:"#e31e24", init:"SIM"},
-            {id:"yan", n:"YOUNG AFRICANS SC", t:"CAF", bg:"#008000", init:"YAN"},{id:"JSK", n:"JS KABYLIE", t:"CAF", bg:"#fff200", init:"JSK"},{id:"ESS", n:"ES SÉTIF", t:"CAF", bg:"#ffffff", init:"ESS"},{id:"pyr", n:"PYRAMIDS FC", t:"CAF", bg:"#0b1f3f", init:"PYR"}
+            // --- CAF CLUB FLAGS ---
+            {id:"AHL", n:"AL AHLY SC", t:"CAF", colors:["#cc0000","#000","#cc0000"], init:"AHL"},
+            {id:"ZAM", n:"ZAMALEK SC", t:"CAF", colors:["#fff","#cc0000","#fff"], init:"ZAM"},
+            {id:"MSD", n:"MAMELODI SUNDOWNS", t:"CAF", colors:["#ffcc00","#008040","#ffcc00"], init:"MSD"},
+            {id:"WAC", n:"WYDAD AC", t:"CAF", colors:["#e2001a","#fff","#e2001a"], init:"WAC"},
+            {id:"RCA", n:"RAJA CASABLANCA", t:"CAF", colors:["#008040","#fff","#008040"], init:"RCA"},
+            {id:"TPM", n:"TP MAZEMBE", t:"CAF", colors:["#000","#fff","#000"], init:"TPM"}
         ];
 
         let selectedSlot = null;
@@ -467,15 +487,29 @@
         let predictionTabs = { "Prediksi Utama": {} }; 
         let activeTabName = "Prediksi Utama";
 
-        // Generate element visual logo dinamis berbasis inisial data objek
+        // Render visual bendera negara via API / CSS Banner dinamis untuk klub
         function createBadgeHTML(teamObj) {
-            let textColor = (teamObj.bg === '#ffffff' || teamObj.bg === '#fff200' || teamObj.bg === '#ffd500' || teamObj.bg === '#eed000') ? '#1a010c' : '#ffffff';
-            return `
-                <div class="badge-render" style="background:${teamObj.bg}; color:${textColor};">
-                    <div>${teamObj.init}</div>
-                    <div class="badge-sub">${teamObj.t}</div>
-                </div>
-            `;
+            if (teamObj.t === 'NATION') {
+                return `
+                    <div class="flag-container">
+                        <img class="flag-img" src="https://flagcdn.com/64x48/${teamObj.iso}.png" alt="${teamObj.n}">
+                        <div class="club-text-overlay">${teamObj.id}</div>
+                    </div>
+                `;
+            } else {
+                // Skema bendera/syal klub sepak bola horizontal split
+                const c = teamObj.colors;
+                return `
+                    <div class="flag-container">
+                        <div class="club-flag-mock">
+                            <div style="flex:1; background:${c[0]};"></div>
+                            <div style="flex:1; background:${c[1]};"></div>
+                            <div style="flex:1; background:${c[2]};"></div>
+                        </div>
+                        <div class="club-text-overlay">${teamObj.init}</div>
+                    </div>
+                `;
+            }
         }
 
         function renderTabsHeader() {
@@ -487,10 +521,10 @@
                 const btn = document.createElement('button');
                 btn.className = `tab-button ${tabName === activeTabName ? 'active' : ''}`;
                 btn.innerHTML = `
-                    <span onclick="switchTab('${tabName}')">📋 ${tabName}</span>
+                    <span onclick="switchTab('${tabName}')">⚫ ${tabName}</span>
                     <div class="tab-actions-wrapper">
-                        <span class="action-tab-icon clear-bin" title="Reset Opsi Tab Ini" onclick="clearSpecificTab('${tabName}')">⟲</span>
-                        ${Object.keys(predictionTabs).length > 1 ? `<span class="action-tab-icon delete-x" title="Hapus Tab Konten" onclick="deleteTab('${tabName}')">✕</span>` : ''}
+                        <span class="action-tab-icon clear-bin" title="Reset Opsi" onclick="clearSpecificTab('${tabName}')">⟲</span>
+                        ${Object.keys(predictionTabs).length > 1 ? `<span class="action-tab-icon delete-x" title="Hapus Tab" onclick="deleteTab('${tabName}')">✕</span>` : ''}
                     </div>
                 `;
                 container.appendChild(btn);
@@ -519,7 +553,7 @@
         }
 
         function clearSpecificTab(tabName) {
-            if (confirm(`Kosongkan isi seluruh bagan prediksi pada tab "${tabName}"?`)) {
+            if (confirm(`Kosongkan isi seluruh prediksi pada tab "${tabName}"?`)) {
                 predictionTabs[tabName] = {};
                 if (tabName === activeTabName) clearVisualBracket();
                 saveAllTabsState();
@@ -529,9 +563,7 @@
         function deleteTab(tabName) {
             if (confirm(`Hapus tab "${tabName}" secara permanen?`)) {
                 delete predictionTabs[tabName];
-                if (activeTabName === tabName) {
-                    activeTabName = Object.keys(predictionTabs)[0];
-                }
+                if (activeTabName === tabName) activeTabName = Object.keys(predictionTabs)[0];
                 saveAllTabsState();
                 renderTabsHeader();
                 loadActiveTabToVisual();
@@ -541,9 +573,6 @@
 
         function setPoolFilter(filterType) {
             activePoolFilter = filterType;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent === filterType || (filterType==='NATION' && btn.textContent==='193 NATIONS') || (filterType==='ALL' && btn.textContent==='ALL'));
-            });
             filterAndRenderPool();
         }
 
@@ -551,12 +580,8 @@
             const searchVal = document.getElementById('countryInput').value.trim().toUpperCase();
             let filtered = masterDatabase;
 
-            if (activePoolFilter !== 'ALL') {
-                filtered = filtered.filter(item => item.t === activePoolFilter);
-            }
-            if (searchVal !== '') {
-                filtered = filtered.filter(item => item.n.includes(searchVal) || item.id.includes(searchVal));
-            }
+            if (activePoolFilter !== 'ALL') filtered = filtered.filter(item => item.t === activePoolFilter);
+            if (searchVal !== '') filtered = filtered.filter(item => item.n.includes(searchVal) || item.id.includes(searchVal));
 
             const grid = document.getElementById('global-pool-grid');
             grid.innerHTML = '';
@@ -564,14 +589,10 @@
             filtered.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'pool-item';
-                div.style.background = item.bg;
                 div.innerHTML = createBadgeHTML(item);
                 div.addEventListener('click', () => {
-                    if (selectedSlot) {
-                        setSlotTeam(selectedSlot, item);
-                    } else {
-                        alert("Pilih salah satu kotak slot '?' di bagan atas terlebih dahulu!");
-                    }
+                    if (selectedSlot) setSlotTeam(selectedSlot, item);
+                    else alert("Klik salah satu slot kosong '?' di bagan atas dulu bro!");
                 });
                 grid.appendChild(div);
             });
@@ -588,7 +609,7 @@
 
             slot.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
-                if (slot.querySelector('.badge-render')) {
+                if (slot.getAttribute('data-team-id')) {
                     slot.classList.toggle('eliminated');
                     saveActiveTabState();
                 }
@@ -604,11 +625,11 @@
                         const slots = node.querySelectorAll('.team-slot');
                         if (slots.length === 2) {
                             const slot1 = slots[0], slot2 = slots[1];
-                            const badge1 = slot1.querySelector('.badge-render'), badge2 = slot2.querySelector('.badge-render');
+                            const id1 = slot1.getAttribute('data-team-id'), id2 = slot2.getAttribute('data-team-id');
 
                             let winnerId = null;
-                            if (badge1 && !slot1.classList.contains('eliminated') && slot2.classList.contains('eliminated')) winnerId = slot1.getAttribute('data-team-id');
-                            else if (badge2 && !slot2.classList.contains('eliminated') && slot1.classList.contains('eliminated')) winnerId = slot2.getAttribute('data-team-id');
+                            if (id1 && !slot1.classList.contains('eliminated') && slot2.classList.contains('eliminated')) winnerId = id1;
+                            else if (id2 && !slot2.classList.contains('eliminated') && slot1.classList.contains('eliminated')) winnerId = id2;
 
                             if (winnerId) {
                                 const teamObj = masterDatabase.find(t => t.id === winnerId);
@@ -649,7 +670,7 @@
         }
 
         function saveAllTabsState() {
-            localStorage.setItem('football_ultimate_engine_data', JSON.stringify({ tabs: predictionTabs, active: activeTabName }));
+            localStorage.setItem('football_black_engine_data', JSON.stringify({ tabs: predictionTabs, active: activeTabName }));
         }
 
         function loadActiveTabToVisual() {
@@ -690,19 +711,16 @@
                     const targetNode = toNodes[Math.floor(idx / 2)];
                     if (node && targetNode) {
                         const rA = node.getBoundingClientRect(), rB = targetNode.getBoundingClientRect();
-                        
                         let x1 = (side === 'L') ? (rA.right - arenaRect.left) : (rA.left - arenaRect.left);
                         let y1 = (rA.top + rA.height / 2) - arenaRect.top;
-                        
                         let x2 = (side === 'L') ? (rB.left - arenaRect.left) : (rB.right - arenaRect.left);
                         let y2 = (rB.top + rB.height / 2) - arenaRect.top;
-                        
                         const midX = x1 + (x2 - x1) / 2;
                         
                         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                         path.setAttribute('d', `M ${x1} ${y1} H ${midX} V ${y2} H ${x2}`);
                         path.setAttribute('stroke', 'var(--line-color)'); 
-                        path.setAttribute('stroke-width', '2.5'); 
+                        path.setAttribute('stroke-width', '2'); 
                         path.setAttribute('fill', 'none');
                         svg.appendChild(path);
                     }
@@ -716,7 +734,7 @@
         }
 
         window.addEventListener('load', () => {
-            const saved = localStorage.getItem('football_ultimate_engine_data');
+            const saved = localStorage.getItem('football_black_engine_data');
             if (saved) {
                 const parsed = JSON.parse(saved);
                 predictionTabs = parsed.tabs || { "Prediksi Utama": {} };
