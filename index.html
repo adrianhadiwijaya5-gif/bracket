@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIFA World Cup 2026 - Prediction Engine Bracket</title>
+    <title>FIFA World Cup 2026 - Multi-Tab Prediction Engine</title>
     <style>
         :root {
             --bg-color: #060709;
@@ -33,12 +33,65 @@
             user-select: none;
         }
 
+        /* Tabs System Container */
+        .tabs-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 90%;
+            max-width: 1300px;
+            margin-bottom: 10px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .tab-button {
+            background: #161b29;
+            border: 1px solid #2b364f;
+            color: #8fa0c2;
+            padding: 8px 16px;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .tab-button.active {
+            background: var(--panel-bg);
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan) var(--accent-cyan) transparent var(--accent-cyan);
+            box-shadow: 0 -4px 10px rgba(0, 240, 255, 0.15);
+        }
+
+        .btn-create-tab {
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px dashed var(--accent-cyan);
+            color: var(--accent-cyan);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+        .btn-create-tab:hover { background: rgba(0, 240, 255, 0.25); }
+
+        .close-tab-x {
+            color: var(--accent-red);
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 2px;
+        }
+
         /* Top Control Panel */
         .control-panel {
             background: rgba(15, 18, 29, 0.85);
             backdrop-filter: blur(12px);
             padding: 12px 25px;
-            border-radius: 16px;
+            border-radius: 0 16px 16px 16px;
             display: flex;
             align-items: center;
             gap: 15px;
@@ -55,11 +108,10 @@
             padding: 10px 16px;
             border-radius: 8px;
             outline: none;
-            width: 200px;
+            width: 180px;
             font-weight: bold;
             text-transform: uppercase;
         }
-
         .control-panel input:focus { border-color: var(--accent-cyan); }
 
         .btn-action {
@@ -71,12 +123,8 @@
             font-weight: 900;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
         }
-        .btn-action:hover {
-            transform: scale(1.03);
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
-        }
+        .btn-action:hover { transform: scale(1.03); }
 
         .btn-reset {
             background: #2b364f;
@@ -87,7 +135,6 @@
             font-weight: bold;
             cursor: pointer;
             margin-left: auto;
-            transition: background 0.2s;
         }
         .btn-reset:hover { background: var(--accent-red); }
 
@@ -168,7 +215,6 @@
         }
 
         .center-stage { display: flex; flex-direction: column; align-items: center; gap: 60px; z-index: 2; }
-
         .champion-podium {
             background: linear-gradient(135deg, #2b220d 0%, #111522 100%);
             border: 2px solid var(--accent-gold);
@@ -176,14 +222,7 @@
             padding: 20px 35px;
             text-align: center;
         }
-
-        .champion-podium .team-slot {
-            width: 76px;
-            height: 54px;
-            border-radius: 22px 2px 22px 2px;
-            border-color: var(--accent-gold);
-        }
-        .champion-podium .flag-img { border-radius: 20px 2px 20px 2px; }
+        .champion-podium .team-slot { width: 76px; height: 54px; border-radius: 22px 2px 22px 2px; border-color: var(--accent-gold); }
 
         /* Pool Grid */
         .pool-section {
@@ -197,53 +236,38 @@
         }
 
         .pool-grid { 
-            display: flex; 
-            flex-wrap: wrap; 
-            gap: 10px; 
-            justify-content: center;
-            max-height: 200px;
-            overflow-y: auto;
-            padding: 10px;
-            background: #090b12;
-            border-radius: 8px;
+            display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+            max-height: 180px; overflow-y: auto; padding: 10px; background: #090b12; border-radius: 8px;
         }
-
         .pool-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: #161b29;
-            padding: 6px;
-            border-radius: 10px 2px 10px 2px;
-            border: 1px solid #252e45;
-            width: 65px;
+            display: flex; flex-direction: column; align-items: center;
+            background: #161b29; padding: 6px; border-radius: 10px 2px 10px 2px; border: 1px solid #252e45; width: 65px;
         }
-
         .pool-flag { width: 48px; height: 34px; object-fit: cover; border-radius: 8px 2px 8px 2px; cursor: grab; }
-        .pool-code { font-size: 0.65rem; color: #8fa0c2; margin-top: 5px; font-weight: bold; text-align: center; }
+        .pool-code { font-size: 0.65rem; color: #8fa0c2; margin-top: 5px; font-weight: bold; }
     </style>
 </head>
 <body>
 
+    <div class="tabs-container" id="tabs-header-box">
+        <button class="btn-create-tab" onclick="createNewTab()">➕ CREATE NEW PREDICTION TAB</button>
+    </div>
+
     <div class="control-panel">
         <input type="text" id="countryInput" placeholder="CARI TIM...">
-        
-        <!-- TOMBOL SYSTEM PREDIKSI OTOMATIS -->
         <button class="btn-action" onclick="generateNextRound()">⚡ RUN PREDICTION</button>
 
-        <div style="font-size: 0.8rem; color: #8fa0c2; max-width: 450px; line-height: 1.35;">
-            🔮 <b>Cara Prediksi:</b> Isi tim di bagan. <b>Klik kanan</b> pada tim yang kalah hingga meredup. Lalu klik tombol <b>⚡ RUN PREDICTION</b> untuk meloloskan pemenang ke babak berikutnya secara otomatis!
+        <div style="font-size: 0.8rem; color: #8fa0c2; line-height: 1.35;">
+            📑 <b>Multi-Tab:</b> Kamu bisa buat banyak opsi simulasi di tombol atas. Klik kanan benderanya untuk meredupkan tim kalah, lalu klik <b>RUN PREDICTION</b>.
         </div>
 
-        <button class="btn-reset" onclick="resetBracket()">RESET</button>
+        <button class="btn-reset" onclick="resetBracket()">RESET ACTIVE TAB</button>
     </div>
 
     <div class="bracket-arena" id="arena">
         <svg id="connector-svg"></svg>
 
-        <!-- SISI KIRI -->
         <div class="side left-side">
-            <!-- Round of 32 (Babak 1) -->
             <div class="column" data-round="1">
                 <div class="match-node"><div class="team-slot drop-zone" id="L-1-1">?</div><div class="team-slot drop-zone" id="L-1-2">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="L-1-3">?</div><div class="team-slot drop-zone" id="L-1-4">?</div></div>
@@ -254,25 +278,21 @@
                 <div class="match-node"><div class="team-slot drop-zone" id="L-1-13">?</div><div class="team-slot drop-zone" id="L-1-14">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="L-1-15">?</div><div class="team-slot drop-zone" id="L-1-16">?</div></div>
             </div>
-            <!-- Round of 16 (Babak 2) -->
             <div class="column" data-round="2">
                 <div class="match-node"><div class="team-slot drop-zone" id="L-2-1">?</div><div class="team-slot drop-zone" id="L-2-2">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="L-2-3">?</div><div class="team-slot drop-zone" id="L-2-4">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="L-2-5">?</div><div class="team-slot drop-zone" id="L-2-6">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="L-2-7">?</div><div class="team-slot drop-zone" id="L-2-8">?</div></div>
             </div>
-            <!-- Quarter Finals (Babak 3) -->
             <div class="column" data-round="3">
                 <div class="match-node"><div class="team-slot drop-zone" id="L-3-1">?</div><div class="team-slot drop-zone" id="L-3-2">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="L-3-3">?</div><div class="team-slot drop-zone" id="L-3-4">?</div></div>
             </div>
-            <!-- Semi Finals (Babak 4) -->
             <div class="column" data-round="4">
                 <div class="match-node"><div class="team-slot drop-zone" id="L-4-1">?</div><div class="team-slot drop-zone" id="L-4-2">?</div></div>
             </div>
         </div>
 
-        <!-- PODIUM TENGAH -->
         <div class="center-stage">
             <div class="champion-podium">
                 <div style="font-size:0.75rem; font-weight:bold; letter-spacing:2px; margin-bottom:10px;">WORLD CHAMPION</div>
@@ -280,25 +300,20 @@
             </div>
         </div>
 
-        <!-- SISI KANAN -->
         <div class="side right-side">
-            <!-- Semi Finals (Babak 4) -->
             <div class="column" data-round="4">
                 <div class="match-node"><div class="team-slot drop-zone" id="R-4-1">?</div><div class="team-slot drop-zone" id="R-4-2">?</div></div>
             </div>
-            <!-- Quarter Finals (Babak 3) -->
             <div class="column" data-round="3">
                 <div class="match-node"><div class="team-slot drop-zone" id="R-3-1">?</div><div class="team-slot drop-zone" id="R-3-2">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-3-3">?</div><div class="team-slot drop-zone" id="R-3-4">?</div></div>
             </div>
-            <!-- Round of 16 (Babak 2) -->
             <div class="column" data-round="2">
                 <div class="match-node"><div class="team-slot drop-zone" id="R-2-1">?</div><div class="team-slot drop-zone" id="R-2-2">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-2-3">?</div><div class="team-slot drop-zone" id="R-2-4">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-2-5">?</div><div class="team-slot drop-zone" id="R-2-6">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-2-7">?</div><div class="team-slot drop-zone" id="R-2-8">?</div></div>
             </div>
-            <!-- Round of 32 (Babak 1) -->
             <div class="column" data-round="1">
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-1">?</div><div class="team-slot drop-zone" id="R-1-2">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-3">?</div><div class="team-slot drop-zone" id="R-1-4">?</div></div>
@@ -312,24 +327,75 @@
         </div>
     </div>
 
-    <!-- GLOBAL POOL DATABASE -->
     <div class="pool-section">
-        <div style="font-size:0.8rem; font-weight:bold; color:var(--accent-cyan); margin-bottom:15px; letter-spacing:1px;">🌐 TIM POOL DATABASE</div>
+        <div style="font-size:0.8rem; font-weight:bold; color:var(--accent-cyan); margin-bottom:15px;">🌐 DATABASE NEGARA</div>
         <div class="pool-grid" id="global-pool-grid"></div>
     </div>
 
     <script>
-        // Database negara minimalis 
         const countriesList = [
             {c:"us", n:"USA"}, {c:"mx", n:"MEX"}, {c:"ca", n:"CAN"}, {c:"id", n:"IDN"}, {c:"br", n:"BRA"}, {c:"ar", n:"ARG"},
             {c:"fr", n:"FRA"}, {c:"de", n:"GER"}, {c:"gb-eng", n:"ENG"}, {c:"es", n:"ESP"}, {c:"pt", n:"POR"}, {c:"jp", n:"JPN"},
             {c:"kr", n:"KOR"}, {c:"nl", n:"NED"}, {c:"it", n:"ITA"}, {c:"ma", n:"MAR"}, {c:"hr", n:"CRO"}, {c:"be", n:"BEL"},
-            {c:"uy", n:"URU"}, {c:"co", n:"COL"}, {c:"sa", n:"KSA"}, {c:"au", n:"AUS"}, {c:"sn", n:"SEN"}, {c:"cm", n:"CMR"},
-            {c:"gh", n:"GHA"}, {c:"ch", n:"SUI"}, {c:"dk", n:"DEN"}, {c:"ba", n:"BIH"}, {c:"cv", n:"CPV"}, {c:"eg", n:"EGY"}
+            {c:"uy", n:"URU"}, {c:"co", n:"COL"}, {c:"sa", n:"KSA"}, {c:"au", n:"AUS"}, {c:"sn", n:"SEN"}, {c:"ba", n:"BIH"}, 
+            {c:"cv", n:"CPV"}, {c:"eg", n:"EGY"}, {c:"ca", n:"CAN"}
         ];
 
         let selectedSlot = null;
+        
+        // --- MULTI-TAB CONTROLLER STATES ---
+        let predictionTabs = { "Prediksi 1": {} }; 
+        let activeTabName = "Prediksi 1";
 
+        function renderTabsHeader() {
+            const container = document.getElementById('tabs-header-box');
+            // Bersihkan semua tombol kecuali tombol tambah
+            const createBtn = container.querySelector('.btn-create-tab');
+            container.innerHTML = '';
+            
+            Object.keys(predictionTabs).forEach(tabName => {
+                const btn = document.createElement('button');
+                btn.className = `tab-button ${tabName === activeTabName ? 'active' : ''}`;
+                btn.innerHTML = `
+                    <span onclick="switchTab('${tabName}')">📋 ${tabName}</span>
+                    ${Object.keys(predictionTabs).length > 1 ? `<span class="close-tab-x" onclick="deleteTab('${tabName}')">✕</span>` : ''}
+                `;
+                container.appendChild(btn);
+            });
+            container.appendChild(createBtn);
+        }
+
+        function createNewTab() {
+            const name = prompt("Masukkan nama opsi prediksi baru:", `Prediksi ${Object.keys(predictionTabs).length + 1}`);
+            if (name && name.trim() !== "") {
+                if (predictionTabs[name]) { alert("Nama tab sudah ada!"); return; }
+                predictionTabs[name] = {};
+                activeTabName = name;
+                saveAllTabsState();
+                renderTabsHeader();
+                clearVisualBracket();
+            }
+        }
+
+        function switchTab(tabName) {
+            activeTabName = tabName;
+            renderTabsHeader();
+            loadActiveTabToVisual();
+        }
+
+        function deleteTab(tabName) {
+            if (confirm(`Hapus tab "${tabName}"? Semua simulasinya akan hilang.`)) {
+                delete predictionTabs[tabName];
+                if (activeTabName === tabName) {
+                    activeTabName = Object.keys(predictionTabs)[0];
+                }
+                saveAllTabsState();
+                renderTabsHeader();
+                loadActiveTabToVisual();
+            }
+        }
+
+        // Pool Render & Search
         function renderPool(list) {
             const grid = document.getElementById('global-pool-grid');
             grid.innerHTML = '';
@@ -337,7 +403,7 @@
                 const div = document.createElement('div');
                 div.className = 'pool-item';
                 div.innerHTML = `
-                    <img src="https://flagcdn.com/w80/${item.c}.png" class="pool-flag" draggable="true">
+                    <img src="https://flagcdn.com/w80/${item.c}.png" class="pool-flag">
                     <div class="pool-code">${item.n}</div>
                 `;
                 grid.appendChild(div);
@@ -345,166 +411,150 @@
         }
         renderPool(countriesList);
 
-        // Search engine logic
         document.getElementById('countryInput').addEventListener('input', (e) => {
-            const val = e.target.value.trim().toUpperCase();
-            renderPool(countriesList.filter(c => c.n.includes(val)));
+            renderPool(countriesList.filter(c => c.n.includes(e.target.value.trim().toUpperCase())));
         });
 
         document.getElementById('countryInput').addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && selectedSlot) {
                 const found = countriesList.find(c => c.n === e.target.value.trim().toUpperCase());
-                if (found) {
-                    setSlotImage(selectedSlot, `https://flagcdn.com/w80/${found.c}.png`);
-                    e.target.value = '';
-                }
+                if (found) { setSlotImage(selectedSlot, `https://flagcdn.com/w80/${found.c}.png`); e.target.value = ''; }
             }
         });
 
-        // Click interaction setup
+        // Slot Listeners
         document.querySelectorAll('.drop-zone').forEach(slot => {
             slot.addEventListener('click', () => {
                 document.querySelectorAll('.drop-zone').forEach(s => s.classList.remove('active-target'));
-                selectedSlot = slot;
-                slot.classList.add('active-target');
+                selectedSlot = slot; slot.classList.add('active-target');
                 document.getElementById('countryInput').focus();
             });
 
-            // Toggle Redup / Kalah via Klik Kanan
             slot.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
                 if (slot.querySelector('img')) {
                     slot.classList.toggle('eliminated');
-                    saveBracketState();
+                    saveActiveTabState();
                 }
             });
         });
 
-        // --- SISTEM AUTOMATIC PREDICTION ENGINE ---
+        // Auto Prediction Generator
         function generateNextRound() {
-            // Kita proses dari Round 1 ke 2, Round 2 ke 3, Round 3 ke 4, lalu Round 4 ke Champion
             const sides = ['L', 'R'];
-            
             sides.forEach(side => {
-                // Loop melalui tingkatan babak 1 s/d 4
                 for (let round = 1; round <= 4; round++) {
                     const currentNodes = document.querySelectorAll(`.${side === 'L' ? 'left-side' : 'right-side'} .column[data-round="${round}"] .match-node`);
-                    
                     currentNodes.forEach((node, index) => {
                         const slots = node.querySelectorAll('.team-slot');
                         if (slots.length === 2) {
-                            const slot1 = slots[0];
-                            const slot2 = slots[1];
-                            const img1 = slot1.querySelector('img');
-                            const img2 = slot2.querySelector('img');
+                            const slot1 = slots[0], slot2 = slots[1];
+                            const img1 = slot1.querySelector('img'), img2 = slot2.querySelector('img');
 
-                            // Cek siapa yang menang (yang tidak memiliki class 'eliminated')
                             let winnerSrc = null;
-                            if (img1 && !slot1.classList.contains('eliminated') && slot2.classList.contains('eliminated')) {
-                                winnerSrc = img1.getAttribute('src');
-                            } else if (img2 && !slot2.classList.contains('eliminated') && slot1.classList.contains('eliminated')) {
-                                winnerSrc = img2.getAttribute('src');
-                            }
+                            if (img1 && !slot1.classList.contains('eliminated') && slot2.classList.contains('eliminated')) winnerSrc = img1.getAttribute('src');
+                            else if (img2 && !slot2.classList.contains('eliminated') && slot1.classList.contains('eliminated')) winnerSrc = img2.getAttribute('src');
 
                             if (winnerSrc) {
                                 if (round < 4) {
-                                    // Target adalah babak berikutnya (round + 1)
                                     const nextRoundIndex = Math.floor(index / 2) + 1;
                                     const nextSlotPosition = (index % 2) + 1;
-                                    const targetSlotId = `${side}-${round + 1}-${nextRoundIndex}`;
                                     const targetNode = document.querySelectorAll(`.${side === 'L' ? 'left-side' : 'right-side'} .column[data-round="${round + 1}"] .match-node`)[nextRoundIndex - 1];
-                                    if (targetNode) {
-                                        const targetSlot = targetNode.querySelectorAll('.team-slot')[nextSlotPosition - 1];
-                                        if (targetSlot) setSlotImage(targetSlot, winnerSrc);
-                                    }
+                                    if (targetNode) setSlotImage(targetNode.querySelectorAll('.team-slot')[nextSlotPosition - 1], winnerSrc);
                                 } else if (round === 4) {
-                                    // Jika memenangkan semi final (round 4), langsung dorong ke slot CHAMPION
-                                    const champSlot = document.getElementById('CHAMP');
-                                    if (champSlot) setSlotImage(champSlot, winnerSrc);
+                                    setSlotImage(document.getElementById('CHAMP'), winnerSrc);
                                 }
                             }
                         }
                     });
                 }
             });
-            saveBracketState();
+            saveActiveTabState();
         }
 
         function setSlotImage(slotElement, imgUrl) {
-            slotElement.innerHTML = `<img src="${imgUrl}" class="flag-img" draggable="true">`;
+            if (!slotElement) return;
+            slotElement.innerHTML = `<img src="${imgUrl}" class="flag-img">`;
             slotElement.classList.remove('eliminated');
-            saveBracketState();
+            saveActiveTabState();
         }
 
-        function saveBracketState() {
+        // Storage Management
+        function saveActiveTabState() {
             const state = {};
             document.querySelectorAll('.drop-zone').forEach(slot => {
                 const img = slot.querySelector('img');
-                state[slot.id] = {
-                    src: img ? img.getAttribute('src') : null,
-                    isEliminated: slot.classList.contains('eliminated')
-                };
+                state[slot.id] = { src: img ? img.getAttribute('src') : null, isEliminated: slot.classList.contains('eliminated') };
             });
-            localStorage.setItem('fifa2026_predict_save', JSON.stringify(state));
+            predictionTabs[activeTabName] = state;
+            saveAllTabsState();
         }
 
-        function loadBracketState() {
-            const savedData = localStorage.getItem('fifa2026_predict_save');
-            if (savedData) {
-                const state = JSON.parse(savedData);
-                Object.keys(state).forEach(id => {
-                    const slot = document.getElementById(id);
-                    if (slot && state[id].src) {
-                        slot.innerHTML = `<img src="${state[id].src}" class="flag-img" draggable="true">`;
-                        if (state[id].isEliminated) slot.classList.add('eliminated');
-                    }
-                });
-            }
+        function saveAllTabsState() {
+            localStorage.setItem('fifa2026_multitab_data', JSON.stringify({ tabs: predictionTabs, active: activeTabName }));
+        }
+
+        function loadActiveTabToVisual() {
+            clearVisualBracket();
+            const state = predictionTabs[activeTabName] || {};
+            Object.keys(state).forEach(id => {
+                const slot = document.getElementById(id);
+                if (slot && state[id].src) {
+                    slot.innerHTML = `<img src="${state[id].src}" class="flag-img">`;
+                    if (state[id].isEliminated) slot.classList.add('eliminated');
+                }
+            });
+        }
+
+        function clearVisualBracket() {
+            document.querySelectorAll('.drop-zone').forEach(slot => {
+                slot.innerHTML = slot.id === 'CHAMP' ? '🏆' : '?';
+                slot.classList.remove('eliminated');
+            });
         }
 
         function resetBracket() {
-            if (confirm("Reset ulang seluruh simulasi prediksi?")) {
-                localStorage.removeItem('fifa2026_predict_save');
-                document.querySelectorAll('.drop-zone').forEach(slot => {
-                    slot.innerHTML = slot.id === 'CHAMP' ? '🏆' : '?';
-                    slot.classList.remove('eliminated');
-                });
+            if (confirm(`Kosongkan isi data pada "${activeTabName}"?`)) {
+                predictionTabs[activeTabName] = {};
+                clearVisualBracket();
+                saveAllTabsState();
             }
         }
 
-        // SVG Connector Line Drawing
+        // SVG Connector Line
         function drawLines() {
-            const svg = document.getElementById('connector-svg');
-            if (!svg) return;
-            svg.innerHTML = '';
+            const svg = document.getElementById('connector-svg'); if (!svg) return; svg.innerHTML = '';
             const arenaRect = document.getElementById('arena').getBoundingClientRect();
-
             const createTreePath = (side, fromRound, toRound) => {
                 const fromNodes = document.querySelectorAll(`.${side === 'L' ? 'left-side' : 'right-side'} .column[data-round="${fromRound}"] .match-node`);
                 const toNodes = document.querySelectorAll(`.${side === 'L' ? 'left-side' : 'right-side'} .column[data-round="${toRound}"] .match-node`);
-                
                 fromNodes.forEach((node, idx) => {
                     const targetNode = toNodes[Math.floor(idx / 2)];
                     if (node && targetNode) {
                         const rA = node.getBoundingClientRect(), rB = targetNode.getBoundingClientRect();
                         const x1 = (rA.left + rA.width/2) - arenaRect.left, y1 = (rA.top + rA.height/2) - arenaRect.top;
                         const x2 = (rB.left + rB.width/2) - arenaRect.left, y2 = (rB.top + rB.height/2) - arenaRect.top;
-                        
                         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                        const midX = x1 + (x2 - x1) / 2;
-                        path.setAttribute('d', `M ${x1} ${y1} H ${midX} V ${y2} H ${x2}`);
-                        path.setAttribute('stroke', 'var(--line-color)');
-                        path.setAttribute('stroke-width', '2.5');
-                        path.setAttribute('fill', 'none');
+                        path.setAttribute('d', `M ${x1} ${y1} H ${(x1 + (x2 - x1) / 2)} V ${y2} H ${x2}`);
+                        path.setAttribute('stroke', 'var(--line-color)'); path.setAttribute('stroke-width', '2.5'); path.setAttribute('fill', 'none');
                         svg.appendChild(path);
                     }
                 });
             };
-
             for(let r=1; r<=3; r++) { createTreePath('L', r, r+1); createTreePath('R', r, r+1); }
         }
 
-        window.addEventListener('load', () => { loadBracketState(); setTimeout(drawLines, 250); });
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('fifa2026_multitab_data');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                predictionTabs = parsed.tabs || { "Prediksi 1": {} };
+                activeTabName = parsed.active || "Prediksi 1";
+            }
+            renderTabsHeader();
+            loadActiveTabToVisual();
+            setTimeout(drawLines, 250);
+        });
         window.addEventListener('resize', drawLines);
     </script>
 </body>
