@@ -2,35 +2,45 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>FIFA World Cup 2026 - Ultimate Bracket</title>
+    <title>FIFA World Cup 2026 - Ultimate Bracket System</title>
     <style>
-        body { background: #060709; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; margin: 0; padding: 20px; }
+        :root {
+            --bg-color: #060709; --panel-bg: #0f121d; --accent-cyan: #00f0ff;
+            --accent-gold: #ffd700; --accent-red: #ff3b30; --text-color: #ffffff;
+        }
+        body { background-color: var(--bg-color); color: var(--text-color); font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
         
-        /* Papan Skor */
-        .score-board-tv { display: flex; background: #000; padding: 15px 30px; border-radius: 20px; gap: 20px; align-items: center; border: 1px solid #333; margin-bottom: 10px; }
-        .score-input { background: transparent; border: none; color: #0ff; font-size: 1.5rem; width: 50px; text-align: center; font-family: monospace; }
-        .team-label { font-weight: bold; width: 50px; text-align: center; }
+        /* Panel Atas Terintegrasi */
+        .control-panel, .score-board-tv { background: rgba(15, 18, 29, 0.85); padding: 15px; border-radius: 16px; border: 1px solid #2b364f; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+        .score-input { background: #050609; border: 1px solid #444; color: var(--accent-cyan); font-size: 1.5rem; width: 60px; text-align: center; border-radius: 5px; font-family: monospace; }
+        .team-label { font-weight: bold; width: 60px; text-align: center; color: var(--accent-cyan); }
         
-        /* Penalti */
         .penalty-container { display: flex; gap: 10px; margin-bottom: 20px; }
         .penalty-indicator { width: 30px; height: 30px; border: 2px solid #444; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; background: #000; font-weight: bold; }
         .pen-success { background: #28a745; border-color: #28a745; color: white; }
         .pen-fail { background: #dc3545; border-color: #dc3545; color: white; }
 
-        /* Bagan */
-        .bracket { display: flex; gap: 20px; }
-        .match-node { background: #151924; border: 1px solid #2b364f; padding: 10px; border-radius: 8px; cursor: pointer; margin: 5px; }
-        .team-slot { width: 60px; height: 40px; background: #090b12; border: 1px solid #444; margin: 2px; display: flex; align-items: center; justify-content: center; }
-        
-        .pool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 5px; width: 80%; background: #0f121d; padding: 10px; }
+        /* Bracket Styles */
+        .bracket-arena { display: flex; justify-content: center; gap: 20px; width: 100%; overflow-x: auto; padding: 20px; }
+        .match-node { background: rgba(25, 29, 44, 0.45); border: 1px solid #2b364f; padding: 5px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; }
+        .team-slot { width: 58px; height: 42px; background: #151924; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; margin: 2px; }
+        .flag-img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+        .eliminated .flag-img { opacity: 0.25; filter: grayscale(1); }
+        .pool-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; background: #090b12; padding: 15px; border-radius: 8px; width: 80%; }
     </style>
 </head>
 <body>
 
+    <div class="control-panel">
+        <input type="text" id="countryInput" placeholder="CARI KODE TIM...">
+        <button onclick="resetBracket()">RESET</button>
+    </div>
+
+    <!-- Papan Skor & Penalti -->
     <div class="score-board-tv">
         <div id="tv-team-l" class="team-label">---</div>
         <input type="number" class="score-input" id="score-l" value="0">
-        <input type="text" id="match-timer" class="score-input" value="00:00" style="width: 80px; color: #ffd700;">
+        <input type="text" id="match-timer" class="score-input" value="00:00" style="color: var(--accent-gold); width: 80px;">
         <input type="number" class="score-input" id="score-r" value="0">
         <div id="tv-team-r" class="team-label">---</div>
     </div>
@@ -43,59 +53,47 @@
         <div class="penalty-indicator" onclick="penResult(this, 'O')" oncontextmenu="penResult(this, 'X'); return false;">-</div>
     </div>
 
-    <div class="bracket" id="bracket-area">
-        <!-- Contoh 1 Match -->
-        <div class="match-node" onclick="selectMatch(this)">
-            <div class="team-slot" data-code="---">?</div>
-            <div class="team-slot" data-code="---">?</div>
-        </div>
+    <div class="bracket-arena" id="bracket-container">
+        <!-- Struktur match (contoh singkat) -->
+        <div class="match-node" onclick="loadMatch(this)"><div class="team-slot drop-zone" id="L-1">?</div><div class="team-slot drop-zone" id="L-2">?</div></div>
     </div>
 
     <div class="pool-grid" id="pool"></div>
 
     <script>
-        // Autosave ke LocalStorage
-        function save() {
-            const state = {
-                scoreL: document.getElementById('score-l').value,
-                scoreR: document.getElementById('score-r').value,
-                timer: document.getElementById('match-timer').value
-            };
-            localStorage.setItem('fifa_save', JSON.stringify(state));
-        }
-
-        // Papan Skor Dinamis
-        function selectMatch(node) {
+        // Logika Papan Skor Dinamis
+        function loadMatch(node) {
             const slots = node.querySelectorAll('.team-slot');
-            document.getElementById('tv-team-l').innerText = slots[0].dataset.code;
-            document.getElementById('tv-team-r').innerText = slots[1].dataset.code;
-            save();
+            document.getElementById('tv-team-l').innerText = slots[0].innerText || '---';
+            document.getElementById('tv-team-r').innerText = slots[1].innerText || '---';
         }
 
-        // Penalti
         function penResult(el, type) {
             el.innerText = type;
             el.className = 'penalty-indicator ' + (type === 'O' ? 'pen-success' : 'pen-fail');
         }
 
-        // Input Listener untuk Autosave
-        document.querySelectorAll('input').forEach(i => i.addEventListener('input', save));
+        // Autosave Logic
+        document.querySelectorAll('input').forEach(i => i.addEventListener('input', () => {
+            localStorage.setItem('fifa_data', JSON.stringify({
+                sL: document.getElementById('score-l').value,
+                sR: document.getElementById('score-r').value,
+                timer: document.getElementById('match-timer').value
+            }));
+        }));
 
-        // Inisialisasi Database Negara (Contoh sebagian)
+        // Inisialisasi Pool
         const pool = document.getElementById('pool');
-        ['id', 'us', 'fr', 'br', 'ar', 'de', 'jp', 'kr', 'es'].forEach(code => {
-            pool.innerHTML += `<img src="https://flagcdn.com/w40/${code}.png" draggable="true" ondragstart="event.dataTransfer.setData('text', '${code.toUpperCase()}')">`;
+        ['id', 'us', 'fr', 'br', 'ar'].forEach(code => {
+            pool.innerHTML += `<div class="pool-item"><img src="https://flagcdn.com/w40/${code}.png" draggable="true" ondragstart="event.dataTransfer.setData('text', '${code.toUpperCase()}')"></div>`;
         });
 
-        // Drop Logic
-        document.querySelectorAll('.team-slot').forEach(slot => {
-            slot.ondragover = e => e.preventDefault();
-            slot.ondrop = e => {
-                const code = e.dataTransfer.getData('text');
-                slot.innerText = code;
-                slot.dataset.code = code;
-            };
+        document.querySelectorAll('.drop-zone').forEach(z => {
+            z.ondragover = e => e.preventDefault();
+            z.ondrop = e => { z.innerHTML = `<img src="https://flagcdn.com/w40/${e.dataTransfer.getData('text').toLowerCase()}.png" class="flag-img">`; };
         });
+
+        function resetBracket() { if(confirm("Reset semua?")) localStorage.clear(); location.reload(); }
     </script>
 </body>
 </html>
