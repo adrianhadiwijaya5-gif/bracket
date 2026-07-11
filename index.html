@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIFA World Cup 2026 - Ultimate Bracket</title>
+    <title>FIFA World Cup 2026 - Ultimate Bracket & Scoreboard</title>
     <style>
         :root {
             --bg-color: #060709;
@@ -33,6 +33,38 @@
             overflow-x: auto;
             user-select: none;
         }
+
+        /* --- GAYA PAPAN SKOR KAPSUL --- */
+        .score-board-tv {
+            display: inline-flex;
+            align-items: center;
+            background-color: #000000;
+            border-radius: 20px;
+            padding: 8px 20px;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 10;
+            margin: 0 auto 20px auto;
+        }
+        .team-side { display: flex; align-items: center; gap: 8px; }
+        .flag-container { width: 38px; height: 25px; border-radius: 4px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; }
+        .jersey-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.3); }
+        .jersey-blue { background-color: #9fc1ff; }
+        .jersey-grey { background-color: #444444; }
+        .team-code { font-size: 1.4rem; letter-spacing: 0.5px; width: 45px; text-align: center; }
+        .score-box, .match-time, .injury-time { background: transparent; border: none; color: #ffffff; font-family: 'Impact', sans-serif; text-align: center; outline: none; }
+        .score-box { color: #000000; font-size: 1.6rem; width: 40px; height: 32px; border-radius: 8px; font-weight: bold; }
+        .cyan-neon { background-color: #00f0ff; box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
+        .score-box::-webkit-inner-spin-button, .injury-time::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .center-badge-logo { background: linear-gradient(180deg, #ff007f 0%, #4a0025 100%); color: #ffffff; font-size: 0.9rem; padding: 4px 8px; border-radius: 6px; writing-mode: vertical-lr; transform: rotate(180deg); height: 24px; line-height: 1; font-weight: bold; }
+        .divider-line { width: 2px; height: 22px; background-color: #333333; margin: 0 4px; }
+        .time-container { display: flex; align-items: center; gap: 2px; }
+        .match-time { font-size: 1.5rem; width: 65px; color: #fff; }
+        .injury-sign { color: #ffd700; font-size: 1.2rem; font-weight: bold; }
+        .injury-time { color: #ffd700; font-size: 1.3rem; width: 25px; text-align: left; }
 
         /* Top Control Panel */
         .control-panel {
@@ -251,6 +283,38 @@
 </head>
 <body>
 
+    <!-- Papan Skor TV Kapsul (Bisa Ditempeli Bendera via Drag & Drop) -->
+    <div class="score-board-tv">
+        <div class="team-side">
+            <div class="flag-container" id="score-flag-l">
+                <div class="team-slot drop-zone" id="SCORE-L" style="width:38px; height:25px; border-radius:4px; background:#151924;">?</div>
+            </div>
+            <div class="jersey-dot jersey-blue"></div>
+            <div class="team-code" id="code-l">FRA</div>
+        </div>
+
+        <input type="number" class="score-box cyan-neon" id="score-input-l" value="0" min="0">
+        <div class="center-badge-logo">26</div>
+        <input type="number" class="score-box cyan-neon" id="score-input-r" value="0" min="0">
+
+        <div class="team-side">
+            <div class="team-code" id="code-r">SEN</div>
+            <div class="jersey-dot jersey-grey"></div>
+            <div class="flag-container" id="score-flag-r">
+                <div class="team-slot drop-zone" id="SCORE-R" style="width:38px; height:25px; border-radius:4px; background:#151924;">?</div>
+            </div>
+        </div>
+
+        <div class="divider-line"></div>
+
+        <div class="time-container">
+            <input type="text" class="match-time" id="time-main" value="90:00">
+            <span class="injury-sign" id="injury-plus" style="display:none;">+</span>
+            <input type="number" class="injury-time" id="time-injury" value="0" min="0" style="display:none;">
+        </div>
+    </div>
+
+    <!-- Control Panel atas -->
     <div class="control-panel">
         <input type="text" id="countryInput" placeholder="CARI / ENTER KODE TIM...">
         
@@ -265,9 +329,11 @@
         <button class="btn-reset" onclick="resetBracket()">RESET BAGAN</button>
     </div>
 
+    <!-- Area Utama Bagan Turnamen -->
     <div class="bracket-arena" id="arena">
         <svg id="connector-svg"></svg>
 
+        <!-- Sisi Kiri Bagan -->
         <div class="side left-side">
             <div class="column">
                 <div class="match-node"><div class="team-slot drop-zone" id="L-1-1">?</div><div class="team-slot drop-zone" id="L-1-2">?</div></div>
@@ -294,6 +360,7 @@
             </div>
         </div>
 
+        <!-- Panggung Tengah (Podium Juara & Final) -->
         <div class="center-stage">
             <div class="champion-podium">
                 <div style="font-size:0.75rem; font-weight:bold; letter-spacing:2px; margin-bottom:10px; color:var(--accent-gold);">WORLD CHAMPION</div>
@@ -315,6 +382,7 @@
             </div>
         </div>
 
+        <!-- Sisi Kanan Bagan -->
         <div class="side right-side">
             <div class="column">
                 <div class="match-node" id="node-R-SF"><div class="team-slot drop-zone" id="R-4-1">?</div><div class="team-slot drop-zone" id="R-4-2">?</div></div>
@@ -337,11 +405,12 @@
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-9">?</div><div class="team-slot drop-zone" id="R-1-10">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-11">?</div><div class="team-slot drop-zone" id="R-1-12">?</div></div>
                 <div class="match-node"><div class="team-slot drop-zone" id="R-1-13">?</div><div class="team-slot drop-zone" id="R-1-14">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="R-1-15">?</div><div class="team-slot drop-zone" id="R-1-16">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="L-1-15">?</div><div class="team-slot drop-zone" id="L-1-16">?</div></div>
             </div>
         </div>
     </div>
 
+    <!-- Database Global Negara -->
     <div class="pool-section">
         <div style="font-size:0.8rem; font-weight:bold; color:var(--accent-cyan); margin-bottom:15px; letter-spacing:1px;">🌐 GLOBAL DATABASE (SELURUH NEGARA DI DUNIA)</div>
         <div class="pool-grid" id="global-pool-grid"></div>
@@ -395,7 +464,7 @@
                 const div = document.createElement('div');
                 div.className = 'pool-item';
                 div.innerHTML = `
-                    <img src="https://flagcdn.com/w80/${item.c}.png" class="pool-flag" draggable="true">
+                    <img src="https://flagcdn.com/w80/${item.c}.png" class="pool-flag" draggable="true" data-code="${item.n}">
                     <div class="pool-code">${item.n}</div>
                 `;
                 poolGrid.appendChild(div);
@@ -403,24 +472,32 @@
         }
         renderPool(countriesList);
 
+        // Filter / Pencarian Tim
         document.getElementById('countryInput').addEventListener('input', (e) => {
             const val = e.target.value.trim().toUpperCase();
             const filtered = countriesList.filter(c => c.n.includes(val));
             renderPool(filtered);
         });
 
+        // Tekan Enter untuk isi otomatis slot terpilih
         document.getElementById('countryInput').addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && selectedSlot) {
                 const targetCode = e.target.value.trim().toUpperCase();
                 const found = countriesList.find(c => c.n === targetCode);
                 if (found) {
                     setSlotImage(selectedSlot, `https://flagcdn.com/w80/${found.c}.png`);
+                    
+                    // Jika slot yang dipilih papan skor, ganti teks kodenya
+                    if(selectedSlot.id === 'SCORE-L') document.getElementById('code-l').innerText = found.n;
+                    if(selectedSlot.id === 'SCORE-R') document.getElementById('code-r').innerText = found.n;
+
                     e.target.value = '';
                     renderPool(countriesList);
                 }
             }
         });
 
+        // Event Klik & Klik Kanan (Eliminasi)
         document.querySelectorAll('.drop-zone').forEach(slot => {
             slot.addEventListener('click', () => {
                 document.querySelectorAll('.drop-zone').forEach(s => s.classList.remove('active-target'));
@@ -438,13 +515,20 @@
             });
         });
 
+        // Drag & Drop Handling
         document.addEventListener('dragstart', (e) => {
             if (e.target.classList.contains('pool-flag')) {
                 draggedFlagSrc = e.target.getAttribute('src');
+                e.dataTransfer.setData('text/country-code', e.target.getAttribute('data-code') || '');
                 draggedSourceSlotId = null;
             } else if (e.target.classList.contains('flag-img')) {
                 draggedFlagSrc = e.target.getAttribute('src');
-                draggedSourceSlotId = e.target.closest('.drop-zone').id;
+                const parentSlot = e.target.closest('.drop-zone');
+                draggedSourceSlotId = parentSlot.id;
+                
+                // Ambil kode teks yang tersimpan (jika ada)
+                const savedCode = parentSlot.getAttribute('data-code') || '';
+                e.dataTransfer.setData('text/country-code', savedCode);
             }
         });
 
@@ -454,6 +538,14 @@
                 e.preventDefault();
                 if (draggedFlagSrc) {
                     setSlotImage(zone, draggedFlagSrc);
+                    
+                    const codeData = e.dataTransfer.getData('text/country-code');
+                    if(codeData) {
+                        zone.setAttribute('data-code', codeData);
+                        if(zone.id === 'SCORE-L') document.getElementById('code-l').innerText = codeData;
+                        if(zone.id === 'SCORE-R') document.getElementById('code-r').innerText = codeData;
+                    }
+
                     if (draggedSourceSlotId && draggedSourceSlotId !== zone.id) {
                         clearSlot(document.getElementById(draggedSourceSlotId));
                     }
@@ -461,6 +553,7 @@
             });
         });
 
+        // Tong Sampah (Hapus)
         const trashBin = document.getElementById('trashBin');
         trashBin.addEventListener('dragover', (e) => { e.preventDefault(); trashBin.classList.add('drag-over-trash'); });
         trashBin.addEventListener('dragleave', () => trashBin.classList.remove('drag-over-trash'));
@@ -482,21 +575,35 @@
         function clearSlot(slotElement) {
             if (slotElement) {
                 if(slotElement.id === 'CHAMP') slotElement.innerHTML = '🏆';
-                else if(['F-1','F-2','B-1','B-2'].includes(slotElement.id)) slotElement.innerHTML = '?';
                 else slotElement.innerHTML = '?';
+                
                 slotElement.classList.remove('eliminated');
+                slotElement.removeAttribute('data-code');
+                
+                if(slotElement.id === 'SCORE-L') document.getElementById('code-l').innerText = '---';
+                if(slotElement.id === 'SCORE-R') document.getElementById('code-r').innerText = '---';
+                saveBracketState();
             }
         }
 
+        // Simpan & Muat data otomatis lewat LocalStorage
         function saveBracketState() {
             const state = {};
             document.querySelectorAll('.drop-zone').forEach(slot => {
                 const img = slot.querySelector('img');
                 state[slot.id] = {
                     src: img ? img.getAttribute('src') : null,
-                    isEliminated: slot.classList.contains('eliminated')
+                    isEliminated: slot.classList.contains('eliminated'),
+                    code: slot.getAttribute('data-code') || null
                 };
             });
+            
+            // Simpan juga data input teks papan skor
+            state['score_l_val'] = document.getElementById('score-input-l').value;
+            state['score_r_val'] = document.getElementById('score-input-r').value;
+            state['time_main_val'] = document.getElementById('time-main').value;
+            state['time_injury_val'] = document.getElementById('time-injury').value;
+
             localStorage.setItem('fifa2026_redup_save', JSON.stringify(state));
         }
 
@@ -509,8 +616,19 @@
                     if (slot && state[id].src) {
                         slot.innerHTML = `<img src="${state[id].src}" class="flag-img" draggable="true">`;
                         if (state[id].isEliminated) slot.classList.add('eliminated');
+                        if (state[id].code) {
+                            slot.setAttribute('data-code', state[id].code);
+                            if(id === 'SCORE-L') document.getElementById('code-l').innerText = state[id].code;
+                            if(id === 'SCORE-R') document.getElementById('code-r').innerText = state[id].code;
+                        }
                     }
                 });
+
+                if(state['score_l_val'] !== undefined) document.getElementById('score-input-l').value = state['score_l_val'];
+                if(state['score_r_val'] !== undefined) document.getElementById('score-input-r').value = state['score_r_val'];
+                if(state['time_main_val'] !== undefined) document.getElementById('time-main').value = state['time_main_val'];
+                if(state['time_injury_val'] !== undefined) document.getElementById('time-injury').value = state['time_injury_val'];
+                checkInjuryTimeVisibility();
             }
         }
 
@@ -518,23 +636,26 @@
             if (confirm("Kosongkan semua isi bagan beserta status eliminasi?")) {
                 localStorage.removeItem('fifa2026_redup_save');
                 document.querySelectorAll('.drop-zone').forEach(slot => clearSlot(slot));
+                document.getElementById('score-input-l').value = 0;
+                document.getElementById('score-input-r').value = 0;
+                document.getElementById('time-main').value = "90:00";
+                document.getElementById('time-injury').value = 0;
+                checkInjuryTimeVisibility();
             }
         }
 
-        // FUNGSI UTUMA UNTUK MENGGAMBAR GARIS SECARA PRESISI
+        // Menggambar garis penghubung otomatis
         function drawLines() {
             const svg = document.getElementById('connector-svg');
             if (!svg) return;
             svg.innerHTML = '';
             const arenaRect = document.getElementById('arena').getBoundingClientRect();
 
-            // Generator Jalur Sisi Kiri (Keluar ke Dalam)
             const leftR32 = []; for(let i=1; i<=16; i++) leftR32.push(`L-1-${i}`);
             const leftR16 = []; for(let i=1; i<=8; i++) leftR16.push(`L-2-${i}`);
             const leftQF = []; for(let i=1; i<=4; i++) leftQF.push(`L-3-${i}`);
             const leftSF = ['L-4-1', 'L-4-2'];
 
-            // Generator Jalur Sisi Kanan (Keluar ke Dalam)
             const rightR32 = []; for(let i=1; i<=16; i++) rightR32.push(`R-1-${i}`);
             const rightR16 = []; for(let i=1; i<=8; i++) rightR16.push(`R-2-${i}`);
             const rightQF = []; for(let i=1; i<=4; i++) rightQF.push(`R-3-${i}`);
@@ -560,11 +681,9 @@
                 }
             };
 
-            // Menggambar garis utama struktur turnamen kiri & kanan
             createTreePath(leftR32, leftR16); createTreePath(leftR16, leftQF); createTreePath(leftQF, leftSF);
             createTreePath(rightR32, rightR16); createTreePath(rightR16, rightQF); createTreePath(rightQF, rightSF);
 
-            // Fungsi garis manual untuk menyambungkan Semifinal ke area tengah
             const drawDirectLine = (fromId, toId) => {
                 const elA = document.getElementById(fromId), elB = document.getElementById(toId);
                 if(elA && elB) {
@@ -582,14 +701,44 @@
                 }
             };
 
-            // Menghubungkan pemenang Semifinal ke Grand Final
             drawDirectLine('L-4-1', 'F-1');
+            drawDirectLine('L-4-2', 'B-1');
             drawDirectLine('R-4-1', 'F-2');
-
-            // Menghubungkan Grand Final menuju Podium Juara
+            drawDirectLine('R-4-2', 'B-2');
             drawDirectLine('F-1', 'CHAMP');
             drawDirectLine('F-2', 'CHAMP');
         }
+
+        // Logika Otomatisasi Injury Time Papan Skor
+        const injuryInput = document.getElementById('time-injury');
+        const injurySign = document.getElementById('injury-plus');
+        const timeMainInput = document.getElementById('time-main');
+
+        timeMainInput.addEventListener('input', checkInjuryTimeVisibility);
+        
+        function checkInjuryTimeVisibility() {
+            const timeVal = timeMainInput.value;
+            if (timeVal.includes('45') || timeVal.includes('90') || timeVal.includes('120')) {
+                injurySign.style.display = 'inline';
+                injuryInput.style.display = 'inline';
+                if(injuryInput.value == "0") injuryInput.value = "1"; 
+            } else {
+                injurySign.style.display = 'none';
+                injuryInput.style.display = 'none';
+            }
+            saveBracketState();
+        }
+
+        injuryInput.addEventListener('input', () => {
+            if (parseInt(injuryInput.value) <= 0 || injuryInput.value === "") {
+                injurySign.style.display = 'none';
+                injuryInput.style.display = 'none';
+            }
+            saveBracketState();
+        });
+
+        document.getElementById('score-input-l').addEventListener('input', saveBracketState);
+        document.getElementById('score-input-r').addEventListener('input', saveBracketState);
 
         window.addEventListener('load', () => { loadBracketState(); setTimeout(drawLines, 250); });
         window.addEventListener('resize', drawLines);
