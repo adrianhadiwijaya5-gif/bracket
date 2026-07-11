@@ -34,7 +34,7 @@
             user-select: none;
         }
 
-        /* --- GAYA PAPAN SKOR KAPSUL --- */
+        /* --- SCOREBOARD TV STREAMLINED --- */
         .score-board-tv {
             display: inline-flex;
             align-items: center;
@@ -51,20 +51,25 @@
         }
         .team-side { display: flex; align-items: center; gap: 8px; }
         .flag-container { width: 38px; height: 25px; border-radius: 4px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; }
+        .flag-container img { width: 100%; height: 100%; object-fit: cover; }
+        .flag-empty { width: 100%; height: 100%; background: #151924; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.2); font-size: 0.8rem; }
         .jersey-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.3); }
         .jersey-blue { background-color: #9fc1ff; }
         .jersey-grey { background-color: #444444; }
-        .team-code { font-size: 1.4rem; letter-spacing: 0.5px; width: 45px; text-align: center; }
+        .team-code { font-size: 1.4rem; letter-spacing: 0.5px; width: 45px; text-align: center; color: #fff; }
+        
         .score-box, .match-time, .injury-time { background: transparent; border: none; color: #ffffff; font-family: 'Impact', sans-serif; text-align: center; outline: none; }
         .score-box { color: #000000; font-size: 1.6rem; width: 40px; height: 32px; border-radius: 8px; font-weight: bold; }
         .cyan-neon { background-color: #00f0ff; box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
         .score-box::-webkit-inner-spin-button, .injury-time::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        
         .center-badge-logo { background: linear-gradient(180deg, #ff007f 0%, #4a0025 100%); color: #ffffff; font-size: 0.9rem; padding: 4px 8px; border-radius: 6px; writing-mode: vertical-lr; transform: rotate(180deg); height: 24px; line-height: 1; font-weight: bold; }
         .divider-line { width: 2px; height: 22px; background-color: #333333; margin: 0 4px; }
+        
         .time-container { display: flex; align-items: center; gap: 2px; }
         .match-time { font-size: 1.5rem; width: 65px; color: #fff; }
-        .injury-sign { color: #ffd700; font-size: 1.2rem; font-weight: bold; }
-        .injury-time { color: #ffd700; font-size: 1.3rem; width: 25px; text-align: left; }
+        .injury-sign { color: #ffd700; font-size: 1.2rem; font-weight: bold; display: none; }
+        .injury-time { color: #ffd700; font-size: 1.3rem; width: 25px; text-align: left; display: none; }
 
         /* Top Control Panel */
         .control-panel {
@@ -92,10 +97,8 @@
             font-weight: bold;
             text-transform: uppercase;
         }
-
         .control-panel input:focus { border-color: var(--accent-cyan); }
 
-        /* Trash Zone */
         .trash-zone {
             display: flex;
             align-items: center;
@@ -164,6 +167,12 @@
             padding: 5px;
             gap: 5px;
             position: relative;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .match-node.selected-match {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
         }
 
         .team-slot {
@@ -181,10 +190,9 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.2s ease;
         }
-
-        .team-slot.active-target {
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+        .team-slot.active-slot {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
         }
 
         .flag-img {
@@ -193,7 +201,6 @@
             object-fit: cover;
             border-radius: 14px 2px 14px 2px;
             cursor: grab;
-            transition: opacity 0.2s ease, filter 0.2s ease;
         }
 
         .team-slot.eliminated .flag-img {
@@ -206,16 +213,13 @@
         }
 
         .center-stage { display: flex; flex-direction: column; align-items: center; gap: 40px; z-index: 2; width: 240px; }
-
         .champion-podium {
             background: linear-gradient(135deg, #2b220d 0%, #111522 100%);
             border: 2px solid var(--accent-gold);
             border-radius: 20px;
             padding: 20px 35px;
             text-align: center;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
         }
-
         .champion-podium .team-slot {
             width: 76px;
             height: 54px;
@@ -223,7 +227,6 @@
             border-color: var(--accent-gold);
             margin: 0 auto;
         }
-        .champion-podium .flag-img { border-radius: 20px 2px 20px 2px; }
 
         .final-battle {
             display: flex;
@@ -253,19 +256,17 @@
             max-width: 1450px;
             margin-top: 40px;
         }
-
         .pool-grid { 
             display: flex; 
             flex-wrap: wrap; 
             gap: 10px; 
             justify-content: center;
-            max-height: 300px;
+            max-height: 250px;
             overflow-y: auto;
             padding: 10px;
             background: #090b12;
             border-radius: 8px;
         }
-
         .pool-item {
             display: flex;
             flex-direction: column;
@@ -276,143 +277,133 @@
             border: 1px solid #252e45;
             width: 65px;
         }
-
         .pool-flag { width: 48px; height: 34px; object-fit: cover; border-radius: 8px 2px 8px 2px; cursor: grab; }
         .pool-code { font-size: 0.65rem; color: #8fa0c2; margin-top: 5px; font-weight: bold; text-align: center; }
     </style>
 </head>
 <body>
 
-    <!-- Papan Skor TV Kapsul (Bisa Ditempeli Bendera via Drag & Drop) -->
+    <!-- Papan Skor TV Utama (Informasi Otomatis Terkoneksi ke Match yang Diklik) -->
     <div class="score-board-tv">
         <div class="team-side">
-            <div class="flag-container" id="score-flag-l">
-                <div class="team-slot drop-zone" id="SCORE-L" style="width:38px; height:25px; border-radius:4px; background:#151924;">?</div>
-            </div>
+            <div class="flag-container" id="tv-flag-l"><div class="flag-empty">?</div></div>
             <div class="jersey-dot jersey-blue"></div>
-            <div class="team-code" id="code-l">FRA</div>
+            <div class="team-code" id="tv-code-l">---</div>
         </div>
 
-        <input type="number" class="score-box cyan-neon" id="score-input-l" value="0" min="0">
+        <input type="number" class="score-box cyan-neon" id="tv-score-l" value="0" min="0">
         <div class="center-badge-logo">26</div>
-        <input type="number" class="score-box cyan-neon" id="score-input-r" value="0" min="0">
+        <input type="number" class="score-box cyan-neon" id="tv-score-r" value="0" min="0">
 
         <div class="team-side">
-            <div class="team-code" id="code-r">SEN</div>
+            <div class="team-code" id="tv-code-r">---</div>
             <div class="jersey-dot jersey-grey"></div>
-            <div class="flag-container" id="score-flag-r">
-                <div class="team-slot drop-zone" id="SCORE-R" style="width:38px; height:25px; border-radius:4px; background:#151924;">?</div>
-            </div>
+            <div class="flag-container" id="tv-flag-r"><div class="flag-empty">?</div></div>
         </div>
 
         <div class="divider-line"></div>
 
         <div class="time-container">
-            <input type="text" class="match-time" id="time-main" value="90:00">
-            <span class="injury-sign" id="injury-plus" style="display:none;">+</span>
-            <input type="number" class="injury-time" id="time-injury" value="0" min="0" style="display:none;">
+            <input type="text" class="match-time" id="tv-time" value="00:00">
+            <span class="injury-sign" id="tv-injury-plus">+</span>
+            <input type="number" class="injury-time" id="tv-injury-val" value="0" min="0">
         </div>
     </div>
 
-    <!-- Control Panel atas -->
+    <!-- Control Panel -->
     <div class="control-panel">
-        <input type="text" id="countryInput" placeholder="CARI / ENTER KODE TIM...">
-        
-        <div class="trash-zone" id="trashBin">
-            🗑️ DRAG SINI UNTUK HAPUS
+        <input type="text" id="countryInput" placeholder="CARI KODE / ENTER NEGARA...">
+        <div class="trash-zone" id="trashBin">🗑️ DRAG SINI UNTUK HAPUS</div>
+        <div style="font-size: 0.8rem; color: #8fa0c2; max-width: 400px; line-height: 1.3;">
+            📢 <b>Cara Papan Skor Berjalan:</b> Klik area kotak pertandingan (Match Node) mana saja. Papan skor otomatis memuat data match tersebut. Ubah skor/waktu langsung di atas untuk menyimpannya.
         </div>
-
-        <div style="font-size: 0.8rem; color: #8fa0c2; max-width: 350px; line-height: 1.3;">
-            💡 <b>Tips:</b> Klik kiri untuk pilih slot asal. Ketik kode lalu Enter. <b>Klik kanan</b> pada bendera di bagan untuk meredupkan tim kalah!
-        </div>
-
-        <button class="btn-reset" onclick="resetBracket()">RESET BAGAN</button>
+        <button class="btn-reset" onclick="resetBracket()">RESET ALL</button>
     </div>
 
-    <!-- Area Utama Bagan Turnamen -->
+    <!-- Bagan Arena Utama -->
     <div class="bracket-arena" id="arena">
         <svg id="connector-svg"></svg>
 
-        <!-- Sisi Kiri Bagan -->
+        <!-- KIRI -->
         <div class="side left-side">
             <div class="column">
-                <div class="match-node"><div class="team-slot drop-zone" id="L-1-1">?</div><div class="team-slot drop-zone" id="L-1-2">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="L-1-3">?</div><div class="team-slot drop-zone" id="L-1-4">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="L-1-5">?</div><div class="team-slot drop-zone" id="L-1-6">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="L-1-7">?</div><div class="team-slot drop-zone" id="L-1-8">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="L-1-9">?</div><div class="team-slot drop-zone" id="L-1-10">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="L-1-11">?</div><div class="team-slot drop-zone" id="L-1-12">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="L-1-13">?</div><div class="team-slot drop-zone" id="L-1-14">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="L-1-15">?</div><div class="team-slot drop-zone" id="L-1-16">?</div></div>
+                <div class="match-node" data-match="L-M1"><div class="team-slot" id="L-1-1">?</div><div class="team-slot" id="L-1-2">?</div></div>
+                <div class="match-node" data-match="L-M2"><div class="team-slot" id="L-1-3">?</div><div class="team-slot" id="L-1-4">?</div></div>
+                <div class="match-node" data-match="L-M3"><div class="team-slot" id="L-1-5">?</div><div class="team-slot" id="L-1-6">?</div></div>
+                <div class="match-node" data-match="L-M4"><div class="team-slot" id="L-1-7">?</div><div class="team-slot" id="L-1-8">?</div></div>
+                <div class="match-node" data-match="L-M5"><div class="team-slot" id="L-1-9">?</div><div class="team-slot" id="L-1-10">?</div></div>
+                <div class="match-node" data-match="L-M6"><div class="team-slot" id="L-1-11">?</div><div class="team-slot" id="L-1-12">?</div></div>
+                <div class="match-node" data-match="L-M7"><div class="team-slot" id="L-1-13">?</div><div class="team-slot" id="L-1-14">?</div></div>
+                <div class="match-node" data-match="L-M8"><div class="team-slot" id="L-1-15">?</div><div class="team-slot" id="L-1-16">?</div></div>
             </div>
             <div class="column">
-                <div class="match-node"><div class="team-slot drop-zone" id="L-2-1">?</div><div class="team-slot drop-zone" id="L-2-2">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="L-2-3">?</div><div class="team-slot drop-zone" id="L-2-4">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="L-2-5">?</div><div class="team-slot drop-zone" id="L-2-6">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="L-2-7">?</div><div class="team-slot drop-zone" id="L-2-8">?</div></div>
+                <div class="match-node" data-match="L-M9"><div class="team-slot" id="L-2-1">?</div><div class="team-slot" id="L-2-2">?</div></div>
+                <div class="match-node" data-match="L-M10"><div class="team-slot" id="L-2-3">?</div><div class="team-slot" id="L-2-4">?</div></div>
+                <div class="match-node" data-match="L-M11"><div class="team-slot" id="L-2-5">?</div><div class="team-slot" id="L-2-6">?</div></div>
+                <div class="match-node" data-match="L-M12"><div class="team-slot" id="L-2-7">?</div><div class="team-slot" id="L-2-8">?</div></div>
             </div>
             <div class="column">
-                <div class="match-node"><div class="team-slot drop-zone" id="L-3-1">?</div><div class="team-slot drop-zone" id="L-3-2">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="L-3-3">?</div><div class="team-slot drop-zone" id="L-3-4">?</div></div>
+                <div class="match-node" data-match="L-M13"><div class="team-slot" id="L-3-1">?</div><div class="team-slot" id="L-3-2">?</div></div>
+                <div class="match-node" data-match="L-M14"><div class="team-slot" id="L-3-3">?</div><div class="team-slot" id="L-3-4">?</div></div>
             </div>
             <div class="column">
-                <div class="match-node" id="node-L-SF"><div class="team-slot drop-zone" id="L-4-1">?</div><div class="team-slot drop-zone" id="L-4-2">?</div></div>
+                <div class="match-node" data-match="L-M15"><div class="team-slot" id="L-4-1">?</div><div class="team-slot" id="L-4-2">?</div></div>
             </div>
         </div>
 
-        <!-- Panggung Tengah (Podium Juara & Final) -->
+        <!-- TENGAH -->
         <div class="center-stage">
             <div class="champion-podium">
-                <div style="font-size:0.75rem; font-weight:bold; letter-spacing:2px; margin-bottom:10px; color:var(--accent-gold);">WORLD CHAMPION</div>
-                <div class="team-slot drop-zone" id="CHAMP">🏆</div>
+                <div style="font-size:0.75rem; font-weight:bold; color:var(--accent-gold); margin-bottom:5px;">WORLD CHAMPION</div>
+                <div class="team-slot" id="CHAMP">🏆</div>
             </div>
 
-            <div class="final-battle" id="node-MAIN-FINAL">
-                <div style="font-size:0.7rem; font-weight:bold; letter-spacing:1px; color:var(--accent-cyan);">GRAND FINAL</div>
-                <div class="team-slot drop-zone" id="F-1" style="margin:0 auto;">?</div>
-                <div class="team-slot drop-zone" id="F-2" style="margin:0 auto;">?</div>
+            <div class="final-battle match-node" data-match="M-FINAL">
+                <div style="font-size:0.7rem; font-weight:bold; color:var(--accent-cyan);">GRAND FINAL</div>
+                <div class="team-slot" id="F-1" style="margin:0 auto;">?</div>
+                <div class="team-slot" id="F-2" style="margin:0 auto;">?</div>
             </div>
 
-            <div class="bronze-box" id="node-BRONZE">
-                <div style="font-size:0.75rem; font-weight:bold; margin-bottom:8px; color:#cd7f32;">BRONZE FINAL</div>
-                <div class="match-node" style="flex-direction: row; justify-content: center;">
-                    <div class="team-slot drop-zone" id="B-1">?</div>
-                    <div class="team-slot drop-zone" id="B-2">?</div>
+            <div class="bronze-box match-node" data-match="M-BRONZE">
+                <div style="font-size:0.75rem; font-weight:bold; margin-bottom:5px; color:#cd7f32;">BRONZE FINAL</div>
+                <div style="display:flex; gap:5px; justify-content:center;">
+                    <div class="team-slot" id="B-1">?</div>
+                    <div class="team-slot" id="B-2">?</div>
                 </div>
             </div>
         </div>
 
-        <!-- Sisi Kanan Bagan -->
+        <!-- KANAN (DIPERBAIKI: R-1-15 dan R-1-16 agar tidak terputus) -->
         <div class="side right-side">
             <div class="column">
-                <div class="match-node" id="node-R-SF"><div class="team-slot drop-zone" id="R-4-1">?</div><div class="team-slot drop-zone" id="R-4-2">?</div></div>
+                <div class="match-node" data-match="R-M15"><div class="team-slot" id="R-4-1">?</div><div class="team-slot" id="R-4-2">?</div></div>
             </div>
             <div class="column">
-                <div class="match-node"><div class="team-slot drop-zone" id="R-3-1">?</div><div class="team-slot drop-zone" id="R-3-2">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="R-3-3">?</div><div class="team-slot drop-zone" id="R-3-4">?</div></div>
+                <div class="match-node" data-match="R-M13"><div class="team-slot" id="R-3-1">?</div><div class="team-slot" id="R-3-2">?</div></div>
+                <div class="match-node" data-match="R-M14"><div class="team-slot" id="R-3-3">?</div><div class="team-slot" id="R-3-4">?</div></div>
             </div>
             <div class="column">
-                <div class="match-node"><div class="team-slot drop-zone" id="R-2-1">?</div><div class="team-slot drop-zone" id="R-2-2">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="R-2-3">?</div><div class="team-slot drop-zone" id="R-2-4">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="R-2-5">?</div><div class="team-slot drop-zone" id="R-2-6">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="R-2-7">?</div><div class="team-slot drop-zone" id="R-2-8">?</div></div>
+                <div class="match-node" data-match="R-M9"><div class="team-slot" id="R-2-1">?</div><div class="team-slot" id="R-2-2">?</div></div>
+                <div class="match-node" data-match="R-M10"><div class="team-slot" id="R-2-3">?</div><div class="team-slot" id="R-2-4">?</div></div>
+                <div class="match-node" data-match="R-M11"><div class="team-slot" id="R-2-5">?</div><div class="team-slot" id="R-2-6">?</div></div>
+                <div class="match-node" data-match="R-M12"><div class="team-slot" id="R-2-7">?</div><div class="team-slot" id="R-2-8">?</div></div>
             </div>
             <div class="column">
-                <div class="match-node"><div class="team-slot drop-zone" id="R-1-1">?</div><div class="team-slot drop-zone" id="R-1-2">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="R-1-3">?</div><div class="team-slot drop-zone" id="R-1-4">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="R-1-5">?</div><div class="team-slot drop-zone" id="R-1-6">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="R-1-7">?</div><div class="team-slot drop-zone" id="R-1-8">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="R-1-9">?</div><div class="team-slot drop-zone" id="R-1-10">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="R-1-11">?</div><div class="team-slot drop-zone" id="R-1-12">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="R-1-13">?</div><div class="team-slot drop-zone" id="R-1-14">?</div></div>
-                <div class="match-node"><div class="team-slot drop-zone" id="L-1-15">?</div><div class="team-slot drop-zone" id="L-1-16">?</div></div>
+                <div class="match-node" data-match="R-M1"><div class="team-slot" id="R-1-1">?</div><div class="team-slot" id="R-1-2">?</div></div>
+                <div class="match-node" data-match="R-M2"><div class="team-slot" id="R-1-3">?</div><div class="team-slot" id="R-1-4">?</div></div>
+                <div class="match-node" data-match="R-M3"><div class="team-slot" id="R-1-5">?</div><div class="team-slot" id="R-1-6">?</div></div>
+                <div class="match-node" data-match="R-M4"><div class="team-slot" id="R-1-7">?</div><div class="team-slot" id="R-1-8">?</div></div>
+                <div class="match-node" data-match="R-M5"><div class="team-slot" id="R-1-9">?</div><div class="team-slot" id="R-1-10">?</div></div>
+                <div class="match-node" data-match="R-M6"><div class="team-slot" id="R-1-11">?</div><div class="team-slot" id="R-1-12">?</div></div>
+                <div class="match-node" data-match="R-M7"><div class="team-slot" id="R-1-13">?</div><div class="team-slot" id="R-1-14">?</div></div>
+                <div class="match-node" data-match="R-M8"><div class="team-slot" id="R-1-15">?</div><div class="team-slot" id="R-1-16">?</div></div>
             </div>
         </div>
     </div>
 
-    <!-- Database Global Negara -->
+    <!-- Database Negara -->
     <div class="pool-section">
-        <div style="font-size:0.8rem; font-weight:bold; color:var(--accent-cyan); margin-bottom:15px; letter-spacing:1px;">🌐 GLOBAL DATABASE (SELURUH NEGARA DI DUNIA)</div>
+        <div style="font-size:0.8rem; font-weight:bold; color:var(--accent-cyan); margin-bottom:15px;">🌐 GLOBAL DATABASE</div>
         <div class="pool-grid" id="global-pool-grid"></div>
     </div>
 
@@ -422,40 +413,25 @@
             {c:"fr", n:"FRA"}, {c:"de", n:"GER"}, {c:"gb-eng", n:"ENG"}, {c:"es", n:"ESP"}, {c:"pt", n:"POR"}, {c:"jp", n:"JPN"},
             {c:"kr", n:"KOR"}, {c:"nl", n:"NED"}, {c:"it", n:"ITA"}, {c:"ma", n:"MAR"}, {c:"hr", n:"CRO"}, {c:"be", n:"BEL"},
             {c:"uy", n:"URU"}, {c:"co", n:"COL"}, {c:"sa", n:"KSA"}, {c:"au", n:"AUS"}, {c:"sn", n:"SEN"}, {c:"cm", n:"CMR"},
-            {c:"gh", n:"GHA"}, {c:"ch", n:"SUI"}, {c:"dk", n:"DEN"}, {c:"se", n:"SWE"}, {c:"no", n:"NOR"}, {c:"pl", n:"POL"},
-            {c:"ua", n:"UKR"}, {c:"tr", n:"TUR"}, {c:"eg", n:"EGY"}, {c:"dz", n:"ALG"}, {c:"ng", n:"NGA"}, {c:"za", n:"RSA"},
-            {c:"ir", n:"IRN"}, {c:"cl", n:"CHI"}, {c:"pe", n:"PER"}, {c:"ec", n:"ECU"}, {c:"py", n:"PAR"}, {c:"ve", n:"VEN"},
-            {c:"nz", n:"NZL"}, {c:"cr", n:"CRC"}, {c:"jm", n:"JAM"}, {c:"tn", n:"TUN"}, {c:"qa", n:"QAT"}, {c:"at", n:"AUT"},
-            {c:"af", n:"AFG"}, {c:"al", n:"ALB"}, {c:"ad", n:"AND"}, {c:"ao", n:"ANG"}, {c:"ag", n:"ATG"}, {c:"am", n:"ARM"},
-            {c:"az", n:"AZE"}, {c:"bs", n:"BAH"}, {c:"bh", n:"BHR"}, {c:"bd", n:"BAN"}, {c:"bb", n:"BAR"}, {c:"by", n:"BLR"},
-            {c:"bz", n:"BLZ"}, {c:"bj", n:"BEN"}, {c:"bt", n:"BHU"}, {c:"bo", n:"BOL"}, {c:"ba", n:"BIH"}, {c:"bw", n:"BOT"},
-            {c:"bn", n:"BRU"}, {c:"bg", n:"BUL"}, {c:"bf", n:"BUR"}, {c:"bi", n:"BDI"}, {c:"kh", n:"CAM"}, {c:"cv", n:"CPV"},
-            {c:"cf", n:"CAF"}, {c:"td", n:"CHA"}, {c:"cn", n:"CHN"}, {c:"km", n:"COM"}, {c:"cg", n:"CGO"}, {c:"cd", n:"COD"},
-            {c:"ci", n:"CIV"}, {c:"cu", n:"CUB"}, {c:"cy", n:"CYP"}, {c:"cz", n:"CZE"}, {c:"dj", n:"DJI"}, {c:"dm", n:"DMA"},
-            {c:"do", n:"DOM"}, {c:"gq", n:"GEQ"}, {c:"er", n:"ERI"}, {c:"ee", n:"EST"}, {c:"sz", n:"SWZ"}, {c:"et", n:"ETH"},
-            {c:"fj", n:"FIJ"}, {c:"fi", n:"FIN"}, {c:"ga", n:"GAB"}, {c:"gm", n:"GAM"}, {c:"ge", n:"GEO"}, {c:"gr", n:"GRE"},
-            {c:"gd", n:"GRN"}, {c:"gt", n:"GUA"}, {c:"gn", n:"GUI"}, {c:"gw", n:"GBS"}, {c:"gy", n:"GUY"}, {c:"ht", n:"HAI"},
-            {c:"hn", n:"HON"}, {c:"hu", n:"HUN"}, {c:"is", n:"ISL"}, {c:"in", n:"IND"}, {c:"iq", n:"IRQ"}, {c:"ie", n:"IRL"},
-            {c:"il", n:"ISR"}, {c:"jo", n:"JOR"}, {c:"kz", n:"KAZ"}, {c:"ke", n:"KEN"}, {c:"ki", n:"KIR"},
-            {c:"kp", n:"PRK"}, {c:"kw", n:"KUW"}, {c:"kg", n:"KGZ"}, {c:"la", n:"LAO"}, {c:"lv", n:"LAT"}, {c:"lb", n:"LEB"},
-            {c:"ls", n:"LES"}, {c:"lr", n:"LBR"}, {c:"ly", n:"LBY"}, {c:"li", n:"LIE"}, {c:"lt", n:"LTU"}, {c:"lu", n:"LUX"},
-            {c:"mg", n:"MAD"}, {c:"mw", n:"MWI"}, {c:"my", n:"MAS"}, {c:"mv", n:"MDV"}, {c:"ml", n:"MLI"}, {c:"mt", n:"MLT"},
-            {c:"mh", n:"MHL"}, {c:"mr", n:"MTN"}, {c:"mu", n:"MRI"}, {c:"md", n:"MDA"}, {c:"mc", n:"MON"}, {c:"mn", n:"MNG"},
-            {c:"me", n:"MNE"}, {c:"mz", n:"MOZ"}, {c:"mm", n:"MYA"}, {c:"na", n:"NAM"}, {c:"nr", n:"NRU"}, {c:"np", n:"NEP"},
-            {c:"ni", n:"NCA"}, {c:"ne", n:"NIG"}, {c:"mk", n:"MKD"}, {c:"om", n:"OMA"}, {c:"pk", n:"PAK"}, {c:"pw", n:"PLW"},
-            {c:"pa", n:"PAN"}, {c:"pg", n:"PNG"}, {c:"ph", n:"PHI"}, {c:"ro", n:"ROU"}, {c:"ru", n:"RUS"},
-            {c:"rw", n:"RWA"}, {c:"kn", n:"SKN"}, {c:"lc", n:"LCA"}, {c:"vc", n:"VIN"}, {c:"ws", n:"SAM"}, {c:"sm", n:"SMR"},
-            {c:"st", n:"STP"}, {c:"rs", n:"SRB"}, {c:"sc", n:"SEY"}, {c:"sl", n:"SLE"}, {c:"sg", n:"SGP"},
-            {c:"sk", n:"SVK"}, {c:"si", n:"SVN"}, {c:"sb", n:"SOL"}, {c:"so", n:"SOM"}, {c:"ss", n:"SSD"}, {c:"lk", n:"SRI"},
-            {c:"sd", n:"SUD"}, {c:"sr", n:"SUR"}, {c:"sy", n:"SYR"}, {c:"tw", n:"TPE"}, {c:"tj", n:"TJK"}, {c:"tz", n:"TAN"},
-            {c:"th", n:"THA"}, {c:"tl", n:"TLS"}, {c:"tg", n:"TOG"}, {c:"to", n:"TGA"}, {c:"tt", n:"TRI"}, {c:"tv", n:"TUV"},
-            {c:"ug", n:"UGA"}, {c:"ae", n:"UAE"}, {c:"gb-wls", n:"WAL"}, {c:"gb-sct", n:"SCO"}, {c:"uz", n:"UZB"}, {c:"vu", n:"VAN"},
-            {c:"ye", n:"YEM"}, {c:"zm", n:"ZAM"}, {c:"zw", n:"ZIM"}
+            {c:"ch", n:"SUI"}, {c:"dz", n:"ALG"}
         ];
 
         let draggedFlagSrc = null;
         let draggedSourceSlotId = null;
-        let selectedSlot = null;
+        let selectedSlotElement = null;
+        let activeMatchId = "L-M1"; 
+
+        // Database structures score
+        let matchScores = {};
+
+        function initScoreData() {
+            document.querySelectorAll('.match-node').forEach(node => {
+                const mid = node.getAttribute('data-match');
+                if(mid && !matchScores[mid]) {
+                    matchScores[mid] = { scoreL: 0, scoreR: 0, time: "00:00", injury: 0 };
+                }
+            });
+        }
 
         const poolGrid = document.getElementById('global-pool-grid');
         function renderPool(list) {
@@ -472,37 +448,47 @@
         }
         renderPool(countriesList);
 
-        // Filter / Pencarian Tim
         document.getElementById('countryInput').addEventListener('input', (e) => {
             const val = e.target.value.trim().toUpperCase();
-            const filtered = countriesList.filter(c => c.n.includes(val));
-            renderPool(filtered);
+            renderPool(countriesList.filter(c => c.n.includes(val)));
         });
 
-        // Tekan Enter untuk isi otomatis slot terpilih
         document.getElementById('countryInput').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && selectedSlot) {
-                const targetCode = e.target.value.trim().toUpperCase();
-                const found = countriesList.find(c => c.n === targetCode);
+            if (e.key === 'Enter' && selectedSlotElement) {
+                const found = countriesList.find(c => c.n === e.target.value.trim().toUpperCase());
                 if (found) {
-                    setSlotImage(selectedSlot, `https://flagcdn.com/w80/${found.c}.png`);
-                    
-                    // Jika slot yang dipilih papan skor, ganti teks kodenya
-                    if(selectedSlot.id === 'SCORE-L') document.getElementById('code-l').innerText = found.n;
-                    if(selectedSlot.id === 'SCORE-R') document.getElementById('code-r').innerText = found.n;
-
+                    setSlotImage(selectedSlotElement, `https://flagcdn.com/w80/${found.c}.png`, found.n);
                     e.target.value = '';
-                    renderPool(countriesList);
+                    updateScoreboardUI();
                 }
             }
         });
 
-        // Event Klik & Klik Kanan (Eliminasi)
-        document.querySelectorAll('.drop-zone').forEach(slot => {
-            slot.addEventListener('click', () => {
-                document.querySelectorAll('.drop-zone').forEach(s => s.classList.remove('active-target'));
-                selectedSlot = slot;
-                slot.classList.add('active-target');
+        // Kontrol klik slot & Match node
+        document.querySelectorAll('.match-node').forEach(node => {
+            node.addEventListener('click', (e) => {
+                if (e.target.classList.contains('team-slot')) return;
+                document.querySelectorAll('.match-node').forEach(n => n.classList.remove('selected-match'));
+                node.classList.add('selected-match');
+                activeMatchId = node.getAttribute('data-match');
+                updateScoreboardUI();
+            });
+        });
+
+        document.querySelectorAll('.team-slot').forEach(slot => {
+            slot.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('.team-slot').forEach(s => s.classList.remove('active-slot'));
+                selectedSlotElement = slot;
+                slot.classList.add('active-slot');
+                
+                const parentNode = slot.closest('.match-node');
+                if (parentNode) {
+                    document.querySelectorAll('.match-node').forEach(n => n.classList.remove('selected-match'));
+                    parentNode.classList.add('selected-match');
+                    activeMatchId = parentNode.getAttribute('data-match');
+                    updateScoreboardUI();
+                }
                 document.getElementById('countryInput').focus();
             });
 
@@ -513,47 +499,35 @@
                     saveBracketState();
                 }
             });
-        });
-
-        // Drag & Drop Handling
-        document.addEventListener('dragstart', (e) => {
-            if (e.target.classList.contains('pool-flag')) {
-                draggedFlagSrc = e.target.getAttribute('src');
-                e.dataTransfer.setData('text/country-code', e.target.getAttribute('data-code') || '');
-                draggedSourceSlotId = null;
-            } else if (e.target.classList.contains('flag-img')) {
-                draggedFlagSrc = e.target.getAttribute('src');
-                const parentSlot = e.target.closest('.drop-zone');
-                draggedSourceSlotId = parentSlot.id;
-                
-                // Ambil kode teks yang tersimpan (jika ada)
-                const savedCode = parentSlot.getAttribute('data-code') || '';
-                e.dataTransfer.setData('text/country-code', savedCode);
-            }
-        });
-
-        document.querySelectorAll('.drop-zone').forEach(zone => {
-            zone.addEventListener('dragover', (e) => e.preventDefault());
-            zone.addEventListener('drop', (e) => {
+            
+            // Drag & Drop
+            slot.addEventListener('dragover', (e) => e.preventDefault());
+            slot.addEventListener('drop', (e) => {
                 e.preventDefault();
                 if (draggedFlagSrc) {
-                    setSlotImage(zone, draggedFlagSrc);
-                    
-                    const codeData = e.dataTransfer.getData('text/country-code');
-                    if(codeData) {
-                        zone.setAttribute('data-code', codeData);
-                        if(zone.id === 'SCORE-L') document.getElementById('code-l').innerText = codeData;
-                        if(zone.id === 'SCORE-R') document.getElementById('code-r').innerText = codeData;
-                    }
-
-                    if (draggedSourceSlotId && draggedSourceSlotId !== zone.id) {
+                    const code = e.dataTransfer.getData('text/plain');
+                    setSlotImage(slot, draggedFlagSrc, code);
+                    if (draggedSourceSlotId && draggedSourceSlotId !== slot.id) {
                         clearSlot(document.getElementById(draggedSourceSlotId));
                     }
+                    updateScoreboardUI();
                 }
             });
         });
 
-        // Tong Sampah (Hapus)
+        document.addEventListener('dragstart', (e) => {
+            if (e.target.classList.contains('pool-flag')) {
+                draggedFlagSrc = e.target.getAttribute('src');
+                e.dataTransfer.setData('text/plain', e.target.getAttribute('data-code'));
+                draggedSourceSlotId = null;
+            } else if (e.target.classList.contains('flag-img')) {
+                draggedFlagSrc = e.target.getAttribute('src');
+                const parent = e.target.closest('.team-slot');
+                draggedSourceSlotId = parent.id;
+                e.dataTransfer.setData('text/plain', parent.getAttribute('data-code') || '');
+            }
+        });
+
         const trashBin = document.getElementById('trashBin');
         trashBin.addEventListener('dragover', (e) => { e.preventDefault(); trashBin.classList.add('drag-over-trash'); });
         trashBin.addEventListener('dragleave', () => trashBin.classList.remove('drag-over-trash'));
@@ -562,89 +536,143 @@
             trashBin.classList.remove('drag-over-trash');
             if (draggedSourceSlotId) {
                 clearSlot(document.getElementById(draggedSourceSlotId));
-                saveBracketState();
+                updateScoreboardUI();
             }
         });
 
-        function setSlotImage(slotElement, imgUrl) {
-            slotElement.innerHTML = `<img src="${imgUrl}" class="flag-img" draggable="true">`;
-            slotElement.classList.remove('eliminated');
+        function setSlotImage(slot, src, code) {
+            slot.innerHTML = `<img src="${src}" class="flag-img" draggable="true">`;
+            slot.classList.remove('eliminated');
+            slot.setAttribute('data-code', code || '---');
             saveBracketState();
         }
 
-        function clearSlot(slotElement) {
-            if (slotElement) {
-                if(slotElement.id === 'CHAMP') slotElement.innerHTML = '🏆';
-                else slotElement.innerHTML = '?';
-                
-                slotElement.classList.remove('eliminated');
-                slotElement.removeAttribute('data-code');
-                
-                if(slotElement.id === 'SCORE-L') document.getElementById('code-l').innerText = '---';
-                if(slotElement.id === 'SCORE-R') document.getElementById('code-r').innerText = '---';
-                saveBracketState();
+        function clearSlot(slot) {
+            if (!slot) return;
+            slot.innerHTML = (slot.id === 'CHAMP') ? '🏆' : '?';
+            slot.classList.remove('eliminated');
+            slot.removeAttribute('data-code');
+            saveBracketState();
+        }
+
+        // Sinkronisasi Data Ke Papan Skor TV
+        function updateScoreboardUI() {
+            const node = document.querySelector(`[data-match="${activeMatchId}"]`);
+            if(!node) return;
+
+            const slots = node.querySelectorAll('.team-slot');
+            const data = matchScores[activeMatchId] || { scoreL:0, scoreR:0, time:"00:00", injury:0 };
+
+            // Render Tim Kiri
+            if(slots[0] && slots[0].querySelector('img')) {
+                document.getElementById('tv-flag-l').innerHTML = `<img src="${slots[0].querySelector('img').src}">`;
+                document.getElementById('tv-code-l').innerText = slots[0].getAttribute('data-code') || '---';
+            } else {
+                document.getElementById('tv-flag-l').innerHTML = `<div class="flag-empty">?</div>`;
+                document.getElementById('tv-code-l').innerText = '---';
+            }
+
+            // Render Tim Kanan
+            if(slots[1] && slots[1].querySelector('img')) {
+                document.getElementById('tv-flag-r').innerHTML = `<img src="${slots[1].querySelector('img').src}">`;
+                document.getElementById('tv-code-r').innerText = slots[1].getAttribute('data-code') || '---';
+            } else {
+                document.getElementById('tv-flag-r').innerHTML = `<div class="flag-empty">?</div>`;
+                document.getElementById('tv-code-r').innerText = '---';
+            }
+
+            // Render Skor & Waktu
+            document.getElementById('tv-score-l').value = data.scoreL;
+            document.getElementById('tv-score-r').value = data.scoreR;
+            document.getElementById('tv-time').value = data.time;
+            document.getElementById('tv-injury-val').value = data.injury;
+
+            // Atur Visibilitas injury time
+            const t = data.time;
+            if(t.includes('45') || t.includes('90') || t.includes('120')) {
+                document.getElementById('tv-injury-plus').style.display = 'inline';
+                document.getElementById('tv-injury-val').style.display = 'inline';
+            } else {
+                document.getElementById('tv-injury-plus').style.display = 'none';
+                document.getElementById('tv-injury-val').style.display = 'none';
             }
         }
 
-        // Simpan & Muat data otomatis lewat LocalStorage
+        // Event Listener Papan Skor Input untuk Simpan Data Pertandingan
+        ['tv-score-l', 'tv-score-r', 'tv-time', 'tv-injury-val'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                if(!matchScores[activeMatchId]) matchScores[activeMatchId] = {};
+                
+                matchScores[activeMatchId].scoreL = parseInt(document.getElementById('tv-score-l').value) || 0;
+                matchScores[activeMatchId].scoreR = parseInt(document.getElementById('tv-score-r').value) || 0;
+                matchScores[activeMatchId].time = document.getElementById('tv-time').value || "00:00";
+                matchScores[activeMatchId].injury = parseInt(document.getElementById('tv-injury-val').value) || 0;
+
+                // Cek ulang visibilitas injury time pas ngetik
+                const t = matchScores[activeMatchId].time;
+                if(t.includes('45') || t.includes('90') || t.includes('120')) {
+                    document.getElementById('tv-injury-plus').style.display = 'inline';
+                    document.getElementById('tv-injury-val').style.display = 'inline';
+                } else {
+                    document.getElementById('tv-injury-plus').style.display = 'none';
+                    document.getElementById('tv-injury-val').style.display = 'none';
+                }
+                saveBracketState();
+            });
+        });
+
+        // Simpan & Muat LocalStorage
         function saveBracketState() {
-            const state = {};
-            document.querySelectorAll('.drop-zone').forEach(slot => {
+            const state = { slots: {}, scores: matchScores, activeMatch: activeMatchId };
+            document.querySelectorAll('.team-slot').forEach(slot => {
                 const img = slot.querySelector('img');
-                state[slot.id] = {
+                state.slots[slot.id] = {
                     src: img ? img.getAttribute('src') : null,
                     isEliminated: slot.classList.contains('eliminated'),
                     code: slot.getAttribute('data-code') || null
                 };
             });
-            
-            // Simpan juga data input teks papan skor
-            state['score_l_val'] = document.getElementById('score-input-l').value;
-            state['score_r_val'] = document.getElementById('score-input-r').value;
-            state['time_main_val'] = document.getElementById('time-main').value;
-            state['time_injury_val'] = document.getElementById('time-injury').value;
-
-            localStorage.setItem('fifa2026_redup_save', JSON.stringify(state));
+            localStorage.setItem('fifa2026_advanced_save', JSON.stringify(state));
         }
 
         function loadBracketState() {
-            const savedData = localStorage.getItem('fifa2026_redup_save');
+            initScoreData();
+            const savedData = localStorage.getItem('fifa2026_advanced_save');
             if (savedData) {
                 const state = JSON.parse(savedData);
-                Object.keys(state).forEach(id => {
-                    const slot = document.getElementById(id);
-                    if (slot && state[id].src) {
-                        slot.innerHTML = `<img src="${state[id].src}" class="flag-img" draggable="true">`;
-                        if (state[id].isEliminated) slot.classList.add('eliminated');
-                        if (state[id].code) {
-                            slot.setAttribute('data-code', state[id].code);
-                            if(id === 'SCORE-L') document.getElementById('code-l').innerText = state[id].code;
-                            if(id === 'SCORE-R') document.getElementById('code-r').innerText = state[id].code;
+                if (state.slots) {
+                    Object.keys(state.slots).forEach(id => {
+                        const slot = document.getElementById(id);
+                        if (slot && state.slots[id].src) {
+                            slot.innerHTML = `<img src="${state.slots[id].src}" class="flag-img" draggable="true">`;
+                            if (state.slots[id].isEliminated) slot.classList.add('eliminated');
+                            if (state.slots[id].code) slot.setAttribute('data-code', state.slots[id].code);
                         }
-                    }
-                });
-
-                if(state['score_l_val'] !== undefined) document.getElementById('score-input-l').value = state['score_l_val'];
-                if(state['score_r_val'] !== undefined) document.getElementById('score-input-r').value = state['score_r_val'];
-                if(state['time_main_val'] !== undefined) document.getElementById('time-main').value = state['time_main_val'];
-                if(state['time_injury_val'] !== undefined) document.getElementById('time-injury').value = state['time_injury_val'];
-                checkInjuryTimeVisibility();
+                    });
+                }
+                if (state.scores) matchScores = state.scores;
+                if (state.activeMatch) activeMatchId = state.activeMatch;
             }
+            const activeNode = document.querySelector(`[data-match="${activeMatchId}"]`);
+            if(activeNode) activeNode.classList.add('selected-match');
+            updateScoreboardUI();
         }
 
         function resetBracket() {
-            if (confirm("Kosongkan semua isi bagan beserta status eliminasi?")) {
-                localStorage.removeItem('fifa2026_redup_save');
-                document.querySelectorAll('.drop-zone').forEach(slot => clearSlot(slot));
-                document.getElementById('score-input-l').value = 0;
-                document.getElementById('score-input-r').value = 0;
-                document.getElementById('time-main').value = "90:00";
-                document.getElementById('time-injury').value = 0;
-                checkInjuryTimeVisibility();
+            if (confirm("Reset seluruh data bagan dan papan skor?")) {
+                localStorage.removeItem('fifa2026_advanced_save');
+                document.querySelectorAll('.team-slot').forEach(slot => clearSlot(slot));
+                matchScores = {};
+                initScoreData();
+                activeMatchId = "L-M1";
+                document.querySelectorAll('.match-node').forEach(n => n.classList.remove('selected-match'));
+                const first = document.querySelector('[data-match="L-M1"]');
+                if(first) first.classList.add('selected-match');
+                updateScoreboardUI();
             }
         }
 
-        // Menggambar garis penghubung otomatis
+        // Render Garis SVGs
         function drawLines() {
             const svg = document.getElementById('connector-svg');
             if (!svg) return;
@@ -656,6 +684,7 @@
             const leftQF = []; for(let i=1; i<=4; i++) leftQF.push(`L-3-${i}`);
             const leftSF = ['L-4-1', 'L-4-2'];
 
+            // PERBAIKAN: List array kanan bawah mendeteksi id R-1-x dengan benar sampai 16 slot
             const rightR32 = []; for(let i=1; i<=16; i++) rightR32.push(`R-1-${i}`);
             const rightR16 = []; for(let i=1; i<=8; i++) rightR16.push(`R-2-${i}`);
             const rightQF = []; for(let i=1; i<=4; i++) rightQF.push(`R-3-${i}`);
@@ -701,44 +730,10 @@
                 }
             };
 
-            drawDirectLine('L-4-1', 'F-1');
-            drawDirectLine('L-4-2', 'B-1');
-            drawDirectLine('R-4-1', 'F-2');
-            drawDirectLine('R-4-2', 'B-2');
-            drawDirectLine('F-1', 'CHAMP');
-            drawDirectLine('F-2', 'CHAMP');
+            drawDirectLine('L-4-1', 'F-1'); drawDirectLine('L-4-2', 'B-1');
+            drawDirectLine('R-4-1', 'F-2'); drawDirectLine('R-4-2', 'B-2');
+            drawDirectLine('F-1', 'CHAMP'); drawDirectLine('F-2', 'CHAMP');
         }
-
-        // Logika Otomatisasi Injury Time Papan Skor
-        const injuryInput = document.getElementById('time-injury');
-        const injurySign = document.getElementById('injury-plus');
-        const timeMainInput = document.getElementById('time-main');
-
-        timeMainInput.addEventListener('input', checkInjuryTimeVisibility);
-        
-        function checkInjuryTimeVisibility() {
-            const timeVal = timeMainInput.value;
-            if (timeVal.includes('45') || timeVal.includes('90') || timeVal.includes('120')) {
-                injurySign.style.display = 'inline';
-                injuryInput.style.display = 'inline';
-                if(injuryInput.value == "0") injuryInput.value = "1"; 
-            } else {
-                injurySign.style.display = 'none';
-                injuryInput.style.display = 'none';
-            }
-            saveBracketState();
-        }
-
-        injuryInput.addEventListener('input', () => {
-            if (parseInt(injuryInput.value) <= 0 || injuryInput.value === "") {
-                injurySign.style.display = 'none';
-                injuryInput.style.display = 'none';
-            }
-            saveBracketState();
-        });
-
-        document.getElementById('score-input-l').addEventListener('input', saveBracketState);
-        document.getElementById('score-input-r').addEventListener('input', saveBracketState);
 
         window.addEventListener('load', () => { loadBracketState(); setTimeout(drawLines, 250); });
         window.addEventListener('resize', drawLines);
