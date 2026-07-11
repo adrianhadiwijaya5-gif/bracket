@@ -131,6 +131,7 @@
             border-radius: 12px;
             padding: 5px;
             gap: 5px;
+            position: relative;
         }
 
         .team-slot {
@@ -163,7 +164,6 @@
             transition: opacity 0.2s ease, filter 0.2s ease;
         }
 
-        /* --- FITUR REDUP (TIM KALAH) --- */
         .team-slot.eliminated .flag-img {
             opacity: 0.25;
             filter: grayscale(60%) contrast(80%);
@@ -173,7 +173,7 @@
             background: #0b0e16;
         }
 
-        .center-stage { display: flex; flex-direction: column; align-items: center; gap: 60px; z-index: 2; }
+        .center-stage { display: flex; flex-direction: column; align-items: center; gap: 40px; z-index: 2; width: 240px; }
 
         .champion-podium {
             background: linear-gradient(135deg, #2b220d 0%, #111522 100%);
@@ -181,6 +181,7 @@
             border-radius: 20px;
             padding: 20px 35px;
             text-align: center;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
         }
 
         .champion-podium .team-slot {
@@ -188,8 +189,20 @@
             height: 54px;
             border-radius: 22px 2px 22px 2px;
             border-color: var(--accent-gold);
+            margin: 0 auto;
         }
         .champion-podium .flag-img { border-radius: 20px 2px 20px 2px; }
+
+        .final-battle {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: rgba(20, 25, 40, 0.6);
+            padding: 15px;
+            border-radius: 14px;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            text-align: center;
+        }
 
         .bronze-box {
             text-align: center;
@@ -199,7 +212,6 @@
             border: 1px solid #2b364f;
         }
 
-        /* Database Pool Grid */
         .pool-section {
             background-color: var(--panel-bg);
             border: 1px solid rgba(43, 54, 79, 0.7);
@@ -246,8 +258,8 @@
             🗑️ DRAG SINI UNTUK HAPUS
         </div>
 
-        <div style="font-size: 0.8rem; color: #8fa0c2; max-width: 250px; line-height: 1.3;">
-            💡 <b>Tips:</b> Klik kiri untuk pilih slot. <b>Klik kanan (atau tahan lama)</b> pada bendera di bagan untuk meredupkan tim kalah!
+        <div style="font-size: 0.8rem; color: #8fa0c2; max-width: 350px; line-height: 1.3;">
+            💡 <b>Tips:</b> Klik kiri untuk pilih slot asal. Ketik kode lalu Enter. <b>Klik kanan</b> pada bendera di bagan untuk meredupkan tim kalah!
         </div>
 
         <button class="btn-reset" onclick="resetBracket()">RESET BAGAN</button>
@@ -278,18 +290,25 @@
                 <div class="match-node"><div class="team-slot drop-zone" id="L-3-3">?</div><div class="team-slot drop-zone" id="L-3-4">?</div></div>
             </div>
             <div class="column">
-                <div class="match-node"><div class="team-slot drop-zone" id="L-4-1">?</div><div class="team-slot drop-zone" id="L-4-2">?</div></div>
+                <div class="match-node" id="node-L-SF"><div class="team-slot drop-zone" id="L-4-1">?</div><div class="team-slot drop-zone" id="L-4-2">?</div></div>
             </div>
         </div>
 
         <div class="center-stage">
             <div class="champion-podium">
-                <div style="font-size:0.75rem; font-weight:bold; letter-spacing:2px; margin-bottom:10px;">WORLD CHAMPION</div>
+                <div style="font-size:0.75rem; font-weight:bold; letter-spacing:2px; margin-bottom:10px; color:var(--accent-gold);">WORLD CHAMPION</div>
                 <div class="team-slot drop-zone" id="CHAMP">🏆</div>
             </div>
-            <div class="bronze-box">
-                <div style="font-size:0.75rem; font-weight:bold; margin-bottom:8px;">BRONZE FINAL</div>
-                <div class="match-node" style="flex-direction: row;">
+
+            <div class="final-battle" id="node-MAIN-FINAL">
+                <div style="font-size:0.7rem; font-weight:bold; letter-spacing:1px; color:var(--accent-cyan);">GRAND FINAL</div>
+                <div class="team-slot drop-zone" id="F-1" style="margin:0 auto;">?</div>
+                <div class="team-slot drop-zone" id="F-2" style="margin:0 auto;">?</div>
+            </div>
+
+            <div class="bronze-box" id="node-BRONZE">
+                <div style="font-size:0.75rem; font-weight:bold; margin-bottom:8px; color:#cd7f32;">BRONZE FINAL</div>
+                <div class="match-node" style="flex-direction: row; justify-content: center;">
                     <div class="team-slot drop-zone" id="B-1">?</div>
                     <div class="team-slot drop-zone" id="B-2">?</div>
                 </div>
@@ -298,7 +317,7 @@
 
         <div class="side right-side">
             <div class="column">
-                <div class="match-node"><div class="team-slot drop-zone" id="R-4-1">?</div><div class="team-slot drop-zone" id="R-4-2">?</div></div>
+                <div class="match-node" id="node-R-SF"><div class="team-slot drop-zone" id="R-4-1">?</div><div class="team-slot drop-zone" id="R-4-2">?</div></div>
             </div>
             <div class="column">
                 <div class="match-node"><div class="team-slot drop-zone" id="R-3-1">?</div><div class="team-slot drop-zone" id="R-3-2">?</div></div>
@@ -340,7 +359,7 @@
             {c:"nz", n:"NZL"}, {c:"cr", n:"CRC"}, {c:"jm", n:"JAM"}, {c:"tn", n:"TUN"}, {c:"qa", n:"QAT"}, {c:"at", n:"AUT"},
             {c:"af", n:"AFG"}, {c:"al", n:"ALB"}, {c:"ad", n:"AND"}, {c:"ao", n:"ANG"}, {c:"ag", n:"ATG"}, {c:"am", n:"ARM"},
             {c:"az", n:"AZE"}, {c:"bs", n:"BAH"}, {c:"bh", n:"BHR"}, {c:"bd", n:"BAN"}, {c:"bb", n:"BAR"}, {c:"by", n:"BLR"},
-            {c:"bz", n:"BEL"}, {c:"bj", n:"BEN"}, {c:"bt", n:"BHU"}, {c:"bo", n:"BOL"}, {c:"ba", n:"BIH"}, {c:"bw", n:"BOT"},
+            {c:"bz", n:"BLZ"}, {c:"bj", n:"BEN"}, {c:"bt", n:"BHU"}, {c:"bo", n:"BOL"}, {c:"ba", n:"BIH"}, {c:"bw", n:"BOT"},
             {c:"bn", n:"BRU"}, {c:"bg", n:"BUL"}, {c:"bf", n:"BUR"}, {c:"bi", n:"BDI"}, {c:"kh", n:"CAM"}, {c:"cv", n:"CPV"},
             {c:"cf", n:"CAF"}, {c:"td", n:"CHA"}, {c:"cn", n:"CHN"}, {c:"km", n:"COM"}, {c:"cg", n:"CGO"}, {c:"cd", n:"COD"},
             {c:"ci", n:"CIV"}, {c:"cu", n:"CUB"}, {c:"cy", n:"CYP"}, {c:"cz", n:"CZE"}, {c:"dj", n:"DJI"}, {c:"dm", n:"DMA"},
@@ -348,16 +367,16 @@
             {c:"fj", n:"FIJ"}, {c:"fi", n:"FIN"}, {c:"ga", n:"GAB"}, {c:"gm", n:"GAM"}, {c:"ge", n:"GEO"}, {c:"gr", n:"GRE"},
             {c:"gd", n:"GRN"}, {c:"gt", n:"GUA"}, {c:"gn", n:"GUI"}, {c:"gw", n:"GBS"}, {c:"gy", n:"GUY"}, {c:"ht", n:"HAI"},
             {c:"hn", n:"HON"}, {c:"hu", n:"HUN"}, {c:"is", n:"ISL"}, {c:"in", n:"IND"}, {c:"iq", n:"IRQ"}, {c:"ie", n:"IRL"},
-            {c:"il", n:"ISR"}, {c:"jm", n:"JAM"}, {c:"jo", n:"JOR"}, {c:"kz", n:"KAZ"}, {c:"ke", n:"KEN"}, {c:"ki", n:"KIR"},
+            {c:"il", n:"ISR"}, {c:"jo", n:"JOR"}, {c:"kz", n:"KAZ"}, {c:"ke", n:"KEN"}, {c:"ki", n:"KIR"},
             {c:"kp", n:"PRK"}, {c:"kw", n:"KUW"}, {c:"kg", n:"KGZ"}, {c:"la", n:"LAO"}, {c:"lv", n:"LAT"}, {c:"lb", n:"LEB"},
             {c:"ls", n:"LES"}, {c:"lr", n:"LBR"}, {c:"ly", n:"LBY"}, {c:"li", n:"LIE"}, {c:"lt", n:"LTU"}, {c:"lu", n:"LUX"},
             {c:"mg", n:"MAD"}, {c:"mw", n:"MWI"}, {c:"my", n:"MAS"}, {c:"mv", n:"MDV"}, {c:"ml", n:"MLI"}, {c:"mt", n:"MLT"},
             {c:"mh", n:"MHL"}, {c:"mr", n:"MTN"}, {c:"mu", n:"MRI"}, {c:"md", n:"MDA"}, {c:"mc", n:"MON"}, {c:"mn", n:"MNG"},
             {c:"me", n:"MNE"}, {c:"mz", n:"MOZ"}, {c:"mm", n:"MYA"}, {c:"na", n:"NAM"}, {c:"nr", n:"NRU"}, {c:"np", n:"NEP"},
             {c:"ni", n:"NCA"}, {c:"ne", n:"NIG"}, {c:"mk", n:"MKD"}, {c:"om", n:"OMA"}, {c:"pk", n:"PAK"}, {c:"pw", n:"PLW"},
-            {c:"pa", n:"PAN"}, {c:"pg", n:"PNG"}, {c:"ph", n:"PHI"}, {c:"qa", n:"QAT"}, {c:"ro", n:"ROU"}, {c:"ru", n:"RUS"},
+            {c:"pa", n:"PAN"}, {c:"pg", n:"PNG"}, {c:"ph", n:"PHI"}, {c:"ro", n:"ROU"}, {c:"ru", n:"RUS"},
             {c:"rw", n:"RWA"}, {c:"kn", n:"SKN"}, {c:"lc", n:"LCA"}, {c:"vc", n:"VIN"}, {c:"ws", n:"SAM"}, {c:"sm", n:"SMR"},
-            {c:"st", n:"STP"}, {c:"sn", n:"SEN"}, {c:"rs", n:"SRB"}, {c:"sc", n:"SEY"}, {c:"sl", n:"SLE"}, {c:"sg", n:"SGP"},
+            {c:"st", n:"STP"}, {c:"rs", n:"SRB"}, {c:"sc", n:"SEY"}, {c:"sl", n:"SLE"}, {c:"sg", n:"SGP"},
             {c:"sk", n:"SVK"}, {c:"si", n:"SVN"}, {c:"sb", n:"SOL"}, {c:"so", n:"SOM"}, {c:"ss", n:"SSD"}, {c:"lk", n:"SRI"},
             {c:"sd", n:"SUD"}, {c:"sr", n:"SUR"}, {c:"sy", n:"SYR"}, {c:"tw", n:"TPE"}, {c:"tj", n:"TJK"}, {c:"tz", n:"TAN"},
             {c:"th", n:"THA"}, {c:"tl", n:"TLS"}, {c:"tg", n:"TOG"}, {c:"to", n:"TGA"}, {c:"tt", n:"TRI"}, {c:"tv", n:"TUV"},
@@ -384,7 +403,6 @@
         }
         renderPool(countriesList);
 
-        // Search Bar Logic
         document.getElementById('countryInput').addEventListener('input', (e) => {
             const val = e.target.value.trim().toUpperCase();
             const filtered = countriesList.filter(c => c.n.includes(val));
@@ -403,7 +421,6 @@
             }
         });
 
-        // Slot Klik Kiri Selector & Sistem Klik Kanan Efek Redup
         document.querySelectorAll('.drop-zone').forEach(slot => {
             slot.addEventListener('click', () => {
                 document.querySelectorAll('.drop-zone').forEach(s => s.classList.remove('active-target'));
@@ -412,9 +429,8 @@
                 document.getElementById('countryInput').focus();
             });
 
-            // KLIK KANAN UNTUK TOGGLE REDUP (ELIMINASI)
             slot.addEventListener('contextmenu', (e) => {
-                e.preventDefault(); // Mencegah browser memunculkan menu bawaan
+                e.preventDefault();
                 if (slot.querySelector('img')) {
                     slot.classList.toggle('eliminated');
                     saveBracketState();
@@ -422,7 +438,6 @@
             });
         });
 
-        // Drag Systems
         document.addEventListener('dragstart', (e) => {
             if (e.target.classList.contains('pool-flag')) {
                 draggedFlagSrc = e.target.getAttribute('src');
@@ -446,7 +461,6 @@
             });
         });
 
-        // Trash Bin System
         const trashBin = document.getElementById('trashBin');
         trashBin.addEventListener('dragover', (e) => { e.preventDefault(); trashBin.classList.add('drag-over-trash'); });
         trashBin.addEventListener('dragleave', () => trashBin.classList.remove('drag-over-trash'));
@@ -461,18 +475,19 @@
 
         function setSlotImage(slotElement, imgUrl) {
             slotElement.innerHTML = `<img src="${imgUrl}" class="flag-img" draggable="true">`;
-            slotElement.classList.remove('eliminated'); // Reset status eliminasi jika diganti tim baru
+            slotElement.classList.remove('eliminated');
             saveBracketState();
         }
 
         function clearSlot(slotElement) {
             if (slotElement) {
-                slotElement.innerHTML = slotElement.id === 'CHAMP' ? '🏆' : '?';
+                if(slotElement.id === 'CHAMP') slotElement.innerHTML = '🏆';
+                else if(['F-1','F-2','B-1','B-2'].includes(slotElement.id)) slotElement.innerHTML = '?';
+                else slotElement.innerHTML = '?';
                 slotElement.classList.remove('eliminated');
             }
         }
 
-        // State Save & Load LocalStorage (Menyimpan posisi benderanya + status redupnya)
         function saveBracketState() {
             const state = {};
             document.querySelectorAll('.drop-zone').forEach(slot => {
@@ -493,9 +508,7 @@
                     const slot = document.getElementById(id);
                     if (slot && state[id].src) {
                         slot.innerHTML = `<img src="${state[id].src}" class="flag-img" draggable="true">`;
-                        if (state[id].isEliminated) {
-                            slot.classList.add('eliminated');
-                        }
+                        if (state[id].isEliminated) slot.classList.add('eliminated');
                     }
                 });
             }
@@ -508,12 +521,24 @@
             }
         }
 
-        // SVG Path Connector
+        // FUNGSI UTUMA UNTUK MENGGAMBAR GARIS SECARA PRESISI
         function drawLines() {
             const svg = document.getElementById('connector-svg');
             if (!svg) return;
             svg.innerHTML = '';
             const arenaRect = document.getElementById('arena').getBoundingClientRect();
+
+            // Generator Jalur Sisi Kiri (Keluar ke Dalam)
+            const leftR32 = []; for(let i=1; i<=16; i++) leftR32.push(`L-1-${i}`);
+            const leftR16 = []; for(let i=1; i<=8; i++) leftR16.push(`L-2-${i}`);
+            const leftQF = []; for(let i=1; i<=4; i++) leftQF.push(`L-3-${i}`);
+            const leftSF = ['L-4-1', 'L-4-2'];
+
+            // Generator Jalur Sisi Kanan (Keluar ke Dalam)
+            const rightR32 = []; for(let i=1; i<=16; i++) rightR32.push(`R-1-${i}`);
+            const rightR16 = []; for(let i=1; i<=8; i++) rightR16.push(`R-2-${i}`);
+            const rightQF = []; for(let i=1; i<=4; i++) rightQF.push(`R-3-${i}`);
+            const rightSF = ['R-4-1', 'R-4-2'];
 
             const createTreePath = (fromArr, toArr) => {
                 for(let i=0; i < fromArr.length; i++) {
@@ -535,18 +560,35 @@
                 }
             };
 
-            const leftR32 = []; for(let i=1; i<=16; i++) leftR32.push(`L-1-${i}`);
-            const leftR16 = []; for(let i=1; i<=8; i++) leftR16.push(`L-2-${i}`);
-            const leftQF = []; for(let i=1; i<=4; i++) leftQF.push(`L-3-${i}`);
-            const leftSF = ['L-4-1', 'L-4-2'];
-
-            const rightR32 = []; for(let i=1; i<=16; i++) rightR32.push(`R-1-${i}`);
-            const rightR16 = []; for(let i=1; i<=8; i++) rightR16.push(`R-2-${i}`);
-            const rightQF = []; for(let i=1; i<=4; i++) rightQF.push(`R-3-${i}`);
-            const rightSF = ['R-4-1', 'R-4-2'];
-
+            // Menggambar garis utama struktur turnamen kiri & kanan
             createTreePath(leftR32, leftR16); createTreePath(leftR16, leftQF); createTreePath(leftQF, leftSF);
             createTreePath(rightR32, rightR16); createTreePath(rightR16, rightQF); createTreePath(rightQF, rightSF);
+
+            // Fungsi garis manual untuk menyambungkan Semifinal ke area tengah
+            const drawDirectLine = (fromId, toId) => {
+                const elA = document.getElementById(fromId), elB = document.getElementById(toId);
+                if(elA && elB) {
+                    const rA = elA.getBoundingClientRect(), rB = elB.getBoundingClientRect();
+                    const x1 = (rA.left + rA.width/2) - arenaRect.left, y1 = (rA.top + rA.height/2) - arenaRect.top;
+                    const x2 = (rB.left + rB.width/2) - arenaRect.left, y2 = (rB.top + rB.height/2) - arenaRect.top;
+
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    const midX = x1 + (x2 - x1) / 2;
+                    path.setAttribute('d', `M ${x1} ${y1} H ${midX} V ${y2} H ${x2}`);
+                    path.setAttribute('stroke', 'var(--line-color)');
+                    path.setAttribute('stroke-width', '2.5');
+                    path.setAttribute('fill', 'none');
+                    svg.appendChild(path);
+                }
+            };
+
+            // Menghubungkan pemenang Semifinal ke Grand Final
+            drawDirectLine('L-4-1', 'F-1');
+            drawDirectLine('R-4-1', 'F-2');
+
+            // Menghubungkan Grand Final menuju Podium Juara
+            drawDirectLine('F-1', 'CHAMP');
+            drawDirectLine('F-2', 'CHAMP');
         }
 
         window.addEventListener('load', () => { loadBracketState(); setTimeout(drawLines, 250); });
