@@ -2,98 +2,597 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>FIFA World Cup 2026 - Ultimate Bracket System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIFA World Cup 2026 - Ultimate Bracket</title>
     <style>
         :root {
-            --bg-color: #060709; --panel-bg: #0f121d; --accent-cyan: #00f0ff;
-            --accent-gold: #ffd700; --accent-red: #ff3b30; --text-color: #ffffff;
+            --bg-color: #060709;
+            --panel-bg: #0f121d;
+            --card-bg: rgba(25, 29, 44, 0.45);
+            --line-color: #2b364f;
+            --line-glow: rgba(0, 240, 255, 0.2);
+            --accent-cyan: #00f0ff;
+            --accent-gold: #ffd700;
+            --accent-red: #ff3b30;
+            --text-color: #ffffff;
+            --slot-width: 58px;
+            --slot-height: 42px;
         }
-        body { background-color: var(--bg-color); color: var(--text-color); font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        
-        /* Panel Atas Terintegrasi */
-        .control-panel, .score-board-tv { background: rgba(15, 18, 29, 0.85); padding: 15px; border-radius: 16px; border: 1px solid #2b364f; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
-        .score-input { background: #050609; border: 1px solid #444; color: var(--accent-cyan); font-size: 1.5rem; width: 60px; text-align: center; border-radius: 5px; font-family: monospace; }
-        .team-label { font-weight: bold; width: 60px; text-align: center; color: var(--accent-cyan); }
-        
-        .penalty-container { display: flex; gap: 10px; margin-bottom: 20px; }
-        .penalty-indicator { width: 30px; height: 30px; border: 2px solid #444; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; background: #000; font-weight: bold; }
-        .pen-success { background: #28a745; border-color: #28a745; color: white; }
-        .pen-fail { background: #dc3545; border-color: #dc3545; color: white; }
 
-        /* Bracket Styles */
-        .bracket-arena { display: flex; justify-content: center; gap: 20px; width: 100%; overflow-x: auto; padding: 20px; }
-        .match-node { background: rgba(25, 29, 44, 0.45); border: 1px solid #2b364f; padding: 5px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; }
-        .team-slot { width: 58px; height: 42px; background: #151924; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; margin: 2px; }
-        .flag-img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
-        .eliminated .flag-img { opacity: 0.25; filter: grayscale(1); }
-        .pool-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; background: #090b12; padding: 15px; border-radius: 8px; width: 80%; }
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 50% 40%, #111827 0%, var(--bg-color) 70%);
+            color: var(--text-color);
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: auto;
+            user-select: none;
+        }
+
+        /* Top Control Panel */
+        .control-panel {
+            background: rgba(15, 18, 29, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 12px 25px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            width: 90%;
+            max-width: 1300px;
+        }
+
+        .control-panel input {
+            background: #050609;
+            border: 2px solid #2b364f;
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            outline: none;
+            width: 240px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .control-panel input:focus { border-color: var(--accent-cyan); }
+
+        /* Trash Zone */
+        .trash-zone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(255, 59, 48, 0.1);
+            border: 2px dashed var(--accent-red);
+            color: var(--accent-red);
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .trash-zone.drag-over-trash {
+            background: rgba(255, 59, 48, 0.3);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 59, 48, 0.4);
+        }
+
+        .btn-reset {
+            background: #2b364f;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: auto;
+            transition: background 0.2s;
+        }
+        .btn-reset:hover { background: var(--accent-red); }
+
+        /* Bracket Area */
+        .bracket-arena {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 20px;
+            width: 100%;
+            max-width: 1650px;
+        }
+
+        #connector-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .side { display: flex; align-items: center; z-index: 2; }
+        .column { display: flex; flex-direction: column; justify-content: space-around; height: 930px; gap: 6px; }
+        .left-side .column { margin-right: 55px; }
+        .right-side .column { margin-left: 55px; }
+
+        .match-node {
+            display: flex;
+            flex-direction: column;
+            background-color: var(--card-bg);
+            border: 1px solid rgba(43, 54, 79, 0.4);
+            border-radius: 12px;
+            padding: 5px;
+            gap: 5px;
+            position: relative;
+        }
+
+        .team-slot {
+            width: var(--slot-width);
+            height: var(--slot-height);
+            background: linear-gradient(135deg, #232a3d 0%, #151924 100%);
+            border-radius: 16px 2px 16px 2px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .team-slot.active-target {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+        }
+
+        .flag-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 14px 2px 14px 2px;
+            cursor: grab;
+            transition: opacity 0.2s ease, filter 0.2s ease;
+        }
+
+        .team-slot.eliminated .flag-img {
+            opacity: 0.25;
+            filter: grayscale(60%) contrast(80%);
+        }
+        .team-slot.eliminated {
+            border-color: rgba(255, 255, 255, 0.05);
+            background: #0b0e16;
+        }
+
+        .center-stage { display: flex; flex-direction: column; align-items: center; gap: 40px; z-index: 2; width: 240px; }
+
+        .champion-podium {
+            background: linear-gradient(135deg, #2b220d 0%, #111522 100%);
+            border: 2px solid var(--accent-gold);
+            border-radius: 20px;
+            padding: 20px 35px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
+        }
+
+        .champion-podium .team-slot {
+            width: 76px;
+            height: 54px;
+            border-radius: 22px 2px 22px 2px;
+            border-color: var(--accent-gold);
+            margin: 0 auto;
+        }
+        .champion-podium .flag-img { border-radius: 20px 2px 20px 2px; }
+
+        .final-battle {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: rgba(20, 25, 40, 0.6);
+            padding: 15px;
+            border-radius: 14px;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            text-align: center;
+        }
+
+        .bronze-box {
+            text-align: center;
+            background: rgba(15, 18, 29, 0.7);
+            padding: 15px;
+            border-radius: 14px;
+            border: 1px solid #2b364f;
+        }
+
+        .pool-section {
+            background-color: var(--panel-bg);
+            border: 1px solid rgba(43, 54, 79, 0.7);
+            border-radius: 16px;
+            padding: 20px;
+            width: 95%;
+            max-width: 1450px;
+            margin-top: 40px;
+        }
+
+        .pool-grid { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 10px; 
+            justify-content: center;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #090b12;
+            border-radius: 8px;
+        }
+
+        .pool-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #161b29;
+            padding: 6px;
+            border-radius: 10px 2px 10px 2px;
+            border: 1px solid #252e45;
+            width: 65px;
+        }
+
+        .pool-flag { width: 48px; height: 34px; object-fit: cover; border-radius: 8px 2px 8px 2px; cursor: grab; }
+        .pool-code { font-size: 0.65rem; color: #8fa0c2; margin-top: 5px; font-weight: bold; text-align: center; }
     </style>
 </head>
 <body>
 
     <div class="control-panel">
-        <input type="text" id="countryInput" placeholder="CARI KODE TIM...">
-        <button onclick="resetBracket()">RESET</button>
+        <input type="text" id="countryInput" placeholder="CARI / ENTER KODE TIM...">
+        
+        <div class="trash-zone" id="trashBin">
+            🗑️ DRAG SINI UNTUK HAPUS
+        </div>
+
+        <div style="font-size: 0.8rem; color: #8fa0c2; max-width: 350px; line-height: 1.3;">
+            💡 <b>Tips:</b> Klik kiri untuk pilih slot asal. Ketik kode lalu Enter. <b>Klik kanan</b> pada bendera di bagan untuk meredupkan tim kalah!
+        </div>
+
+        <button class="btn-reset" onclick="resetBracket()">RESET BAGAN</button>
     </div>
 
-    <!-- Papan Skor & Penalti -->
-    <div class="score-board-tv">
-        <div id="tv-team-l" class="team-label">---</div>
-        <input type="number" class="score-input" id="score-l" value="0">
-        <input type="text" id="match-timer" class="score-input" value="00:00" style="color: var(--accent-gold); width: 80px;">
-        <input type="number" class="score-input" id="score-r" value="0">
-        <div id="tv-team-r" class="team-label">---</div>
+    <div class="bracket-arena" id="arena">
+        <svg id="connector-svg"></svg>
+
+        <div class="side left-side">
+            <div class="column">
+                <div class="match-node"><div class="team-slot drop-zone" id="L-1-1">?</div><div class="team-slot drop-zone" id="L-1-2">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="L-1-3">?</div><div class="team-slot drop-zone" id="L-1-4">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="L-1-5">?</div><div class="team-slot drop-zone" id="L-1-6">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="L-1-7">?</div><div class="team-slot drop-zone" id="L-1-8">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="L-1-9">?</div><div class="team-slot drop-zone" id="L-1-10">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="L-1-11">?</div><div class="team-slot drop-zone" id="L-1-12">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="L-1-13">?</div><div class="team-slot drop-zone" id="L-1-14">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="L-1-15">?</div><div class="team-slot drop-zone" id="L-1-16">?</div></div>
+            </div>
+            <div class="column">
+                <div class="match-node"><div class="team-slot drop-zone" id="L-2-1">?</div><div class="team-slot drop-zone" id="L-2-2">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="L-2-3">?</div><div class="team-slot drop-zone" id="L-2-4">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="L-2-5">?</div><div class="team-slot drop-zone" id="L-2-6">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="L-2-7">?</div><div class="team-slot drop-zone" id="L-2-8">?</div></div>
+            </div>
+            <div class="column">
+                <div class="match-node"><div class="team-slot drop-zone" id="L-3-1">?</div><div class="team-slot drop-zone" id="L-3-2">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="L-3-3">?</div><div class="team-slot drop-zone" id="L-3-4">?</div></div>
+            </div>
+            <div class="column">
+                <div class="match-node" id="node-L-SF"><div class="team-slot drop-zone" id="L-4-1">?</div><div class="team-slot drop-zone" id="L-4-2">?</div></div>
+            </div>
+        </div>
+
+        <div class="center-stage">
+            <div class="champion-podium">
+                <div style="font-size:0.75rem; font-weight:bold; letter-spacing:2px; margin-bottom:10px; color:var(--accent-gold);">WORLD CHAMPION</div>
+                <div class="team-slot drop-zone" id="CHAMP">🏆</div>
+            </div>
+
+            <div class="final-battle" id="node-MAIN-FINAL">
+                <div style="font-size:0.7rem; font-weight:bold; letter-spacing:1px; color:var(--accent-cyan);">GRAND FINAL</div>
+                <div class="team-slot drop-zone" id="F-1" style="margin:0 auto;">?</div>
+                <div class="team-slot drop-zone" id="F-2" style="margin:0 auto;">?</div>
+            </div>
+
+            <div class="bronze-box" id="node-BRONZE">
+                <div style="font-size:0.75rem; font-weight:bold; margin-bottom:8px; color:#cd7f32;">BRONZE FINAL</div>
+                <div class="match-node" style="flex-direction: row; justify-content: center;">
+                    <div class="team-slot drop-zone" id="B-1">?</div>
+                    <div class="team-slot drop-zone" id="B-2">?</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="side right-side">
+            <div class="column">
+                <div class="match-node" id="node-R-SF"><div class="team-slot drop-zone" id="R-4-1">?</div><div class="team-slot drop-zone" id="R-4-2">?</div></div>
+            </div>
+            <div class="column">
+                <div class="match-node"><div class="team-slot drop-zone" id="R-3-1">?</div><div class="team-slot drop-zone" id="R-3-2">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="R-3-3">?</div><div class="team-slot drop-zone" id="R-3-4">?</div></div>
+            </div>
+            <div class="column">
+                <div class="match-node"><div class="team-slot drop-zone" id="R-2-1">?</div><div class="team-slot drop-zone" id="R-2-2">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="R-2-3">?</div><div class="team-slot drop-zone" id="R-2-4">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="R-2-5">?</div><div class="team-slot drop-zone" id="R-2-6">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="R-2-7">?</div><div class="team-slot drop-zone" id="R-2-8">?</div></div>
+            </div>
+            <div class="column">
+                <div class="match-node"><div class="team-slot drop-zone" id="R-1-1">?</div><div class="team-slot drop-zone" id="R-1-2">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="R-1-3">?</div><div class="team-slot drop-zone" id="R-1-4">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="R-1-5">?</div><div class="team-slot drop-zone" id="R-1-6">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="R-1-7">?</div><div class="team-slot drop-zone" id="R-1-8">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="R-1-9">?</div><div class="team-slot drop-zone" id="R-1-10">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="R-1-11">?</div><div class="team-slot drop-zone" id="R-1-12">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="R-1-13">?</div><div class="team-slot drop-zone" id="R-1-14">?</div></div>
+                <div class="match-node"><div class="team-slot drop-zone" id="R-1-15">?</div><div class="team-slot drop-zone" id="R-1-16">?</div></div>
+            </div>
+        </div>
     </div>
 
-    <div class="penalty-container">
-        <div class="penalty-indicator" onclick="penResult(this, 'O')" oncontextmenu="penResult(this, 'X'); return false;">-</div>
-        <div class="penalty-indicator" onclick="penResult(this, 'O')" oncontextmenu="penResult(this, 'X'); return false;">-</div>
-        <div class="penalty-indicator" onclick="penResult(this, 'O')" oncontextmenu="penResult(this, 'X'); return false;">-</div>
-        <div class="penalty-indicator" onclick="penResult(this, 'O')" oncontextmenu="penResult(this, 'X'); return false;">-</div>
-        <div class="penalty-indicator" onclick="penResult(this, 'O')" oncontextmenu="penResult(this, 'X'); return false;">-</div>
+    <div class="pool-section">
+        <div style="font-size:0.8rem; font-weight:bold; color:var(--accent-cyan); margin-bottom:15px; letter-spacing:1px;">🌐 GLOBAL DATABASE (SELURUH NEGARA DI DUNIA)</div>
+        <div class="pool-grid" id="global-pool-grid"></div>
     </div>
-
-    <div class="bracket-arena" id="bracket-container">
-        <!-- Struktur match (contoh singkat) -->
-        <div class="match-node" onclick="loadMatch(this)"><div class="team-slot drop-zone" id="L-1">?</div><div class="team-slot drop-zone" id="L-2">?</div></div>
-    </div>
-
-    <div class="pool-grid" id="pool"></div>
 
     <script>
-        // Logika Papan Skor Dinamis
-        function loadMatch(node) {
-            const slots = node.querySelectorAll('.team-slot');
-            document.getElementById('tv-team-l').innerText = slots[0].innerText || '---';
-            document.getElementById('tv-team-r').innerText = slots[1].innerText || '---';
+        const countriesList = [
+            {c:"us", n:"USA"}, {c:"mx", n:"MEX"}, {c:"ca", n:"CAN"}, {c:"id", n:"IDN"}, {c:"br", n:"BRA"}, {c:"ar", n:"ARG"},
+            {c:"fr", n:"FRA"}, {c:"de", n:"GER"}, {c:"gb-eng", n:"ENG"}, {c:"es", n:"ESP"}, {c:"pt", n:"POR"}, {c:"jp", n:"JPN"},
+            {c:"kr", n:"KOR"}, {c:"nl", n:"NED"}, {c:"it", n:"ITA"}, {c:"ma", n:"MAR"}, {c:"hr", n:"CRO"}, {c:"be", n:"BEL"},
+            {c:"uy", n:"URU"}, {c:"co", n:"COL"}, {c:"sa", n:"KSA"}, {c:"au", n:"AUS"}, {c:"sn", n:"SEN"}, {c:"cm", n:"CMR"},
+            {c:"gh", n:"GHA"}, {c:"ch", n:"SUI"}, {c:"dk", n:"DEN"}, {c:"se", n:"SWE"}, {c:"no", n:"NOR"}, {c:"pl", n:"POL"},
+            {c:"ua", n:"UKR"}, {c:"tr", n:"TUR"}, {c:"eg", n:"EGY"}, {c:"dz", n:"ALG"}, {c:"ng", n:"NGA"}, {c:"za", n:"RSA"},
+            {c:"ir", n:"IRN"}, {c:"cl", n:"CHI"}, {c:"pe", n:"PER"}, {c:"ec", n:"ECU"}, {c:"py", n:"PAR"}, {c:"ve", n:"VEN"},
+            {c:"nz", n:"NZL"}, {c:"cr", n:"CRC"}, {c:"jm", n:"JAM"}, {c:"tn", n:"TUN"}, {c:"qa", n:"QAT"}, {c:"at", n:"AUT"},
+            {c:"af", n:"AFG"}, {c:"al", n:"ALB"}, {c:"ad", n:"AND"}, {c:"ao", n:"ANG"}, {c:"ag", n:"ATG"}, {c:"am", n:"ARM"},
+            {c:"az", n:"AZE"}, {c:"bs", n:"BAH"}, {c:"bh", n:"BHR"}, {c:"bd", n:"BAN"}, {c:"bb", n:"BAR"}, {c:"by", n:"BLR"},
+            {c:"bz", n:"BLZ"}, {c:"bj", n:"BEN"}, {c:"bt", n:"BHU"}, {c:"bo", n:"BOL"}, {c:"ba", n:"BIH"}, {c:"bw", n:"BOT"},
+            {c:"bn", n:"BRU"}, {c:"bg", n:"BUL"}, {c:"bf", n:"BUR"}, {c:"bi", n:"BDI"}, {c:"kh", n:"CAM"}, {c:"cv", n:"CPV"},
+            {c:"cf", n:"CAF"}, {c:"td", n:"CHA"}, {c:"cn", n:"CHN"}, {c:"km", n:"COM"}, {c:"cg", n:"CGO"}, {c:"cd", n:"COD"},
+            {c:"ci", n:"CIV"}, {c:"cu", n:"CUB"}, {c:"cy", n:"CYP"}, {c:"cz", n:"CZE"}, {c:"dj", n:"DJI"}, {c:"dm", n:"DMA"},
+            {c:"do", n:"DOM"}, {c:"gq", n:"GEQ"}, {c:"er", n:"ERI"}, {c:"ee", n:"EST"}, {c:"sz", n:"SWZ"}, {c:"et", n:"ETH"},
+            {c:"fj", n:"FIJ"}, {c:"fi", n:"FIN"}, {c:"ga", n:"GAB"}, {c:"gm", n:"GAM"}, {c:"ge", n:"GEO"}, {c:"gr", n:"GRE"},
+            {c:"gd", n:"GRN"}, {c:"gt", n:"GUA"}, {c:"gn", n:"GUI"}, {c:"gw", n:"GBS"}, {c:"gy", n:"GUY"}, {c:"ht", n:"HAI"},
+            {c:"hn", n:"HON"}, {c:"hu", n:"HUN"}, {c:"is", n:"ISL"}, {c:"in", n:"IND"}, {c:"iq", n:"IRQ"}, {c:"ie", n:"IRL"},
+            {c:"il", n:"ISR"}, {c:"jo", n:"JOR"}, {c:"kz", n:"KAZ"}, {c:"ke", n:"KEN"}, {c:"ki", n:"KIR"},
+            {c:"kp", n:"PRK"}, {c:"kw", n:"KUW"}, {c:"kg", n:"KGZ"}, {c:"la", n:"LAO"}, {c:"lv", n:"LAT"}, {c:"lb", n:"LEB"},
+            {c:"ls", n:"LES"}, {c:"lr", n:"LBR"}, {c:"ly", n:"LBY"}, {c:"li", n:"LIE"}, {c:"lt", n:"LTU"}, {c:"lu", n:"LUX"},
+            {c:"mg", n:"MAD"}, {c:"mw", n:"MWI"}, {c:"my", n:"MAS"}, {c:"mv", n:"MDV"}, {c:"ml", n:"MLI"}, {c:"mt", n:"MLT"},
+            {c:"mh", n:"MHL"}, {c:"mr", n:"MTN"}, {c:"mu", n:"MRI"}, {c:"md", n:"MDA"}, {c:"mc", n:"MON"}, {c:"mn", n:"MNG"},
+            {c:"me", n:"MNE"}, {c:"mz", n:"MOZ"}, {c:"mm", n:"MYA"}, {c:"na", n:"NAM"}, {c:"nr", n:"NRU"}, {c:"np", n:"NEP"},
+            {c:"ni", n:"NCA"}, {c:"ne", n:"NIG"}, {c:"mk", n:"MKD"}, {c:"om", n:"OMA"}, {c:"pk", n:"PAK"}, {c:"pw", n:"PLW"},
+            {c:"pa", n:"PAN"}, {c:"pg", n:"PNG"}, {c:"ph", n:"PHI"}, {c:"ro", n:"ROU"}, {c:"ru", n:"RUS"},
+            {c:"rw", n:"RWA"}, {c:"kn", n:"SKN"}, {c:"lc", n:"LCA"}, {c:"vc", n:"VIN"}, {c:"ws", n:"SAM"}, {c:"sm", n:"SMR"},
+            {c:"st", n:"STP"}, {c:"rs", n:"SRB"}, {c:"sc", n:"SEY"}, {c:"sl", n:"SLE"}, {c:"sg", n:"SGP"},
+            {c:"sk", n:"SVK"}, {c:"si", n:"SVN"}, {c:"sb", n:"SOL"}, {c:"so", n:"SOM"}, {c:"ss", n:"SSD"}, {c:"lk", n:"SRI"},
+            {c:"sd", n:"SUD"}, {c:"sr", n:"SUR"}, {c:"sy", n:"SYR"}, {c:"tw", n:"TPE"}, {c:"tj", n:"TJK"}, {c:"tz", n:"TAN"},
+            {c:"th", n:"THA"}, {c:"tl", n:"TLS"}, {c:"tg", n:"TOG"}, {c:"to", n:"TGA"}, {c:"tt", n:"TRI"}, {c:"tv", n:"TUV"},
+            {c:"ug", n:"UGA"}, {c:"ae", n:"UAE"}, {c:"gb-wls", n:"WAL"}, {c:"gb-sct", n:"SCO"}, {c:"uz", n:"UZB"}, {c:"vu", n:"VAN"},
+            {c:"ye", n:"YEM"}, {c:"zm", n:"ZAM"}, {c:"zw", n:"ZIM"}
+        ];
+
+        let draggedFlagSrc = null;
+        let draggedSourceSlotId = null;
+        let selectedSlot = null;
+
+        const poolGrid = document.getElementById('global-pool-grid');
+        function renderPool(list) {
+            poolGrid.innerHTML = '';
+            list.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'pool-item';
+                div.innerHTML = `
+                    <img src="https://flagcdn.com/w80/${item.c}.png" class="pool-flag" draggable="true">
+                    <div class="pool-code">${item.n}</div>
+                `;
+                poolGrid.appendChild(div);
+            });
         }
+        renderPool(countriesList);
 
-        function penResult(el, type) {
-            el.innerText = type;
-            el.className = 'penalty-indicator ' + (type === 'O' ? 'pen-success' : 'pen-fail');
-        }
-
-        // Autosave Logic
-        document.querySelectorAll('input').forEach(i => i.addEventListener('input', () => {
-            localStorage.setItem('fifa_data', JSON.stringify({
-                sL: document.getElementById('score-l').value,
-                sR: document.getElementById('score-r').value,
-                timer: document.getElementById('match-timer').value
-            }));
-        }));
-
-        // Inisialisasi Pool
-        const pool = document.getElementById('pool');
-        ['id', 'us', 'fr', 'br', 'ar'].forEach(code => {
-            pool.innerHTML += `<div class="pool-item"><img src="https://flagcdn.com/w40/${code}.png" draggable="true" ondragstart="event.dataTransfer.setData('text', '${code.toUpperCase()}')"></div>`;
+        document.getElementById('countryInput').addEventListener('input', (e) => {
+            const val = e.target.value.trim().toUpperCase();
+            const filtered = countriesList.filter(c => c.n.includes(val));
+            renderPool(filtered);
         });
 
-        document.querySelectorAll('.drop-zone').forEach(z => {
-            z.ondragover = e => e.preventDefault();
-            z.ondrop = e => { z.innerHTML = `<img src="https://flagcdn.com/w40/${e.dataTransfer.getData('text').toLowerCase()}.png" class="flag-img">`; };
+        document.getElementById('countryInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && selectedSlot) {
+                const targetCode = e.target.value.trim().toUpperCase();
+                const found = countriesList.find(c => c.n === targetCode);
+                if (found) {
+                    setSlotImage(selectedSlot, `https://flagcdn.com/w80/${found.c}.png`);
+                    e.target.value = '';
+                    renderPool(countriesList);
+                }
+            }
         });
 
-        function resetBracket() { if(confirm("Reset semua?")) localStorage.clear(); location.reload(); }
+        document.querySelectorAll('.drop-zone').forEach(slot => {
+            slot.addEventListener('click', () => {
+                document.querySelectorAll('.drop-zone').forEach(s => s.classList.remove('active-target'));
+                selectedSlot = slot;
+                slot.classList.add('active-target');
+                document.getElementById('countryInput').focus();
+            });
+
+            slot.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                if (slot.querySelector('img')) {
+                    slot.classList.toggle('eliminated');
+                    saveBracketState();
+                }
+            });
+        });
+
+        document.addEventListener('dragstart', (e) => {
+            if (e.target.classList.contains('pool-flag')) {
+                draggedFlagSrc = e.target.getAttribute('src');
+                draggedSourceSlotId = null;
+            } else if (e.target.classList.contains('flag-img')) {
+                draggedFlagSrc = e.target.getAttribute('src');
+                draggedSourceSlotId = e.target.closest('.drop-zone').id;
+            }
+        });
+
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragover', (e) => e.preventDefault());
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                if (draggedFlagSrc) {
+                    setSlotImage(zone, draggedFlagSrc);
+                    if (draggedSourceSlotId && draggedSourceSlotId !== zone.id) {
+                        clearSlot(document.getElementById(draggedSourceSlotId));
+                    }
+                }
+            });
+        });
+
+        const trashBin = document.getElementById('trashBin');
+        trashBin.addEventListener('dragover', (e) => { e.preventDefault(); trashBin.classList.add('drag-over-trash'); });
+        trashBin.addEventListener('dragleave', () => trashBin.classList.remove('drag-over-trash'));
+        trashBin.addEventListener('drop', (e) => {
+            e.preventDefault();
+            trashBin.classList.remove('drag-over-trash');
+            if (draggedSourceSlotId) {
+                clearSlot(document.getElementById(draggedSourceSlotId));
+                saveBracketState();
+            }
+        });
+
+        function setSlotImage(slotElement, imgUrl) {
+            slotElement.innerHTML = `<img src="${imgUrl}" class="flag-img" draggable="true">`;
+            slotElement.classList.remove('eliminated');
+            saveBracketState();
+        }
+
+        function clearSlot(slotElement) {
+            if (slotElement) {
+                if(slotElement.id === 'CHAMP') slotElement.innerHTML = '🏆';
+                else if(['F-1','F-2','B-1','B-2'].includes(slotElement.id)) slotElement.innerHTML = '?';
+                else slotElement.innerHTML = '?';
+                slotElement.classList.remove('eliminated');
+            }
+        }
+
+        function saveBracketState() {
+            const state = {};
+            document.querySelectorAll('.drop-zone').forEach(slot => {
+                const img = slot.querySelector('img');
+                state[slot.id] = {
+                    src: img ? img.getAttribute('src') : null,
+                    isEliminated: slot.classList.contains('eliminated')
+                };
+            });
+            localStorage.setItem('fifa2026_redup_save', JSON.stringify(state));
+        }
+
+        function loadBracketState() {
+            const savedData = localStorage.getItem('fifa2026_redup_save');
+            if (savedData) {
+                const state = JSON.parse(savedData);
+                Object.keys(state).forEach(id => {
+                    const slot = document.getElementById(id);
+                    if (slot && state[id].src) {
+                        slot.innerHTML = `<img src="${state[id].src}" class="flag-img" draggable="true">`;
+                        if (state[id].isEliminated) slot.classList.add('eliminated');
+                    }
+                });
+            }
+        }
+
+        function resetBracket() {
+            if (confirm("Kosongkan semua isi bagan beserta status eliminasi?")) {
+                localStorage.removeItem('fifa2026_redup_save');
+                document.querySelectorAll('.drop-zone').forEach(slot => clearSlot(slot));
+            }
+        }
+
+        // FUNGSI UTUMA UNTUK MENGGAMBAR GARIS SECARA PRESISI
+        function drawLines() {
+            const svg = document.getElementById('connector-svg');
+            if (!svg) return;
+            svg.innerHTML = '';
+            const arenaRect = document.getElementById('arena').getBoundingClientRect();
+
+            // Generator Jalur Sisi Kiri (Keluar ke Dalam)
+            const leftR32 = []; for(let i=1; i<=16; i++) leftR32.push(`L-1-${i}`);
+            const leftR16 = []; for(let i=1; i<=8; i++) leftR16.push(`L-2-${i}`);
+            const leftQF = []; for(let i=1; i<=4; i++) leftQF.push(`L-3-${i}`);
+            const leftSF = ['L-4-1', 'L-4-2'];
+
+            // Generator Jalur Sisi Kanan (Keluar ke Dalam)
+            const rightR32 = []; for(let i=1; i<=16; i++) rightR32.push(`R-1-${i}`);
+            const rightR16 = []; for(let i=1; i<=8; i++) rightR16.push(`R-2-${i}`);
+            const rightQF = []; for(let i=1; i<=4; i++) rightQF.push(`R-3-${i}`);
+            const rightSF = ['R-4-1', 'R-4-2'];
+
+            const createTreePath = (fromArr, toArr) => {
+                for(let i=0; i < fromArr.length; i++) {
+                    const elA = document.getElementById(fromArr[i]);
+                    const elB = document.getElementById(toArr[Math.floor(i/2)]);
+                    if(elA && elB) {
+                        const rA = elA.getBoundingClientRect(), rB = elB.getBoundingClientRect();
+                        const x1 = (rA.left + rA.width/2) - arenaRect.left, y1 = (rA.top + rA.height/2) - arenaRect.top;
+                        const x2 = (rB.left + rB.width/2) - arenaRect.left, y2 = (rB.top + rB.height/2) - arenaRect.top;
+                        
+                        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        const midX = x1 + (x2 - x1) / 2;
+                        path.setAttribute('d', `M ${x1} ${y1} H ${midX} V ${y2} H ${x2}`);
+                        path.setAttribute('stroke', 'var(--line-color)');
+                        path.setAttribute('stroke-width', '2.5');
+                        path.setAttribute('fill', 'none');
+                        svg.appendChild(path);
+                    }
+                }
+            };
+
+            // Menggambar garis utama struktur turnamen kiri & kanan
+            createTreePath(leftR32, leftR16); createTreePath(leftR16, leftQF); createTreePath(leftQF, leftSF);
+            createTreePath(rightR32, rightR16); createTreePath(rightR16, rightQF); createTreePath(rightQF, rightSF);
+
+            // Fungsi garis manual untuk menyambungkan Semifinal ke area tengah
+            const drawDirectLine = (fromId, toId) => {
+                const elA = document.getElementById(fromId), elB = document.getElementById(toId);
+                if(elA && elB) {
+                    const rA = elA.getBoundingClientRect(), rB = elB.getBoundingClientRect();
+                    const x1 = (rA.left + rA.width/2) - arenaRect.left, y1 = (rA.top + rA.height/2) - arenaRect.top;
+                    const x2 = (rB.left + rB.width/2) - arenaRect.left, y2 = (rB.top + rB.height/2) - arenaRect.top;
+
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    const midX = x1 + (x2 - x1) / 2;
+                    path.setAttribute('d', `M ${x1} ${y1} H ${midX} V ${y2} H ${x2}`);
+                    path.setAttribute('stroke', 'var(--line-color)');
+                    path.setAttribute('stroke-width', '2.5');
+                    path.setAttribute('fill', 'none');
+                    svg.appendChild(path);
+                }
+            };
+
+            // Menghubungkan pemenang Semifinal ke Grand Final
+            drawDirectLine('L-4-1', 'F-1');
+            drawDirectLine('R-4-1', 'F-2');
+
+            // Menghubungkan Grand Final menuju Podium Juara
+            drawDirectLine('F-1', 'CHAMP');
+            drawDirectLine('F-2', 'CHAMP');
+        }
+
+        window.addEventListener('load', () => { loadBracketState(); setTimeout(drawLines, 250); });
+        window.addEventListener('resize', drawLines);
     </script>
 </body>
 </html>
